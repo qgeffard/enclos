@@ -3,14 +3,14 @@ package com.enclos.component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class Board extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	public Board() {
 		final HexagonPanel hex = new HexagonPanel();

@@ -2,13 +2,14 @@ package com.enclos.component;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Polygon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 
 public class BridgePanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 
 	public BridgePanel() {
 		setOpaque(true);

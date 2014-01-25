@@ -1,11 +1,9 @@
 package com.enclos.component;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 
 import javax.swing.JPanel;
 
@@ -13,6 +11,7 @@ import com.enclos.controller.HexagonListener;
 
 public class HexagonPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	// Default size
 	// TODO dynamic from the board's size
 	private int width = 50;
