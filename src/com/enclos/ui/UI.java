@@ -1,6 +1,7 @@
 package com.enclos.ui;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.*;
 
@@ -17,7 +18,9 @@ public class UI {
 		//TODO dynamic ?
 		frame.setMinimumSize(new Dimension(500,500));
 		frame.setLocationRelativeTo(null);
-		frame.getContentPane().add(new Board());
+		frame.getContentPane().add(new Board(2));
+		//avoid bad dynamic resizing
+		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		
