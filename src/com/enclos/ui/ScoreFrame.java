@@ -1,5 +1,6 @@
 package com.enclos.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class ScoreFrame extends JFrame {
 
@@ -21,10 +23,14 @@ public class ScoreFrame extends JFrame {
 		this.size = parent.getSize();
 		setTitle("Scores");
 		setSize(this.size);
+		setAlwaysOnTop(true);
 		setUndecorated(true);
-		setBackground(Color.blue);
 		setOpacity(0.50f);
-		
+		setEnabled(false);
+		JPanel contentPane = new JPanel();
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(new JLabel("Scores des joueurs : "),BorderLayout.CENTER);
+		setContentPane(contentPane);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}

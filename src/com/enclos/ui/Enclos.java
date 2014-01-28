@@ -72,7 +72,7 @@ public class Enclos extends JFrame {
 				super.keyPressed(e);
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
 					if (!scoreFrame.isVisible()) {
-						//scoreFrame.setLocation(getLocation());
+						scoreFrame.setLocation(getLocation());
 						scoreFrame.setVisible(true);
 						requestFocus();
 					}
