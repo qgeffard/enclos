@@ -2,6 +2,7 @@ package com.enclos.ui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Box.Filler;
@@ -31,9 +33,12 @@ public class Board extends JPanel {
 	private List<Shape> cells = new ArrayList<Shape>();
 	private JFrame parent = null;
 
+	private Image background = null;
+
 	// on met le frame en constructeur juste pour l'exemple
 	public Board(JFrame parent) {
 		this.parent = parent;
+		this.background = new ImageIcon("resources/grass.jpg").getImage();
 
 		generateCells();
 
@@ -82,6 +87,8 @@ public class Board extends JPanel {
 	// on récupère toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
+		 g.drawImage(this.background, 0, 0, null);
+		 
 		for (Shape shape : cells) {
 			if (shape instanceof Hexagon) {
 				drawHexagon(g, shape);

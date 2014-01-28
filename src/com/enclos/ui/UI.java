@@ -15,5 +15,6 @@ public class UI {
 
 		//frame normale avec le resize non dynamique
 		Enclos enclos = new Enclos();
+
 	}
 }
