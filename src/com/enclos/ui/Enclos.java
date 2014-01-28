@@ -1,5 +1,6 @@
 package com.enclos.ui;
 
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -10,31 +11,41 @@ import com.enclos.controller.State;
 
 public class Enclos extends JFrame {
 
-	private State state= null;
-	
-	public Enclos(){
+	private State state = null;
+
+	public Enclos() {
 		this.state = new State(this);
 		
-		//TODO fullSize
 		
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
-		this.setSize(500, 500);
-		this.setLocationRelativeTo(null);
-		this.setContentPane(new Board(this));
-		this.setVisible(true);
+		setTitle("Jeu de l'enclos");
+		
+		//à revoir
+		setMaximumSize(getScreenMaximumSize());
+		setSize(500, 500);
+		setContentPane(new Board(this));
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.addResizeListener();
+		addResizeListener();
+	}
+
+	private Dimension getScreenMaximumSize() {
+		Dimension maxDimension = null;
+		Dimension screenDimension =Toolkit.getDefaultToolkit().getScreenSize();
+		if(screenDimension.getHeight() > screenDimension.getWidth())
+			return new Dimension(screenDimension.width,screenDimension.width);
+		else return new Dimension(screenDimension.height, screenDimension.height);
 	}
 
 	private void addResizeListener() {
-		this.addComponentListener(new ComponentAdapter() {
+		addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				super.componentResized(e);
 				state.setSize(getSize(), true);
 			}
 		});
-		
 	}
 }

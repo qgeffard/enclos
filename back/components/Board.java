@@ -1,4 +1,4 @@
-package components.back;
+package components;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import data.back.BridgeRotation;
+import data.BridgeRotation;
 
 public class Board extends JPanel {
 

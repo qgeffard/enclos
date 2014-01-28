@@ -1,11 +1,11 @@
-package ui.back;
+package ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.*;
 
-import components.back.Board;
+import components.Board;
 
 public class UI {
 

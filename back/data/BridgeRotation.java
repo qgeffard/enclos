@@ -1,4 +1,4 @@
-package data.back;
+package data;
 
 public enum BridgeRotation {
 	DOWNWARD(30),

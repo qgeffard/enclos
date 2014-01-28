@@ -1,4 +1,4 @@
-package components.back;
+package components;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import controller.back.HexagonListener;
+import controller.HexagonListener;
 
 public class HexagonPanel extends JPanel {
 
