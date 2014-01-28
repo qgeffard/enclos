@@ -2,27 +2,18 @@ package com.enclos.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.*;
 
-import com.enclos.component.Board;
+import com.enclos.controller.State;
+
 
 public class UI {
-
 	public static void main(String[] args) {
-		
-		JFrame frame = new JFrame();
-		//TODO square frame to keep hexagone shape
-		frame.setSize(900,900);
-		
-		//TODO dynamic ?
-		frame.setMinimumSize(new Dimension(500,500));
-		frame.setLocationRelativeTo(null);
-		frame.getContentPane().add(new Board(2));
-		//avoid bad dynamic resizing
-		Toolkit.getDefaultToolkit().setDynamicLayout(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		
+
+		//frame normale avec le resize non dynamique
+		Enclos enclos = new Enclos();
 	}
 }
