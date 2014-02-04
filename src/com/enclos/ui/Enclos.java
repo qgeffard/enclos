@@ -50,7 +50,7 @@ public class Enclos extends JFrame {
 		//enabled tab listener	
 		setFocusTraversalKeysEnabled(false);
 		setSize(500, 500);
-		setContentPane(new Board(this));
+		setContentPane(new Board(this,3));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generateMenu();
