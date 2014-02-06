@@ -29,9 +29,6 @@ public class Hexagon extends Shape {
 		System.out.println(" Hexagon");
 	}
 
-	// public void setVirtualPosition(int virtualX, int virtualY){
-	// this.virtualIndex.setLocation(virtualX, virtualY);
-	// }
 
 	public Point getVirtualIndex() {
 		return this.virtualIndex;
@@ -42,7 +39,7 @@ public class Hexagon extends Shape {
 		Polygon polygon = hexagon.getPolygon();
 
 		List<Point> pointList = hexagon.getPointList();
-		for (int i = 0; i <= 5; i++) {
+		for (int i = 0; i < 5; i++) {
 			if (i == 5) {
 				totalLength += Math.sqrt(Math.pow((pointList.get(i).x)
 						- (pointList.get(0).x), 2)
@@ -59,5 +56,9 @@ public class Hexagon extends Shape {
 				- (pointList.get(2).x), 2)
 				+ Math.pow((pointList.get(0).y) - (pointList.get(2).y), 2)));
 
+	}
+	
+	public static int getDistanceBetweenHexagons(){
+		return Math.round(Hexagon.distanceBetweenHexagons);
 	}
 }

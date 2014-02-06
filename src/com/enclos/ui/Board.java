@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -39,7 +40,9 @@ public class Board extends JPanel {
 	private JFrame parent = null;
 	private int size = 3;
 	private Image background = null;
-	private static boolean firstHexagon = true;
+
+	// TODO changer cette merde
+	private Shape lastCell = null;
 
 	// on met le frame en constructeur juste pour l'exemple
 	public Board(JFrame parent, int size) {
@@ -54,9 +57,9 @@ public class Board extends JPanel {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				super.componentResized(e);
-				Board.firstHexagon = true;
+
 				for (Shape shape : cells) {
-					shape.setSize(getWidth() / 20);
+					shape.setSize(getWidth() / 30);
 				}
 			}
 		});
@@ -85,13 +88,9 @@ public class Board extends JPanel {
 		for (int k = 0; k <= this.size; k++)
 			for (int l = 0; l < k * 6; l++) {
 				cells.add(new Hexagon(k, l));
-				System.out.println("Niveau : " + k + " rang : " + l);
+				// System.out.println("Niveau : " + k + " rang : " + l);
 			}
 
-		// for (int i = 0; i < calculateNumberOfHexagons(); i++) {
-		// // cells.add(new Hexagon(i, i, parent.getWidth() / 20));
-		// cells.add(new Hexagon(i, i % 6));
-		// }
 		// for (int i = 0; i < calculateNumberOfBridges(); i++) {
 		// cells.add(new Bridge(i, i, parent.getWidth() / 20, 48));
 		// }
@@ -108,29 +107,10 @@ public class Board extends JPanel {
 		return nbBridges;
 	}
 
-	private int calculateNumberOfHexagons() {
-
-		int nbHexagones = 0;
-		for (int i = 1; i <= this.size; i++) {
-			nbHexagones += 6 * i;
-		}
-		return nbHexagones;
-	}
-
 	// on récupère toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(this.background, 0, 0, null);
-		//
-		// for (Shape shape : cells) {
-		// shape.clearPointList();
-		// if (shape instanceof Hexagon) {
-		// drawHexagon(g, shape);
-		// } else {
-		// drawBridge((Graphics2D) g, shape);
-		//
-		// }
-		// }
 
 		drawHexagons(g);
 	}
@@ -141,14 +121,20 @@ public class Board extends JPanel {
 		Direction currentDirection = null;
 
 		// drawing center
-		drawCell(g, cells.get(0), null);
+		drawCenterCell(g);
 
-		for (int i = 1; i < this.size; i++) {
-			currentDirection = Direction.NORTH;
-			counter = 0;
+		for (int i = 1; i <= this.size; i++) {
+			if (lastCell != null) {
+				lastCell = getCorrespondingCell(i - 1, 0);
+			} else {
+				lastCell = cells.get(0);
+			}
 
 			currentCell = getCorrespondingCell(i, 0);
-			drawCell(g, currentCell, currentDirection);
+			drawCell(g, currentCell, lastCell, Direction.NORTH);
+
+			currentDirection = Direction.SOUTH_EAST;
+			counter = 0;
 
 			for (int j = 1; j < i * 6; j++) {
 				currentCell = getCorrespondingCell(i, j);
@@ -156,7 +142,8 @@ public class Board extends JPanel {
 					currentDirection = currentDirection.getNext();
 					counter = 0;
 				}
-				drawCell(g, currentCell, currentDirection);
+
+				drawCell(g, currentCell, lastCell, currentDirection);
 				counter++;
 			}
 		}
@@ -165,61 +152,60 @@ public class Board extends JPanel {
 
 	private Shape getCorrespondingCell(int i, int j) {
 		for (Shape shape : cells) {
-			if (((Hexagon)shape).getVirtualIndex().getX() == i && ((Hexagon)shape).getVirtualIndex().getY() == j)
+			if (((Hexagon) shape).getVirtualIndex().getX() == i
+					&& ((Hexagon) shape).getVirtualIndex().getY() == j)
 				return shape;
 		}
 		return null;
 	}
 
-	private void drawCell(Graphics g, Shape shape, Direction direction) {
+	private void drawCenterCell(Graphics g) {
 		Polygon polygon = new Polygon();
-		int ratio = ((Hexagon) shape).getVirtualIndex().y;
-
-		Direction currentDirection = direction;
-		
-		if (currentDirection == null) {
-			for (int i = 0; i < 6; i++) {
-				Point point = new Point(
-						(int) (this.getWidth() / 2 + shape.getSize()
-								* Math.cos(i * 2 * Math.PI / 6)),
-						(int) (this.getHeight() / 2 + shape.getSize()
-								* Math.sin(i * 2 * Math.PI / 6)));
-				polygon.addPoint(point.x, point.y);
-			}
-
-			g.fillPolygon(polygon);
-		}else{
-			AffineTransform currentTransform = currentDirection.getDirection();
-			//currentTransform.setToTranslation(20, 20); ????
-			
-			//MAGIE
-
-			//g.fillPolygon(polygon);
-			
-		}
-
-	}
-
-	private void drawHexagon(Graphics g, Shape shape) {
-		Polygon polygon = new Polygon();
-
-		int ratio = ((Hexagon) shape).getVirtualIndex().y;
-
+		cells.get(0).clearPointList();
 		for (int i = 0; i < 6; i++) {
-			Point point = new Point(
-					(int) (this.getWidth() / 2 + shape.getSize()
-							* Math.cos(i * 2 * Math.PI / 6)),
-					(int) (this.getHeight() / 2 + shape.getSize()
+			Point point = new Point((int) (this.getWidth() / 2 + cells.get(0)
+					.getSize() * Math.cos(i * 2 * Math.PI / 6)),
+					(int) (this.getHeight() / 2 + cells.get(0).getSize()
 							* Math.sin(i * 2 * Math.PI / 6)));
 			polygon.addPoint(point.x, point.y);
-			shape.addPointToList(point);
-		}
-		shape.setPolygon(polygon);
-		if (Board.firstHexagon) {
-			Hexagon.setDistanceBetweenHexagons(shape);
-			Board.firstHexagon = false;
+			cells.get(0).addPointToList(point);
+
 		}
 		g.fillPolygon(polygon);
+		cells.get(0).setPolygon(polygon);
+
+		Hexagon.setDistanceBetweenHexagons(cells.get(0));
+		System.out.println(Hexagon.getDistanceBetweenHexagons());
+	}
+
+	private void drawCell(Graphics g, Shape shapeToDraw, Shape lastDrawnShape,
+			Direction direction) {
+		Polygon polygon = new Polygon();
+		int ratio = ((Hexagon) shapeToDraw).getVirtualIndex().y;
+		Direction currentDirection = direction;
+
+		// TODO AVERAGE LENGTH
+		System.out.println(Hexagon.getDistanceBetweenHexagons());
+		AffineTransform currentTransform = currentDirection
+				.getDirection(Hexagon.getDistanceBetweenHexagons());
+
+		PathIterator pointsIterator = lastDrawnShape.getPolygon()
+				.getPathIterator(currentTransform);
+
+		while (!pointsIterator.isDone()) {
+			double[] xy = new double[2];
+			pointsIterator.currentSegment(xy);
+			if (xy[0] == 0 && xy[1] == 0)
+				break;
+			polygon.addPoint((int) xy[0], (int) xy[1]);
+			pointsIterator.next();
+		}
+		g.fillPolygon(polygon);
+		shapeToDraw.setPolygon(polygon);
+
+		// TODO changer cette merde
+		this.lastCell = shapeToDraw;
+
 	}
 
 	private void drawBridge(Graphics2D g, Shape shape) {

@@ -25,24 +25,28 @@ public class Content extends JPanel {
 	public void paintComponent(Graphics g) {
 		center = generateCenter(g);
 
-		generateAnotherCell(g);
+		int dx = (int)(Math.cos(5.7595865315813) * 100);
+		int dy = (int)(Math.sin(5.7595865315813) * 100);
+		int x = 0;
+		
+		generateAnotherCell(g, dx, dy);
 	}
 
-	private void generateAnotherCell(Graphics g) {
+	private void generateAnotherCell(Graphics g, int dx, int dy) {
 		Polygon polygon = new Polygon();
-		AffineTransform at = AffineTransform.getTranslateInstance(75,50);
+		AffineTransform at = AffineTransform.getTranslateInstance(dx, dy);
 		PathIterator pointsIterator = center.getPathIterator(at);
 		while (!pointsIterator.isDone()) {
 			double[] xy = new double[2];
 			pointsIterator.currentSegment(xy);
-			if(xy[0] == 0 && xy[1] == 0){
+			if (xy[0] == 0 && xy[1] == 0) {
 				break;
 			}
 			polygon.addPoint((int) xy[0], (int) xy[1]);
 			pointsIterator.next();
 		}
 		g.fillPolygon(polygon);
-		
+
 	}
 
 	private Polygon generateCenter(Graphics g) {
