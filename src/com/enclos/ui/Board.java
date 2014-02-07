@@ -59,7 +59,7 @@ public class Board extends JPanel {
 				super.componentResized(e);
 
 				for (Shape shape : cells) {
-					shape.setSize(getWidth() / 20);
+					shape.setSize(getWidth() / 30);
 				}
 			}
 		});
@@ -90,13 +90,14 @@ public class Board extends JPanel {
 				cells.add(new Hexagon(k, l));
 				// System.out.println("Niveau : " + k + " rang : " + l);
 			}
-		
+
 		//TODO LISTE DES VOISINS
 		/*
 		 * 
 		 * 
 		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3 + shape width/2) et avec ce point tu applique chaque direction pour décaler le point jusqu'a la forme du voisin
 		 */
+
 	}
 
 	private int calculateNumberOfBridges() {
@@ -148,7 +149,9 @@ public class Board extends JPanel {
 				}
 
 				drawCell(g, currentCell, lastCell, currentDirection);
+
 				drawBridge(g,lastCell, currentCell);
+
 				counter++;
 			}
 		}

@@ -61,9 +61,10 @@ public class Hexagon extends Shape {
 	public static int getDistanceBetweenHexagons(){
 		return Math.round(Hexagon.distanceBetweenHexagons);
 	}
-	
+
 	public List<Point> getPoints(){
 		return pointList;
 		
 	}
+
 }
