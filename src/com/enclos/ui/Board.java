@@ -101,7 +101,7 @@ public class Board extends JPanel {
 
 	private int calculateNumberOfBridges() {
 
-		int nbBridges = 0;
+		int nbBridges = 0; //nothing to 
 		for (int i = 1; i < 3 * this.size; i += 3) {
 			nbBridges += 6 * i;
 		}
