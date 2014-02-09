@@ -1,5 +1,6 @@
 package com.enclos.ui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -12,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,16 +66,16 @@ public class Board extends JPanel {
 			}
 		});
 
-		// le clicklistener (contains non implementé)
+		// le clicklistener (contains non implementï¿½)
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
+			public void mouseClicked(MouseEvent event) {
+				super.mouseClicked(event);
 
 				Shape clickedShape = null;
 
 				for (Shape shape : cells) {
-					if (shape.contains(e.getX(), e.getY()))
+					if (shape.contains(event.getX(), event.getY()))
 						clickedShape = shape;
 				}
 				if (clickedShape != null)
@@ -90,14 +92,6 @@ public class Board extends JPanel {
 				cells.add(new Hexagon(k, l));
 				// System.out.println("Niveau : " + k + " rang : " + l);
 			}
-
-		//TODO LISTE DES VOISINS
-		/*
-		 * 
-		 * 
-		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3 + shape width/2) et avec ce point tu applique chaque direction pour décaler le point jusqu'a la forme du voisin
-		 */
-
 	}
 
 	private int calculateNumberOfBridges() {
@@ -111,7 +105,7 @@ public class Board extends JPanel {
 		return nbBridges;
 	}
 
-	// on récupère toutes les shapes et on les dessine en fonction de la shape
+	// on rï¿½cupï¿½re toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(this.background, 0, 0, null);
@@ -150,16 +144,63 @@ public class Board extends JPanel {
 
 				drawCell(g, currentCell, lastCell, currentDirection);
 
-				drawBridge(g,lastCell, currentCell);
+				//drawBridge(g,lastCell, currentCell);
 
 				counter++;
 			}
 		}
+		
+		drawBridges(g);
 
 	}
 
-	private void drawBridge(Graphics g, Shape lastCell, Shape currentCell) {
-		
+	private void drawBridges(Graphics g) {
+		g.setColor(Color.YELLOW);
+		//TODO LISTE DES VOISINS
+		/*
+		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3 + shape width/2) et avec ce point tu applique chaque direction pour dï¿½caler le point jusqu'a la forme du voisin
+		 */		
+		for(Shape shape : cells){
+			
+			Point2D centerOfShape = new Point((int)shape.getPointList().get(3).getX()+Math.round(shape.getSize()/2), (int)shape.getPointList().get(3).getY());
+
+			for (Direction direction : Direction.values()) {
+				Polygon polygon = new Polygon();
+				AffineTransform currentTransform = direction.getDirection(Hexagon.getDistanceBetweenHexagons());
+				//System.out.println(direction);
+				Point2D targetPoint = new Point();
+				targetPoint = currentTransform.transform(centerOfShape, targetPoint);
+				
+				for (Shape targetShape : cells) {
+					if (targetShape.contains((int)targetPoint.getX(), (int) targetPoint.getY())){
+						
+						switch (direction.name()) {
+							case "SOUTH_EAST":
+								polygon.addPoint(targetShape.getPointList().get(3).x,targetShape.getPointList().get(3).y);
+								polygon.addPoint(targetShape.getPointList().get(4).x,targetShape.getPointList().get(4).y);
+								polygon.addPoint(shape.getPointList().get(0).x, shape.getPointList().get(0).y);
+								polygon.addPoint(shape.getPointList().get(1).x, shape.getPointList().get(1).y);
+								break;
+							case "SOUTH":
+								polygon.addPoint(targetShape.getPointList().get(4).x,targetShape.getPointList().get(4).y);
+								polygon.addPoint(targetShape.getPointList().get(5).x,targetShape.getPointList().get(5).y);
+								polygon.addPoint(shape.getPointList().get(1).x, shape.getPointList().get(1).y);
+								polygon.addPoint(shape.getPointList().get(2).x, shape.getPointList().get(2).y);
+								break;
+							case "SOUTH_WEST":
+								polygon.addPoint(targetShape.getPointList().get(5).x,targetShape.getPointList().get(5).y);
+								polygon.addPoint(targetShape.getPointList().get(0).x,targetShape.getPointList().get(0).y);
+								polygon.addPoint(shape.getPointList().get(2).x, shape.getPointList().get(2).y);
+								polygon.addPoint(shape.getPointList().get(3).x, shape.getPointList().get(3).y);
+								break;
+							default:
+								break;
+						}
+						g.fillPolygon(polygon);
+					}
+				}
+			}
+		}
 		
 	}
 
@@ -188,7 +229,7 @@ public class Board extends JPanel {
 		cells.get(0).setPolygon(polygon);
 
 		Hexagon.setDistanceBetweenHexagons(cells.get(0));
-		System.out.println(Hexagon.getDistanceBetweenHexagons());
+		//System.out.println(Hexagon.getDistanceBetweenHexagons());
 	}
 
 	private void drawCell(Graphics g, Shape shapeToDraw, Shape lastDrawnShape,
@@ -198,19 +239,20 @@ public class Board extends JPanel {
 		Direction currentDirection = direction;
 
 		// TODO AVERAGE LENGTH
-		System.out.println(Hexagon.getDistanceBetweenHexagons());
+		//System.out.println(Hexagon.getDistanceBetweenHexagons());
 		AffineTransform currentTransform = currentDirection
 				.getDirection(Hexagon.getDistanceBetweenHexagons());
 
 		PathIterator pointsIterator = lastDrawnShape.getPolygon()
 				.getPathIterator(currentTransform);
-
+		shapeToDraw.clearPointList();
 		while (!pointsIterator.isDone()) {
 			double[] xy = new double[2];
 			pointsIterator.currentSegment(xy);
 			if (xy[0] == 0 && xy[1] == 0)
 				break;
 			polygon.addPoint((int) xy[0], (int) xy[1]);
+			shapeToDraw.addPointToList(new Point((int) xy[0], (int) xy[1]));
 			pointsIterator.next();
 		}
 		g.fillPolygon(polygon);

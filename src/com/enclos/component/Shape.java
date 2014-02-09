@@ -5,7 +5,7 @@ import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
-//classe mère des cellules
+//classe mï¿½re des cellules
 public abstract class Shape {
 	
 	protected int x;
@@ -52,7 +52,7 @@ public abstract class Shape {
 	}
 	
 	public void warn(){
-		System.out.println("Shape clicked : ");
+		System.out.print("Shape clicked : ");
 	}
 	
 	public void setPolygon(Polygon polygon){

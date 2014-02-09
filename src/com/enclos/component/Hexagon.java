@@ -26,7 +26,7 @@ public class Hexagon extends Shape {
 	@Override
 	public void warn() {
 		super.warn();
-		System.out.println(" Hexagon");
+		System.out.println(" Hexagon  - "+getVirtualIndex().toString());
 	}
 
 

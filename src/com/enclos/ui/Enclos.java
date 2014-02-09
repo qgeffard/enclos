@@ -45,7 +45,7 @@ public class Enclos extends JFrame {
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		setTitle("Jeu de l'enclos");
 
-		// à revoir
+		// ï¿½ revoir
 		setMaximumSize(getScreenMaximumSize());
 		//enabled tab listener	
 		setFocusTraversalKeysEnabled(false);
