@@ -13,11 +13,6 @@ public abstract class Shape {
 	protected int size;
 	protected Polygon polygon = null;
 	protected List<Point> pointList = new ArrayList<>();
-	protected Point virtualIndex = new Point();
-	
-	public Point getVirtualIndex() {
-		return this.virtualIndex;
-	}
 	
 	public List<Point> getPointList() {
 		return pointList;

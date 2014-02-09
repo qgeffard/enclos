@@ -11,7 +11,11 @@ public class Hexagon extends Shape {
 
 	private Polygon polygon = null;
 	private static long distanceBetweenHexagons = 0;
-
+	private Point virtualIndex = new Point();
+	
+	public Point getVirtualIndex() {
+		return this.virtualIndex;
+	}
 	public Hexagon(int virtualX, int virtualY) {
 		this.virtualIndex.setLocation(virtualX, virtualY);
 	}

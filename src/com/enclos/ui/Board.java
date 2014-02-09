@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.enclos.component.Bridge;
 import com.enclos.component.Hexagon;
 import com.enclos.component.Shape;
 import com.enclos.data.Direction;
@@ -27,7 +28,8 @@ import com.enclos.data.Direction;
 //board de test
 public class Board extends JPanel {
 
-	private List<Shape> cells = new LinkedList<Shape>();
+	private List<Hexagon> cells = new LinkedList<Hexagon>();
+	private List<Bridge> bridges = new LinkedList<Bridge>();
 	private int size = 3;
 	private Image background = null;
 	
@@ -74,21 +76,23 @@ public class Board extends JPanel {
 
 	private void generateCells() {
 		cells.add(new Hexagon(0, 0));
-		for (int k = 1; k <= this.size; k++)
+		for (int k = 1; k <= this.size; k++){
 			for (int l = 0; l < k * 6; l++) {
 				cells.add(new Hexagon(k, l));
 			}
+		}
 	}
 
-	// on r�cup�re toutes les shapes et on les dessine en fonction de la shape
+
+	// on récupère toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(this.background, 0, 0, null);
-		drawHexagons(g);
+		drawShapes(g);
 			
 	}
 
-	private void drawHexagons(Graphics g) {
+	private void drawShapes(Graphics g) {
 		int counter;
 		Shape currentCell = null;
 		Direction currentDirection = null;
@@ -134,42 +138,59 @@ public class Board extends JPanel {
 		/*
 		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3 + shape width/2) et avec ce point tu applique chaque direction pour d�caler le point jusqu'a la forme du voisin
 		 */		
-		for(Shape shape : cells){
+		for(Hexagon hexa : cells){
 			
-			Point2D centerOfShape = new Point((int)shape.getPointList().get(3).getX()+Math.round(shape.getSize()/2), (int)shape.getPointList().get(3).getY());
+			Point2D centerOfShape = new Point((int)hexa.getPointList().get(3).getX()+Math.round(hexa.getSize()/2), (int)hexa.getPointList().get(3).getY());
 			
 			for (Direction direction : Direction.values()) {
 				Polygon polygon = new Polygon();
 				AffineTransform currentTransform = direction.getDirection(Hexagon.getDistanceBetweenHexagons());
-				//System.out.println(direction);
+
 				Point2D targetPoint = new Point();
 				targetPoint = currentTransform.transform(centerOfShape, targetPoint);
 				
-				for (Shape targetShape : cells) {
-					if (targetShape.contains((int)targetPoint.getX(), (int) targetPoint.getY())){
+				for (Hexagon targetHexa : cells) {
+					if (targetHexa.contains((int)targetPoint.getX(), (int) targetPoint.getY())){
 						switch (direction.name()) {
 							case "SOUTH_EAST":
-								polygon.addPoint(targetShape.getPointList().get(3).x,targetShape.getPointList().get(3).y);
-								polygon.addPoint(targetShape.getPointList().get(4).x,targetShape.getPointList().get(4).y);
-								polygon.addPoint(shape.getPointList().get(0).x, shape.getPointList().get(0).y);
-								polygon.addPoint(shape.getPointList().get(1).x, shape.getPointList().get(1).y);
+								polygon.addPoint(targetHexa.getPointList().get(3).x,targetHexa.getPointList().get(3).y);
+								polygon.addPoint(targetHexa.getPointList().get(4).x,targetHexa.getPointList().get(4).y);
+								polygon.addPoint(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
+								polygon.addPoint(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
 								break;
 							case "SOUTH":
-								polygon.addPoint(targetShape.getPointList().get(4).x,targetShape.getPointList().get(4).y);
-								polygon.addPoint(targetShape.getPointList().get(5).x,targetShape.getPointList().get(5).y);
-								polygon.addPoint(shape.getPointList().get(1).x, shape.getPointList().get(1).y);
-								polygon.addPoint(shape.getPointList().get(2).x, shape.getPointList().get(2).y);
+								polygon.addPoint(targetHexa.getPointList().get(4).x,targetHexa.getPointList().get(4).y);
+								polygon.addPoint(targetHexa.getPointList().get(5).x,targetHexa.getPointList().get(5).y);
+								polygon.addPoint(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
+								polygon.addPoint(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
 								break;
 							case "SOUTH_WEST":
-								polygon.addPoint(targetShape.getPointList().get(5).x,targetShape.getPointList().get(5).y);
-								polygon.addPoint(targetShape.getPointList().get(0).x,targetShape.getPointList().get(0).y);
-								polygon.addPoint(shape.getPointList().get(2).x, shape.getPointList().get(2).y);
-								polygon.addPoint(shape.getPointList().get(3).x, shape.getPointList().get(3).y);
+								polygon.addPoint(targetHexa.getPointList().get(5).x,targetHexa.getPointList().get(5).y);
+								polygon.addPoint(targetHexa.getPointList().get(0).x,targetHexa.getPointList().get(0).y);
+								polygon.addPoint(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
+								polygon.addPoint(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
 								break;
 							default:
 								break;
 						}
+						// Creation du bridge
+						Bridge bridge = new Bridge(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
+						
+						//check if it already exist
+						boolean bridgeAlreadyExist = false;
+						for(Bridge bridgeloop : this.bridges){
+							bridgeAlreadyExist = bridge.equals(bridgeloop);
+							if(bridgeAlreadyExist)
+								break;
+						}
+						
+						//add to the bridge list if no
+						if(!bridgeAlreadyExist){
+							this.bridges.add(bridge);
+						}
+						
 						g.fillPolygon(polygon);
+						
 					}
 				}
 			}
