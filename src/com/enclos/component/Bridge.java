@@ -8,30 +8,10 @@ public class Bridge extends Shape{
 
 	private Polygon polygon = null;
 	
-	//attribut de rotation
-	private int rotation = 0;
-
-	public Bridge(int x, int y, int size){
-		this.x = x;
-		this.y = y;
-		this.size = size;
-		this.rotation = rotation;
-	}
-	
-	public Bridge(int x, int y, int size, int rotation){
-		this(x,y,size);
-		this.rotation = rotation;
-	}
-	
-
-	public int getRotation() {
-		return rotation;
+	public Bridge(int virtualX, int virtualY) {
+		this.virtualIndex.setLocation(virtualX, virtualY);
 	}
 
-	public void setRotation(int rotation) {
-		this.rotation = rotation;
-	}
-	
 	@Override
 	public void warn(){
 		super.warn();

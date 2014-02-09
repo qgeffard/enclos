@@ -2,11 +2,9 @@ package com.enclos.ui;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -14,41 +12,30 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.Box.Filler;
 
-import com.enclos.component.Bridge;
 import com.enclos.component.Hexagon;
 import com.enclos.component.Shape;
-import com.enclos.controller.State;
 import com.enclos.data.Direction;
 
-import components.BridgePanel;
-import components.HexagonPanel;
 
 //board de test
 public class Board extends JPanel {
 
 	private List<Shape> cells = new LinkedList<Shape>();
-	private JFrame parent = null;
 	private int size = 3;
 	private Image background = null;
-
+	
 	// TODO changer cette merde
 	private Shape lastCell = null;
 
 	// on met le frame en constructeur juste pour l'exemple
-	public Board(JFrame parent, int size) {
-		this.parent = parent;
+	public Board( int size) {
 		this.size = size;
 		this.background = new ImageIcon("resources/grass.jpg").getImage();
 
@@ -86,32 +73,19 @@ public class Board extends JPanel {
 	}
 
 	private void generateCells() {
-
-		for (int k = 0; k <= this.size; k++)
+		cells.add(new Hexagon(0, 0));
+		for (int k = 1; k <= this.size; k++)
 			for (int l = 0; l < k * 6; l++) {
 				cells.add(new Hexagon(k, l));
-				// System.out.println("Niveau : " + k + " rang : " + l);
 			}
-	}
-
-	private int calculateNumberOfBridges() {
-
-		int nbBridges = 0; //nothing to 
-		for (int i = 1; i < 3 * this.size; i += 3) {
-			nbBridges += 6 * i;
-		}
-		nbBridges += this.size * 6;
-
-		return nbBridges;
 	}
 
 	// on r�cup�re toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
 		g.drawImage(this.background, 0, 0, null);
-
 		drawHexagons(g);
-		
+			
 	}
 
 	private void drawHexagons(Graphics g) {
@@ -141,15 +115,15 @@ public class Board extends JPanel {
 					currentDirection = currentDirection.getNext();
 					counter = 0;
 				}
-
-				drawCell(g, currentCell, lastCell, currentDirection);
+				
+				if(currentCell != null && lastCell != null)
+					drawCell(g, currentCell, lastCell, currentDirection);
 
 				//drawBridge(g,lastCell, currentCell);
 
 				counter++;
 			}
 		}
-		
 		drawBridges(g);
 
 	}
@@ -163,7 +137,7 @@ public class Board extends JPanel {
 		for(Shape shape : cells){
 			
 			Point2D centerOfShape = new Point((int)shape.getPointList().get(3).getX()+Math.round(shape.getSize()/2), (int)shape.getPointList().get(3).getY());
-
+			
 			for (Direction direction : Direction.values()) {
 				Polygon polygon = new Polygon();
 				AffineTransform currentTransform = direction.getDirection(Hexagon.getDistanceBetweenHexagons());
@@ -173,7 +147,6 @@ public class Board extends JPanel {
 				
 				for (Shape targetShape : cells) {
 					if (targetShape.contains((int)targetPoint.getX(), (int) targetPoint.getY())){
-						
 						switch (direction.name()) {
 							case "SOUTH_EAST":
 								polygon.addPoint(targetShape.getPointList().get(3).x,targetShape.getPointList().get(3).y);
@@ -227,24 +200,19 @@ public class Board extends JPanel {
 		}
 		g.fillPolygon(polygon);
 		cells.get(0).setPolygon(polygon);
-
+		
 		Hexagon.setDistanceBetweenHexagons(cells.get(0));
 		//System.out.println(Hexagon.getDistanceBetweenHexagons());
 	}
 
-	private void drawCell(Graphics g, Shape shapeToDraw, Shape lastDrawnShape,
-			Direction direction) {
+	private void drawCell(Graphics g, Shape shapeToDraw, Shape lastDrawnShape, Direction direction) {
 		Polygon polygon = new Polygon();
-		int ratio = ((Hexagon) shapeToDraw).getVirtualIndex().y;
 		Direction currentDirection = direction;
-
-		// TODO AVERAGE LENGTH
-		//System.out.println(Hexagon.getDistanceBetweenHexagons());
+		
 		AffineTransform currentTransform = currentDirection
 				.getDirection(Hexagon.getDistanceBetweenHexagons());
 
-		PathIterator pointsIterator = lastDrawnShape.getPolygon()
-				.getPathIterator(currentTransform);
+		PathIterator pointsIterator = lastDrawnShape.getPolygon().getPathIterator(currentTransform);
 		shapeToDraw.clearPointList();
 		while (!pointsIterator.isDone()) {
 			double[] xy = new double[2];
@@ -262,39 +230,4 @@ public class Board extends JPanel {
 		this.lastCell = shapeToDraw;
 
 	}
-
-	private void drawBridge(Graphics2D g, Shape shape) {
-		// We create a rectangle from the bridge's attributes
-		Rectangle rectangle = new Rectangle(shape.getX(), shape.getY(),
-				shape.getSize(), shape.getSize());
-		// we create a polygon by rotating the rectangle
-		Polygon polygon = rotateRectangle(shape, rectangle);
-		shape.setPolygon(polygon);
-
-		// we draw the polygon
-		g.fillPolygon(polygon);
-
-	}
-
-	private Polygon rotateRectangle(Shape shape, Rectangle rectangle) {
-		// we create a rotation
-		AffineTransform at = AffineTransform.getRotateInstance(
-				((Bridge) shape).getRotation(), rectangle.getCenterX(),
-				rectangle.getCenterY());
-
-		Polygon polygon = new Polygon();
-
-		// for each point of the rectangle we create another point corresponding
-		// to the new rotated point
-		PathIterator pointsIterator = rectangle.getPathIterator(at);
-		while (!pointsIterator.isDone()) {
-			double[] xy = new double[2];
-			pointsIterator.currentSegment(xy);
-			polygon.addPoint((int) xy[0], (int) xy[1]);
-
-			pointsIterator.next();
-		}
-		return polygon;
-	}
-
 }

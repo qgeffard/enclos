@@ -59,10 +59,10 @@ public class Enclos extends JFrame {
 //		panel.add(new Board(this,3), BorderLayout.EAST);
 //		panel.add(new Board(this,3), BorderLayout.WEST);
 		
-		setContentPane(new Board(this,3));
+		setContentPane(new Board(3));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		generateMenu();
+		//generateMenu();
 
 		setVisible(true);
 

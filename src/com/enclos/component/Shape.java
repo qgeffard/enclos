@@ -13,11 +13,15 @@ public abstract class Shape {
 	protected int size;
 	protected Polygon polygon = null;
 	protected List<Point> pointList = new ArrayList<>();
+	protected Point virtualIndex = new Point();
+	
+	public Point getVirtualIndex() {
+		return this.virtualIndex;
+	}
 	
 	public List<Point> getPointList() {
 		return pointList;
 	}
-	
 
 	public void clearPointList(){
 		this.pointList.clear();
@@ -59,7 +63,7 @@ public abstract class Shape {
 		this.polygon = polygon;
 	}
 	
-	public Polygon getPolygon(){
+	public Polygon getPolygon() throws NullPointerException{
 		return this.polygon;
 	}
 

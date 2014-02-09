@@ -10,28 +10,16 @@ import components.HexagonPanel;
 public class Hexagon extends Shape {
 
 	private Polygon polygon = null;
-	private Point virtualIndex = new Point();
 	private static long distanceBetweenHexagons = 0;
 
 	public Hexagon(int virtualX, int virtualY) {
 		this.virtualIndex.setLocation(virtualX, virtualY);
 	}
 
-	public Hexagon(int x, int y, int size) {
-		this.x = x;
-		this.y = y;
-		this.size = size;
-	}
-
 	@Override
 	public void warn() {
 		super.warn();
 		System.out.println(" Hexagon  - "+getVirtualIndex().toString());
-	}
-
-
-	public Point getVirtualIndex() {
-		return this.virtualIndex;
 	}
 
 	public static void setDistanceBetweenHexagons(Shape hexagon) {
@@ -60,11 +48,6 @@ public class Hexagon extends Shape {
 	
 	public static int getDistanceBetweenHexagons(){
 		return Math.round(Hexagon.distanceBetweenHexagons);
-	}
-
-	public List<Point> getPoints(){
-		return pointList;
-		
 	}
 
 }
