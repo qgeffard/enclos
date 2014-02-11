@@ -58,7 +58,7 @@ public abstract class Shape {
 		this.polygon = polygon;
 	}
 	
-	public Polygon getPolygon() throws NullPointerException{
+	public Polygon getPolygon(){
 		return this.polygon;
 	}
 

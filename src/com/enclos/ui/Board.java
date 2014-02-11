@@ -28,8 +28,9 @@ import com.enclos.data.Direction;
 //board de test
 public class Board extends JPanel {
 
-	private List<Hexagon> cells = new LinkedList<Hexagon>();
+	private List<Hexagon> hexagons = new LinkedList<Hexagon>();
 	private List<Bridge> bridges = new LinkedList<Bridge>();
+	private List<Shape> shapes = new LinkedList<Shape>();
 	private int size = 3;
 	private Image background = null;
 	
@@ -49,7 +50,7 @@ public class Board extends JPanel {
 			public void componentResized(ComponentEvent e) {
 				super.componentResized(e);
 
-				for (Shape shape : cells) {
+				for (Shape shape : hexagons) {
 					shape.setSize(getWidth() / 30);
 				}
 			}
@@ -63,7 +64,7 @@ public class Board extends JPanel {
 
 				Shape clickedShape = null;
 
-				for (Shape shape : cells) {
+				for (Shape shape : shapes) {
 					if (shape.contains(event.getX(), event.getY()))
 						clickedShape = shape;
 				}
@@ -75,10 +76,10 @@ public class Board extends JPanel {
 	}
 
 	private void generateCells() {
-		cells.add(new Hexagon(0, 0));
+		hexagons.add(new Hexagon(0, 0));
 		for (int k = 1; k <= this.size; k++){
 			for (int l = 0; l < k * 6; l++) {
-				cells.add(new Hexagon(k, l));
+				hexagons.add(new Hexagon(k, l));
 			}
 		}
 	}
@@ -104,7 +105,7 @@ public class Board extends JPanel {
 			if (lastCell != null) {
 				lastCell = getCorrespondingCell(i - 1, 0);
 			} else {
-				lastCell = cells.get(0);
+				lastCell = hexagons.get(0);
 			}
 
 			currentCell = getCorrespondingCell(i, 0);
@@ -129,6 +130,9 @@ public class Board extends JPanel {
 			}
 		}
 		drawBridges(g);
+		
+		this.shapes.addAll(0, this.hexagons);
+		this.shapes.addAll(this.shapes.size(), this.bridges);
 
 	}
 
@@ -138,7 +142,7 @@ public class Board extends JPanel {
 		/*
 		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3 + shape width/2) et avec ce point tu applique chaque direction pour d�caler le point jusqu'a la forme du voisin
 		 */		
-		for(Hexagon hexa : cells){
+		for(Hexagon hexa : hexagons){
 			
 			Point2D centerOfShape = new Point((int)hexa.getPointList().get(3).getX()+Math.round(hexa.getSize()/2), (int)hexa.getPointList().get(3).getY());
 			
@@ -149,7 +153,7 @@ public class Board extends JPanel {
 				Point2D targetPoint = new Point();
 				targetPoint = currentTransform.transform(centerOfShape, targetPoint);
 				
-				for (Hexagon targetHexa : cells) {
+				for (Hexagon targetHexa : hexagons) {
 					if (targetHexa.contains((int)targetPoint.getX(), (int) targetPoint.getY())){
 						switch (direction.name()) {
 							case "SOUTH_EAST":
@@ -186,6 +190,7 @@ public class Board extends JPanel {
 						
 						//add to the bridge list if no
 						if(!bridgeAlreadyExist){
+							bridge.setPolygon(polygon);
 							this.bridges.add(bridge);
 						}
 						
@@ -199,7 +204,7 @@ public class Board extends JPanel {
 	}
 
 	private Shape getCorrespondingCell(int i, int j) {
-		for (Shape shape : cells) {
+		for (Shape shape : hexagons) {
 			if (((Hexagon) shape).getVirtualIndex().getX() == i
 					&& ((Hexagon) shape).getVirtualIndex().getY() == j)
 				return shape;
@@ -209,20 +214,20 @@ public class Board extends JPanel {
 
 	private void drawCenterCell(Graphics g) {
 		Polygon polygon = new Polygon();
-		cells.get(0).clearPointList();
+		hexagons.get(0).clearPointList();
 		for (int i = 0; i < 6; i++) {
-			Point point = new Point((int) (this.getWidth() / 2 + cells.get(0)
+			Point point = new Point((int) (this.getWidth() / 2 + hexagons.get(0)
 					.getSize() * Math.cos(i * 2 * Math.PI / 6)),
-					(int) (this.getHeight() / 2 + cells.get(0).getSize()
+					(int) (this.getHeight() / 2 + hexagons.get(0).getSize()
 							* Math.sin(i * 2 * Math.PI / 6)));
 			polygon.addPoint(point.x, point.y);
-			cells.get(0).addPointToList(point);
+			hexagons.get(0).addPointToList(point);
 
 		}
 		g.fillPolygon(polygon);
-		cells.get(0).setPolygon(polygon);
+		hexagons.get(0).setPolygon(polygon);
 		
-		Hexagon.setDistanceBetweenHexagons(cells.get(0));
+		Hexagon.setDistanceBetweenHexagons(hexagons.get(0));
 		//System.out.println(Hexagon.getDistanceBetweenHexagons());
 	}
 

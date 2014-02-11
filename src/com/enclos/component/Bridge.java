@@ -43,9 +43,25 @@ public class Bridge extends Shape{
 		return false;
 	}
 
+	public List<Point> getVirtualIndex() {
+		return virtualIndex;
+	}
+
+	public void setVirtualIndex(List<Point> virtualIndex) {
+		this.virtualIndex = virtualIndex;
+	}
+
+	public List<Point> getVirtualIndexReverse() {
+		return virtualIndexReverse;
+	}
+
+	public void setVirtualIndexReverse(List<Point> virtualIndexReverse) {
+		this.virtualIndexReverse = virtualIndexReverse;
+	}
+
 	@Override
 	public void warn(){
 		super.warn();
-		System.out.print(": Bridge");
+		System.out.println(" Bridge  - "+getVirtualIndex().toString());
 	}
 }
