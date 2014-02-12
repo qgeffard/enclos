@@ -1,6 +1,8 @@
 package com.enclos.ui;
 
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
@@ -32,7 +34,6 @@ public class Board extends JPanel {
 	private List<Bridge> bridges = new LinkedList<Bridge>();
 	private List<Shape> shapes = new LinkedList<Shape>();
 	private int size = 3;
-	private Image background = null;
 	
 	// TODO changer cette merde
 	private Shape lastCell = null;
@@ -40,8 +41,6 @@ public class Board extends JPanel {
 	// on met le frame en constructeur juste pour l'exemple
 	public Board( int size) {
 		this.size = size;
-		this.background = new ImageIcon("resources/grass.jpg").getImage();
-
 		generateCells();
 
 		// on resize les composants
@@ -70,9 +69,15 @@ public class Board extends JPanel {
 				}
 				if (clickedShape != null)
 					clickedShape.warn();
-
 			}
 		});
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		Container parent = getParent();
+		int numberOfGames = getParent().getComponentCount();
+	    return new Dimension(parent.getWidth()/numberOfGames, parent.getHeight()/numberOfGames);
 	}
 
 	private void generateCells() {
@@ -88,7 +93,6 @@ public class Board extends JPanel {
 	// on récupère toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(this.background, 0, 0, null);
 		drawShapes(g);
 			
 	}
