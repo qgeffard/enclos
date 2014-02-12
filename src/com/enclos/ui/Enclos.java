@@ -109,7 +109,7 @@ public class Enclos extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(Color.black);
 
-		JMenu menu = new JMenu("Jeu");
+		JMenu menu = new JMenu("Game");
 		menu.setForeground(Color.white);
 		JMenuItem newGameItem = new JMenuItem("New Game");
 		JMenuItem scoreItem = new JMenuItem("Scores");
@@ -146,6 +146,16 @@ public class Enclos extends JFrame {
 
 			}
 		});
+		
+		playerItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PlayersFrame playersFrame = new PlayersFrame();
+			}
+		});
+		
+		
 
 	}
 
