@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
@@ -34,12 +37,14 @@ public class Board extends JPanel {
 	private List<Bridge> bridges = new LinkedList<Bridge>();
 	private List<Shape> shapes = new LinkedList<Shape>();
 	private int size = 3;
+	private int nbSheep = 6;
 	
 	// TODO changer cette merde
 	private Shape lastCell = null;
 
 	// on met le frame en constructeur juste pour l'exemple
-	public Board( int size) {
+	public Board(int size, int nbSheep) {
+		this.nbSheep = nbSheep;
 		this.size = size;
 		generateCells();
 
@@ -61,14 +66,10 @@ public class Board extends JPanel {
 			public void mouseClicked(MouseEvent event) {
 				super.mouseClicked(event);
 
-				Shape clickedShape = null;
-
 				for (Shape shape : shapes) {
 					if (shape.contains(event.getX(), event.getY()))
-						clickedShape = shape;
+						shape.warn();
 				}
-				if (clickedShape != null)
-					clickedShape.warn();
 			}
 		});
 	}
@@ -89,15 +90,23 @@ public class Board extends JPanel {
 		}
 	}
 
-
-	// on récupère toutes les shapes et on les dessine en fonction de la shape
 	@Override
 	public void paintComponent(Graphics g) {
-		drawShapes(g);
+		//super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		drawHexas(g2);
+		drawBridges(g2);
+		drawSheep(g2);
+		
+		this.shapes.clear();
+		this.shapes.addAll(0, this.hexagons);
+		this.shapes.addAll(this.shapes.size(), this.bridges);
 			
 	}
 
-	private void drawShapes(Graphics g) {
+	private void drawHexas(Graphics2D g) {
+		g.setColor(Color.BLACK);
 		int counter;
 		Shape currentCell = null;
 		Direction currentDirection = null;
@@ -128,26 +137,19 @@ public class Board extends JPanel {
 				if(currentCell != null && lastCell != null)
 					drawCell(g, currentCell, lastCell, currentDirection);
 
-				//drawBridge(g,lastCell, currentCell);
-
 				counter++;
 			}
 		}
-		drawBridges(g);
-		
-		this.shapes.addAll(0, this.hexagons);
-		this.shapes.addAll(this.shapes.size(), this.bridges);
-
 	}
 
-	private void drawBridges(Graphics g) {
+	private void drawBridges(Graphics2D g) {
 		g.setColor(Color.YELLOW);
+		this.bridges.clear();
 		//TODO LISTE DES VOISINS
 		/*
 		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3 + shape width/2) et avec ce point tu applique chaque direction pour d�caler le point jusqu'a la forme du voisin
 		 */		
-		for(Hexagon hexa : hexagons){
-			
+		for(Hexagon hexa : hexagons){			
 			Point2D centerOfShape = new Point((int)hexa.getPointList().get(3).getX()+Math.round(hexa.getSize()/2), (int)hexa.getPointList().get(3).getY());
 			
 			for (Direction direction : Direction.values()) {
@@ -178,7 +180,23 @@ public class Board extends JPanel {
 								polygon.addPoint(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
 								polygon.addPoint(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
 								break;
-							default:
+							case "NORTH_WEST":
+								polygon.addPoint(targetHexa.getPointList().get(0).x,targetHexa.getPointList().get(0).y);
+								polygon.addPoint(targetHexa.getPointList().get(1).x,targetHexa.getPointList().get(1).y);
+								polygon.addPoint(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
+								polygon.addPoint(hexa.getPointList().get(4).x, hexa.getPointList().get(4).y);
+								break;
+							case "NORTH":
+								polygon.addPoint(targetHexa.getPointList().get(1).x,targetHexa.getPointList().get(1).y);
+								polygon.addPoint(targetHexa.getPointList().get(2).x,targetHexa.getPointList().get(2).y);
+								polygon.addPoint(hexa.getPointList().get(4).x, hexa.getPointList().get(4).y);
+								polygon.addPoint(hexa.getPointList().get(5).x, hexa.getPointList().get(5).y);
+								break;
+							case "NORTH_EAST":
+								polygon.addPoint(targetHexa.getPointList().get(2).x,targetHexa.getPointList().get(2).y);
+								polygon.addPoint(targetHexa.getPointList().get(3).x,targetHexa.getPointList().get(3).y);
+								polygon.addPoint(hexa.getPointList().get(5).x, hexa.getPointList().get(5).y);
+								polygon.addPoint(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
 								break;
 						}
 						// Creation du bridge
@@ -196,9 +214,10 @@ public class Board extends JPanel {
 						if(!bridgeAlreadyExist){
 							bridge.setPolygon(polygon);
 							this.bridges.add(bridge);
+							g.fillPolygon(polygon);
 						}
 						
-						g.fillPolygon(polygon);
+						
 						
 					}
 				}
@@ -206,17 +225,19 @@ public class Board extends JPanel {
 		}
 		
 	}
-
-	private Shape getCorrespondingCell(int i, int j) {
-		for (Shape shape : hexagons) {
-			if (((Hexagon) shape).getVirtualIndex().getX() == i
-					&& ((Hexagon) shape).getVirtualIndex().getY() == j)
-				return shape;
+	private void drawSheep(Graphics2D g) {
+		for (int i = 1; i < this.nbSheep+1; i++) {
+			Hexagon currentHexa  = this.hexagons.get(i);
+			Point2D centerOfHexa = new Point((int)currentHexa.getPointList().get(3).getX()+Math.round(currentHexa.getSize()/2), (int)currentHexa.getPointList().get(3).getY()-Math.round(currentHexa.getSize()/2));
+		    
+			// if players are two only
+			if(i%2 == 0) g.setColor(Color.WHITE); else  g.setColor(Color.GREEN) ;
+			
+			Ellipse2D.Double circle = new Ellipse2D.Double(centerOfHexa.getX(), centerOfHexa.getY(), currentHexa.getSize(), currentHexa.getSize());
+			g.fill(circle);
 		}
-		return null;
 	}
-
-	private void drawCenterCell(Graphics g) {
+	private void drawCenterCell(Graphics2D g) {
 		Polygon polygon = new Polygon();
 		hexagons.get(0).clearPointList();
 		for (int i = 0; i < 6; i++) {
@@ -235,7 +256,7 @@ public class Board extends JPanel {
 		//System.out.println(Hexagon.getDistanceBetweenHexagons());
 	}
 
-	private void drawCell(Graphics g, Shape shapeToDraw, Shape lastDrawnShape, Direction direction) {
+	private void drawCell(Graphics2D g, Shape shapeToDraw, Shape lastDrawnShape, Direction direction) {
 		Polygon polygon = new Polygon();
 		Direction currentDirection = direction;
 		
@@ -259,5 +280,14 @@ public class Board extends JPanel {
 		// TODO changer cette merde
 		this.lastCell = shapeToDraw;
 
+	}
+
+	private Shape getCorrespondingCell(int i, int j) {
+		for (Shape shape : hexagons) {
+			if (((Hexagon) shape).getVirtualIndex().getX() == i
+					&& ((Hexagon) shape).getVirtualIndex().getY() == j)
+				return shape;
+		}
+		return null;
 	}
 }

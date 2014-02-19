@@ -51,7 +51,7 @@ public class Enclos extends JFrame {
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		setTitle("Jeu de l'enclos");
 
-		// ï¿½ revoir
+		// à revoir
 		// setMaximumSize(getScreenMaximumSize());
 		// enabled tab listener
 		setFocusTraversalKeysEnabled(false);
@@ -61,7 +61,7 @@ public class Enclos extends JFrame {
 		this.contentPane.setLayout(new FlowLayout());
 		
 		setContentPane(this.contentPane);
-		Board board = new Board(3);
+		Board board = new Board(3, 6);
 		contentPane.add(board);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -130,7 +130,7 @@ public class Enclos extends JFrame {
 				if (settings != null) {
 					String boardSize = settings.get("boardSize");
 					//on crée le board qui va bien
-					Board newGame = new Board(Integer.valueOf(boardSize));
+					Board newGame = new Board(Integer.valueOf(boardSize),6);
 					boolean close = settings.get("close").equals("close") ? true
 							: false;
 					//si on a decidé de close les autre jeux
