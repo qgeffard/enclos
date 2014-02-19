@@ -13,6 +13,19 @@ public class Hexagon extends Shape {
 	private static long distanceBetweenHexagons = 0;
 	private Point virtualIndex = new Point();
 	
+	
+	public boolean contains(int x, int y) {
+		return polygon.contains(new Point(x, y)) ? true:false;
+	}
+	
+	public Polygon getPolygon() {
+		return polygon;
+	}
+
+	public void setPolygon(Polygon polygon) {
+		this.polygon = polygon;
+	}
+
 	public Point getVirtualIndex() {
 		return this.virtualIndex;
 	}
@@ -21,12 +34,11 @@ public class Hexagon extends Shape {
 	}
 
 	@Override
-	public void warn() {
-		super.warn();
-		System.out.println(" Hexagon  - "+getVirtualIndex().toString());
+	public String toString() {
+		return super.toString()+" Hexagon  - "+getVirtualIndex().toString();
 	}
 
-	public static void setDistanceBetweenHexagons(Shape hexagon) {
+	public static void setDistanceBetweenHexagons(Hexagon hexagon) {
 		double totalLength = 0;
 		Polygon polygon = hexagon.getPolygon();
 
