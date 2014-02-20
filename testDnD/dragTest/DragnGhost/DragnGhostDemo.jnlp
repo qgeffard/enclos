@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<jnlp spec="1.0+" codebase="http://www.progx.org/users/Gfx/apps" href="DragnGhostDemo.jnlp">
+  <information>
+    <title>DragnGhostDemo - Drag with style</title>
+
+    <vendor>Romain Guy</vendor>
+    <homepage href="http://www.jroller.com/page/gfx" />
+
+    <description>DragnGhostDemo - Drag with style.</description>
+
+    <offline-allowed />
+  </information>
+
+  <resources>
+    <j2se version="1.4+" />
+    <jar href="DragnGhostDemo.jar" />
+  </resources>
+
+  <application-desc main-class="DragnGhostDemo" />
+</jnlp>
+
