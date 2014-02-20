@@ -2,7 +2,6 @@ package com.enclos.component;
 
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +39,6 @@ public class Bridge extends Shape{
 	}
 	
 	public boolean equals(Bridge bridge){
-		
 		if(	((this.virtualIndex.get(0).x == bridge.virtualIndex.get(0).x && this.virtualIndex.get(0).y == bridge.virtualIndex.get(0).y)
 			&& 
 			(this.virtualIndex.get(1).x == bridge.virtualIndex.get(1).x && this.virtualIndex.get(1).y == bridge.virtualIndex.get(1).y))
@@ -50,6 +48,11 @@ public class Bridge extends Shape{
 			(this.virtualIndexReverse.get(1).x == bridge.virtualIndex.get(1).x && this.virtualIndexReverse.get(1).y == bridge.virtualIndex.get(1).y))
 		)
 		{
+			for (Point point : this.pointList) {
+				if(!bridge.pointList.contains(point))
+					return false;
+			}
+			
 			return true;
 			
 		}

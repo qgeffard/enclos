@@ -91,10 +91,10 @@ public class Board extends JPanel {
 
 		// BRIDGES
 		int nbBridges = calculateNumberOfBridges();
-		for(int i=0; i<nbBridges; i++){
+		for (int i = 0; i < nbBridges; i++) {
 			this.bridges.add(new Bridge());
 		}
-		
+
 		// SHEEPS
 		for (int i = 0; i < this.nbSheep; i++) {
 			this.sheeps.add(new Sheep());
@@ -169,13 +169,9 @@ public class Board extends JPanel {
 		g.setColor(Color.YELLOW);
 		int i = 0;
 		// TODO LISTE DES VOISINS
-		/*
-		 * Boucle sur la liste des cells, choper le milieu de la shape (point 3
-		 * + shape width/2) et avec ce point tu applique chaque direction pour
-		 * d�caler le point jusqu'a la forme du voisin
-		 */
+		
 		for (Hexagon hexa : hexagons) {
-			Point2D centerOfShape = new Point((int) hexa.getPointList().get(3).getX()+ Math.round(hexa.getSize() / 2), (int) hexa.getPointList().get(3).getY());
+			Point2D centerOfShape = new Point((int) hexa.getPointList().get(3).getX() + Math.round(hexa.getSize() / 2), (int) hexa.getPointList().get(3).getY());
 
 			for (Direction direction : Direction.values()) {
 				Polygon polygon = new Polygon();
@@ -188,78 +184,80 @@ public class Board extends JPanel {
 
 				for (Hexagon targetHexa : hexagons) {
 					if (targetHexa.contains((int) targetPoint.getX(), (int) targetPoint.getY())) {
+						Point point1, point2, point3, point4;
 						switch (direction.name()) {
-						case "SOUTH_EAST":
-							polygon.addPoint(targetHexa.getPointList().get(3).x,targetHexa.getPointList().get(3).y);
-							polygon.addPoint(targetHexa.getPointList().get(4).x,targetHexa.getPointList().get(4).y);
-							polygon.addPoint(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
-							polygon.addPoint(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
-							break;
-						case "SOUTH":
-							polygon.addPoint(
-									targetHexa.getPointList().get(4).x,
-									targetHexa.getPointList().get(4).y);
-							polygon.addPoint(
-									targetHexa.getPointList().get(5).x,
-									targetHexa.getPointList().get(5).y);
-							polygon.addPoint(hexa.getPointList().get(1).x, hexa
-									.getPointList().get(1).y);
-							polygon.addPoint(hexa.getPointList().get(2).x, hexa
-									.getPointList().get(2).y);
-							break;
-						case "SOUTH_WEST":
-							polygon.addPoint(
-									targetHexa.getPointList().get(5).x,
-									targetHexa.getPointList().get(5).y);
-							polygon.addPoint(
-									targetHexa.getPointList().get(0).x,
-									targetHexa.getPointList().get(0).y);
-							polygon.addPoint(hexa.getPointList().get(2).x, hexa
-									.getPointList().get(2).y);
-							polygon.addPoint(hexa.getPointList().get(3).x, hexa
-									.getPointList().get(3).y);
-							break;
-						case "NORTH_WEST":
-							polygon.addPoint(
-									targetHexa.getPointList().get(0).x,
-									targetHexa.getPointList().get(0).y);
-							polygon.addPoint(
-									targetHexa.getPointList().get(1).x,
-									targetHexa.getPointList().get(1).y);
-							polygon.addPoint(hexa.getPointList().get(3).x, hexa
-									.getPointList().get(3).y);
-							polygon.addPoint(hexa.getPointList().get(4).x, hexa
-									.getPointList().get(4).y);
-							break;
-						case "NORTH":
-							polygon.addPoint(
-									targetHexa.getPointList().get(1).x,
-									targetHexa.getPointList().get(1).y);
-							polygon.addPoint(
-									targetHexa.getPointList().get(2).x,
-									targetHexa.getPointList().get(2).y);
-							polygon.addPoint(hexa.getPointList().get(4).x, hexa
-									.getPointList().get(4).y);
-							polygon.addPoint(hexa.getPointList().get(5).x, hexa
-									.getPointList().get(5).y);
-							break;
-						case "NORTH_EAST":
-							polygon.addPoint(
-									targetHexa.getPointList().get(2).x,
-									targetHexa.getPointList().get(2).y);
-							polygon.addPoint(
-									targetHexa.getPointList().get(3).x,
-									targetHexa.getPointList().get(3).y);
-							polygon.addPoint(hexa.getPointList().get(5).x, hexa
-									.getPointList().get(5).y);
-							polygon.addPoint(hexa.getPointList().get(0).x, hexa
-									.getPointList().get(0).y);
-							break;
+							case "SOUTH_EAST":
+								point1 = new Point(targetHexa.getPointList().get(3).x, targetHexa.getPointList().get(3).y);
+								polygon.addPoint(point1.x, point1.y);
+								point2 = new Point(targetHexa.getPointList().get(4).x, targetHexa.getPointList().get(4).y);
+								polygon.addPoint(point2.x, point2.y);
+								point3 = new Point(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
+								polygon.addPoint(point3.x, point3.y);
+								point4 = new Point(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
+								polygon.addPoint(point4.x, point4.y);
+								break;
+							case "SOUTH":
+								point1 = new Point(targetHexa.getPointList().get(4).x, targetHexa.getPointList().get(4).y);
+								polygon.addPoint(point1.x, point1.y);
+								point2 = new Point(targetHexa.getPointList().get(5).x, targetHexa.getPointList().get(5).y);
+								polygon.addPoint(point2.x, point2.y);
+								point3 = new Point(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
+								polygon.addPoint(point3.x, point3.y);
+								point4 = new Point(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
+								polygon.addPoint(point4.x, point4.y);
+								break;
+							case "SOUTH_WEST":
+								point1 = new Point(targetHexa.getPointList().get(5).x, targetHexa.getPointList().get(5).y);
+								polygon.addPoint(point1.x, point1.y);
+								point2 = new Point(targetHexa.getPointList().get(0).x, targetHexa.getPointList().get(0).y);
+								polygon.addPoint(point2.x, point2.y);
+								point3 = new Point(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
+								polygon.addPoint(point3.x, point3.y);
+								point4 = new Point(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
+								polygon.addPoint(point4.x, point4.y);
+								break;
+							case "NORTH_WEST":
+								point1 = new Point(targetHexa.getPointList().get(0).x, targetHexa.getPointList().get(0).y);
+								polygon.addPoint(point1.x, point1.y);
+								point2 = new Point(targetHexa.getPointList().get(1).x, targetHexa.getPointList().get(1).y);
+								polygon.addPoint(point2.x, point2.y);
+								point3 = new Point(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
+								polygon.addPoint(point3.x, point3.y);
+								point4 = new Point(hexa.getPointList().get(4).x, hexa.getPointList().get(4).y);
+								polygon.addPoint(point4.x, point4.y);
+								break;
+							case "NORTH":
+								point1 = new Point(targetHexa.getPointList().get(1).x, targetHexa.getPointList().get(1).y);
+								polygon.addPoint(point1.x, point1.y);
+								point2 = new Point(targetHexa.getPointList().get(2).x, targetHexa.getPointList().get(2).y);
+								polygon.addPoint(point2.x, point2.y);
+								point3 = new Point(hexa.getPointList().get(4).x, hexa.getPointList().get(4).y);
+								polygon.addPoint(point3.x, point3.y);
+								point4 = new Point(hexa.getPointList().get(5).x, hexa.getPointList().get(5).y);
+								polygon.addPoint(point4.x, point4.y);
+								break;
+							case "NORTH_EAST":
+								point1 = new Point(targetHexa.getPointList().get(2).x, targetHexa.getPointList().get(2).y);
+								polygon.addPoint(point1.x, point1.y);
+								point2 = new Point(targetHexa.getPointList().get(3).x, targetHexa.getPointList().get(3).y);
+								polygon.addPoint(point2.x, point2.y);
+								point3 = new Point(hexa.getPointList().get(5).x, hexa.getPointList().get(5).y);
+								polygon.addPoint(point3.x, point3.y);
+								point4 = new Point(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
+								polygon.addPoint(point4.x, point4.y);
+								break;
+							default:
+								point1 = null; point2 = null; point3 = null; point4 = null;
+								break;
 						}
-						
-						Bridge bridge = new Bridge(); 				
-						bridge.setVirtualIndex(hexa.getVirtualIndex(),targetHexa.getVirtualIndex());
-						
+
+						Bridge bridge = new Bridge();
+						bridge.addPointToList(point1);
+						bridge.addPointToList(point2);
+						bridge.addPointToList(point3);
+						bridge.addPointToList(point4);
+						bridge.setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
+
 						// check if it already exist
 						boolean bridgeAlreadyExist = false;
 						for (Bridge bridgeloop : this.bridges) {
@@ -271,7 +269,12 @@ public class Board extends JPanel {
 						// add to the bridge list if no
 						if (!bridgeAlreadyExist) {
 							bridges.get(i).setPolygon(polygon);
-							bridges.get(i).setVirtualIndex(hexa.getVirtualIndex(),targetHexa.getVirtualIndex());
+							bridges.get(i).clearPointList();
+							bridges.get(i).addPointToList(point1);
+							bridges.get(i).addPointToList(point2);
+							bridges.get(i).addPointToList(point3);
+							bridges.get(i).addPointToList(point4);
+							bridges.get(i).setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
 							i++;
 							g.fillPolygon(polygon);
 						}
