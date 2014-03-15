@@ -1,5 +1,6 @@
 package com.enclos.component;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public class Bridge extends Shape{
 	private Polygon polygon = null;
 	private List<Point> virtualIndex = new ArrayList<Point>();
 	private List<Point> virtualIndexReverse = new ArrayList<Point>();
+	private Color color = Color.YELLOW;
 	
 	
 //	CONTRUCTS
@@ -67,6 +69,16 @@ public class Bridge extends Shape{
 		this.virtualIndex.add(virtualY);
 		this.virtualIndexReverse.add(virtualY);
 		this.virtualIndexReverse.add(virtualX);
+	}
+	
+	
+	public Color getColor(){
+		return this.color;
+	}
+	
+	
+	public void setColor(Color color){
+		this.color = color; 
 	}
 
 	@Override

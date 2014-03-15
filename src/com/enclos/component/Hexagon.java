@@ -96,6 +96,7 @@ public class Hexagon extends Shape {
 		return this.sheep;
 	}
 
+
 	@Override
 	public String toString() {
 		return super.toString() + " Hexagon  - " +this.sheep ;// == null ? "je n'ai pas de sheep" : "j'ai un sheep"

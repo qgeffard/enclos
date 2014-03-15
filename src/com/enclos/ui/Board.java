@@ -65,7 +65,7 @@ public class Board extends JPanel {
 			}
 		});
 
-		// le clicklistener (contains non implement�)
+		// chelou ca marche une fois sur 15
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent event) {
@@ -78,18 +78,25 @@ public class Board extends JPanel {
 							if (hex.getSheep() != null) {
 								Board.this.firstHexSelected = hex;
 							}
-						}else{
-							if(selectedHexagon.getNeighboors().contains(hex))
-							if (hex.getSheep() == null) {
-								hex.setSheep(selectedHexagon.getSheep());
-								selectedHexagon.setSheep(null);
-								Board.this.firstHexSelected = null;
-							}							
+						} else {
+							if (selectedHexagon.getNeighboors().contains(hex))
+								if (hex.getSheep() == null) {
+									hex.setSheep(selectedHexagon.getSheep());
+									selectedHexagon.setSheep(null);
+									Board.this.firstHexSelected = null;
+								}
 						}
 					}
 				}
 
-				Board.this.repaint();
+				if (Board.this.firstHexSelected == null) {
+					for (Bridge bridge : Board.this.bridges) {
+						if (bridge.contains(event.getX(), event.getY())) {
+							bridge.setColor(Color.RED);
+						}
+					}
+
+				}
 				// for (Shape shape : Board.this.shapes) {
 				// if (shape.contains(event.getX(), event.getY()))
 				// System.out.println(shape);
@@ -194,10 +201,8 @@ public class Board extends JPanel {
 	}
 
 	private void drawBridges(Graphics2D g) {
-		g.setColor(Color.YELLOW);
 		int i = 0;
 		// TODO LISTE DES VOISINS
-
 		for (Hexagon hexa : hexagons) {
 			Point2D centerOfShape = hexa.getCenterPoint();
 
@@ -347,6 +352,7 @@ public class Board extends JPanel {
 								break;
 						}
 
+						g.setColor(Color.YELLOW);
 						// add to the bridge list if no
 						if (!bridgeAlreadyExist) {
 							bridges.get(i).setPolygon(polygon);
@@ -358,9 +364,13 @@ public class Board extends JPanel {
 							bridges.get(i).setVirtualIndex(
 									hexa.getVirtualIndex(),
 									targetHexa.getVirtualIndex());
+							Color color = bridges.get(i).getColor();
+							g.setColor(color);
+
+							g.fillPolygon(polygon);
 							i++;
 						}
-						g.fillPolygon(polygon);
+
 
 					}
 				}
