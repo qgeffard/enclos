@@ -10,9 +10,6 @@ public class Bridge extends Shape{
 
 	private Polygon polygon = null;
 	private List<Point> virtualIndex = new ArrayList<Point>();
-	private List<Point> virtualIndexReverse = new ArrayList<Point>();
-	private Color color = Color.YELLOW;
-	
 	
 //	CONTRUCTS
 	public Bridge() {
@@ -33,56 +30,33 @@ public class Bridge extends Shape{
 		this.polygon = polygon;
 	}
 	
-	public List<Point> getVirtualIndex(boolean reverse) {
-		if(reverse)
-			return this.virtualIndexReverse;
-		else
+	public List<Point> getVirtualIndex() {
 			return this.virtualIndex;
 	}
 	
 	public boolean equals(Bridge bridge){
-		if(	((this.virtualIndex.get(0).x == bridge.virtualIndex.get(0).x && this.virtualIndex.get(0).y == bridge.virtualIndex.get(0).y)
-			&& 
-			(this.virtualIndex.get(1).x == bridge.virtualIndex.get(1).x && this.virtualIndex.get(1).y == bridge.virtualIndex.get(1).y))
-		||
-			((this.virtualIndexReverse.get(0).x == bridge.virtualIndex.get(0).x && this.virtualIndexReverse.get(0).y == bridge.virtualIndex.get(0).y)
-			&&
-			(this.virtualIndexReverse.get(1).x == bridge.virtualIndex.get(1).x && this.virtualIndexReverse.get(1).y == bridge.virtualIndex.get(1).y))
-		)
-		{
+		
+		Point p1 = this.getVirtualIndex().get(0);
+		Point p2 = this.getVirtualIndex().get(1);
+		
+		if(bridge.getVirtualIndex().contains(p1) && bridge.getVirtualIndex().contains(p2) ){
 			for (Point point : this.pointList) {
 				if(!bridge.pointList.contains(point))
 					return false;
 			}
-			
 			return true;
-			
 		}
-		
 		return false;
 	}
 
 	public void setVirtualIndex(Point virtualX, Point virtualY) {
 		this.virtualIndex.clear();
-		this.virtualIndexReverse.clear();
 		this.virtualIndex.add(virtualX);
 		this.virtualIndex.add(virtualY);
-		this.virtualIndexReverse.add(virtualY);
-		this.virtualIndexReverse.add(virtualX);
-	}
-	
-	
-	public Color getColor(){
-		return this.color;
-	}
-	
-	
-	public void setColor(Color color){
-		this.color = color; 
 	}
 
 	@Override
 	public String toString(){
-		return super.toString()+" Bridge  - "+getVirtualIndex(false).toString();
+		return super.toString()+" Bridge  - "+getVirtualIndex().toString();
 	}
 }

@@ -14,7 +14,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -40,9 +39,11 @@ public class Board extends JPanel {
 	private List<Bridge> bridges = new LinkedList<Bridge>();
 	private List<Sheep> sheeps = new LinkedList<Sheep>();
 	private List<Shape> shapes = new LinkedList<Shape>();
+	private List<Bridge> barriers = new LinkedList<Bridge>();
 	private Hexagon firstHexSelected = null;
 	private int size = 3;
 	private int nbSheep = 6;
+	Image background = new ImageIcon("resources/grass.jpg").getImage();
 
 	// TODO changer cette merde
 	private Hexagon lastCell = null;
@@ -92,7 +93,7 @@ public class Board extends JPanel {
 				if (Board.this.firstHexSelected == null) {
 					for (Bridge bridge : Board.this.bridges) {
 						if (bridge.contains(event.getX(), event.getY())) {
-							bridge.setColor(Color.RED);
+							Board.this.barriers.add(bridge);
 						}
 					}
 
@@ -101,6 +102,7 @@ public class Board extends JPanel {
 				// if (shape.contains(event.getX(), event.getY()))
 				// System.out.println(shape);
 				// }
+				Board.this.repaint();
 			}
 		});
 	}
@@ -148,12 +150,14 @@ public class Board extends JPanel {
 
 	@Override
 	public void paintComponent(Graphics g) {
-		// super.paintComponent(g);
+		super.paintComponent(g);
+		g.drawImage(this.background, 0, 0, null);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		drawHexas(g2);
 		drawBridges(g2);
+		drawBarriers(g2);
 		drawSheep(g2);
 		generateNeighboors();
 
@@ -202,6 +206,8 @@ public class Board extends JPanel {
 
 	private void drawBridges(Graphics2D g) {
 		int i = 0;
+
+		g.setColor(Color.YELLOW);
 		// TODO LISTE DES VOISINS
 		for (Hexagon hexa : hexagons) {
 			Point2D centerOfShape = hexa.getCenterPoint();
@@ -341,8 +347,7 @@ public class Board extends JPanel {
 						bridge.addPointToList(point2);
 						bridge.addPointToList(point3);
 						bridge.addPointToList(point4);
-						bridge.setVirtualIndex(hexa.getVirtualIndex(),
-								targetHexa.getVirtualIndex());
+						bridge.setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
 
 						// check if it already exist
 						boolean bridgeAlreadyExist = false;
@@ -352,7 +357,6 @@ public class Board extends JPanel {
 								break;
 						}
 
-						g.setColor(Color.YELLOW);
 						// add to the bridge list if no
 						if (!bridgeAlreadyExist) {
 							bridges.get(i).setPolygon(polygon);
@@ -361,22 +365,22 @@ public class Board extends JPanel {
 							bridges.get(i).addPointToList(point2);
 							bridges.get(i).addPointToList(point3);
 							bridges.get(i).addPointToList(point4);
-							bridges.get(i).setVirtualIndex(
-									hexa.getVirtualIndex(),
-									targetHexa.getVirtualIndex());
-							Color color = bridges.get(i).getColor();
-							g.setColor(color);
-
-							g.fillPolygon(polygon);
+							bridges.get(i).setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
 							i++;
 						}
-
-
+						g.fillPolygon(polygon);
 					}
 				}
 			}
 		}
 
+	}
+
+	private void drawBarriers(Graphics2D g2) {
+		g2.setColor(Color.RED);
+		for (Bridge currentBarrier : this.barriers) {
+			g2.fillPolygon(currentBarrier.getPolygon());
+		}
 	}
 
 	private void drawSheep(Graphics2D g) {
@@ -514,7 +518,10 @@ public class Board extends JPanel {
 
 				for (Hexagon hexa : hexagons) {
 					if (hexa.getPolygon().contains(targetPoint)) {
-						hex.addNeighboor(hexa);
+						Bridge correspondingBridge = this.getBrigeFromIndex(hex,hexa);
+						if (!this.barriers.contains(correspondingBridge)) {
+							hex.addNeighboor(hexa);
+						}
 					}
 				}
 			}
@@ -561,5 +568,17 @@ public class Board extends JPanel {
 		g.dispose();
 
 		return resizedImage;
+	}
+
+	private Bridge getBrigeFromIndex(Hexagon from, Hexagon to) {
+		Bridge bridge = null;
+
+		for (Bridge currentBridge : this.bridges) {
+			if (currentBridge.getVirtualIndex().contains(from.getVirtualIndex()) && currentBridge.getVirtualIndex().contains(to.getVirtualIndex())) {
+				bridge = currentBridge;
+			}
+		}
+		return bridge;
+
 	}
 }

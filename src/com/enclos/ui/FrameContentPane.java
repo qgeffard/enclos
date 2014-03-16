@@ -17,6 +17,6 @@ public class FrameContentPane extends JPanel{
 	
 	@Override
 	public void paintComponent(Graphics g) {
-		g.drawImage(this.background, 0, 0, null);			
+		//g.drawImage(this.background, 0, 0, null);			
 	}
 }
