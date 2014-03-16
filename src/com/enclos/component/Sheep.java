@@ -7,8 +7,24 @@ import java.util.List;
 import com.enclos.data.Player;
 
 public class Sheep {
-	private List<Hexagon> movesAvailable;
+	private Point virtualIndexHexagon;
 	private Player owner;
+	
+	public Player getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Player owner) {
+		this.owner = owner;
+	}
+
+	public Point getVirtualIndexHexagon() {
+		return virtualIndexHexagon;
+	}
+
+	public void setVirtualIndexHexagon(Point virtualIndexHexagon) {
+		this.virtualIndexHexagon = virtualIndexHexagon;
+	}
 
 	
 	

@@ -1,5 +1,6 @@
 package com.enclos.component;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.geom.Point2D;
@@ -15,6 +16,7 @@ public class Hexagon extends Shape {
 	private Point2D center = null;
 	private static long averageLength = 0;
 	private Sheep sheep = null;
+	private Color color = Color.BLACK;
 
 	public static long getAverageLength() {
 		return averageLength;
@@ -90,12 +92,21 @@ public class Hexagon extends Shape {
 	
 	public void setSheep(Sheep sheep){
 		this.sheep = sheep;
+		if(sheep != null)
+			sheep.setVirtualIndexHexagon(this.virtualIndex);
 	}
 	
 	public Sheep getSheep(){
 		return this.sheep;
 	}
+	
+	public Color getColor(){
+		return this.color;
+	}
 
+	public void setColor(Color color){
+		this.color = color;
+	}
 
 	@Override
 	public String toString() {

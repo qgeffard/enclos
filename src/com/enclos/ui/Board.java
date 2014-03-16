@@ -35,6 +35,7 @@ import com.enclos.data.Direction;
 //board de test
 public class Board extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	private List<Hexagon> hexagons = new LinkedList<Hexagon>();
 	private List<Bridge> bridges = new LinkedList<Bridge>();
 	private List<Sheep> sheeps = new LinkedList<Sheep>();
@@ -43,6 +44,7 @@ public class Board extends JPanel {
 	private Hexagon firstHexSelected = null;
 	private int size = 3;
 	private int nbSheep = 6;
+	
 	Image background = new ImageIcon("resources/grass.jpg").getImage();
 
 	// TODO changer cette merde
@@ -69,23 +71,33 @@ public class Board extends JPanel {
 		// chelou ca marche une fois sur 15
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent event) {
-				super.mouseClicked(event);
-
+			public void mousePressed(MouseEvent event) {
+				super.mousePressed(event);
 				Hexagon selectedHexagon = Board.this.firstHexSelected;
 				for (Hexagon hex : Board.this.hexagons) {
 					if (hex.contains(event.getX(), event.getY())) {
 						if (Board.this.firstHexSelected == null) {
 							if (hex.getSheep() != null) {
 								Board.this.firstHexSelected = hex;
+								colorNeighboors(hex);
+
 							}
 						} else {
-							if (selectedHexagon.getNeighboors().contains(hex))
+							if (selectedHexagon.getNeighboors().contains(hex)) {
 								if (hex.getSheep() == null) {
 									hex.setSheep(selectedHexagon.getSheep());
 									selectedHexagon.setSheep(null);
 									Board.this.firstHexSelected = null;
+									resetHexagonsColor();
 								}
+							}else if(hex.getSheep() != null){
+								Board.this.firstHexSelected = hex;
+								resetHexagonsColor();
+								colorNeighboors(hex);
+							}else{
+								Board.this.firstHexSelected = null;
+								resetHexagonsColor();
+							}
 						}
 					}
 				}
@@ -103,6 +115,19 @@ public class Board extends JPanel {
 				// System.out.println(shape);
 				// }
 				Board.this.repaint();
+			}
+
+			private void resetHexagonsColor() {
+				for(Hexagon hexa : Board.this.hexagons){
+					hexa.setColor(Color.BLACK);
+				}
+				
+			}
+			
+			private void colorNeighboors(Hexagon hex){
+				for(Hexagon hexa : hex.getNeighboors()){
+					hexa.setColor(Color.CYAN);
+				}
 			}
 		});
 	}
@@ -168,7 +193,6 @@ public class Board extends JPanel {
 	}
 
 	private void drawHexas(Graphics2D g) {
-		g.setColor(Color.BLACK);
 		int counter;
 		Hexagon currentCell = null;
 		Direction currentDirection = null;
@@ -208,7 +232,7 @@ public class Board extends JPanel {
 		int i = 0;
 
 		g.setColor(Color.YELLOW);
-		// TODO LISTE DES VOISINS
+
 		for (Hexagon hexa : hexagons) {
 			Point2D centerOfShape = hexa.getCenterPoint();
 
@@ -347,7 +371,8 @@ public class Board extends JPanel {
 						bridge.addPointToList(point2);
 						bridge.addPointToList(point3);
 						bridge.addPointToList(point4);
-						bridge.setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
+						bridge.setVirtualIndex(hexa.getVirtualIndex(),
+								targetHexa.getVirtualIndex());
 
 						// check if it already exist
 						boolean bridgeAlreadyExist = false;
@@ -365,7 +390,9 @@ public class Board extends JPanel {
 							bridges.get(i).addPointToList(point2);
 							bridges.get(i).addPointToList(point3);
 							bridges.get(i).addPointToList(point4);
-							bridges.get(i).setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
+							bridges.get(i).setVirtualIndex(
+									hexa.getVirtualIndex(),
+									targetHexa.getVirtualIndex());
 							i++;
 						}
 						g.fillPolygon(polygon);
@@ -385,7 +412,6 @@ public class Board extends JPanel {
 
 	private void drawSheep(Graphics2D g) {
 		for (int i = 1; i < this.nbSheep + 1; i++) {
-			BufferedImage sheepImage = null;
 			Sheep sheep = this.sheeps.get(i - 1);
 			Hexagon currentHexa = findOwnerOfSheep(sheep);
 			Point2D centerOfHexa = new Point((int) currentHexa.getPointList()
@@ -395,7 +421,7 @@ public class Board extends JPanel {
 					- Math.round(currentHexa.getSize() / 2));
 
 			// TODO changer cette merde
-			int imageBounds = (int) currentHexa.getAverageLength();
+			int imageBounds = (int) Hexagon.getAverageLength();
 			if (imageBounds == 0)
 				break;
 			// if players are two only
@@ -412,7 +438,6 @@ public class Board extends JPanel {
 					g.drawImage(resizeImageJpg, (int) centerOfHexa.getX(),
 							(int) centerOfHexa.getY(), null);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -429,7 +454,7 @@ public class Board extends JPanel {
 					g.drawImage(resizeImageJpg, (int) centerOfHexa.getX(),
 							(int) centerOfHexa.getY(), null);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+
 					e.printStackTrace();
 				}
 
@@ -451,6 +476,7 @@ public class Board extends JPanel {
 	private void drawCenterCell(Graphics2D g) {
 		Polygon polygon = new Polygon();
 		hexagons.get(0).clearPointList();
+		g.setColor(hexagons.get(0).getColor());
 		for (int i = 0; i < 6; i++) {
 			Point point = new Point((int) (this.getWidth() / 2 + hexagons
 					.get(0).getSize() * Math.cos(i * 2 * Math.PI / 6)),
@@ -469,6 +495,7 @@ public class Board extends JPanel {
 
 	private void drawCell(Graphics2D g, Hexagon hexaToDraw,
 			Hexagon lastDrawnHexa, Direction direction) {
+		g.setColor(hexaToDraw.getColor());
 		Polygon polygon = new Polygon();
 		Direction currentDirection = direction;
 
@@ -517,10 +544,13 @@ public class Board extends JPanel {
 				targetPoint = currentTransform.transform(center, targetPoint);
 
 				for (Hexagon hexa : hexagons) {
-					if (hexa.getPolygon().contains(targetPoint)) {
-						Bridge correspondingBridge = this.getBrigeFromIndex(hex,hexa);
-						if (!this.barriers.contains(correspondingBridge)) {
-							hex.addNeighboor(hexa);
+					if (hexa.getSheep() == null) {
+						if (hexa.getPolygon().contains(targetPoint)) {
+							Bridge correspondingBridge = this
+									.getBrigeFromIndex(hex, hexa);
+							if (!this.barriers.contains(correspondingBridge)) {
+								hex.addNeighboor(hexa);
+							}
 						}
 					}
 				}
@@ -574,11 +604,33 @@ public class Board extends JPanel {
 		Bridge bridge = null;
 
 		for (Bridge currentBridge : this.bridges) {
-			if (currentBridge.getVirtualIndex().contains(from.getVirtualIndex()) && currentBridge.getVirtualIndex().contains(to.getVirtualIndex())) {
+			if (currentBridge.getVirtualIndex()
+					.contains(from.getVirtualIndex())
+					&& currentBridge.getVirtualIndex().contains(
+							to.getVirtualIndex())) {
 				bridge = currentBridge;
 			}
 		}
 		return bridge;
 
 	}
+
+	public int getNbSheep() {
+		return this.nbSheep;
+	}
+
+	public int getBoardSize() {
+		return this.size;
+	}
+	public List<Bridge> getBarriers(){
+		return this.barriers;
+	}
+	public List<Sheep> getSheeps() {
+		return sheeps;
+	}
+
+	public void setSheeps(List<Sheep> sheeps) {
+		this.sheeps = sheeps;
+	}
+
 }

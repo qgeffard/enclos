@@ -10,6 +10,12 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -19,12 +25,17 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import com.enclos.controller.State;
+import com.enclos.data.SimpleWriter;
 
 public class Enclos extends JFrame {
 
+	
 	private State state = null;
 	private ScoreFrame scoreFrame = null;
 	private JPanel contentPane = null;
+	private List<Board> boards= new LinkedList<Board>();
+	
+	
 	public Enclos() {
 		this.state = new State(this);
 		this.scoreFrame = new ScoreFrame(this);
@@ -41,8 +52,8 @@ public class Enclos extends JFrame {
 		this.contentPane.setLayout(new FlowLayout());
 		
 		setContentPane(this.contentPane);
-		Board board = new Board(3, 6);
-		contentPane.add(board);
+		this.boards.add(new Board(3, 6));
+		contentPane.add(boards.get(0));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generateMenu();
@@ -94,9 +105,11 @@ public class Enclos extends JFrame {
 		JMenuItem newGameItem = new JMenuItem("New Game");
 		JMenuItem scoreItem = new JMenuItem("Scores");
 		JMenuItem playerItem = new JMenuItem("Players");
+		JMenuItem saveItem = new JMenuItem("Save");
 		menu.add(newGameItem);
 		menu.add(scoreItem);
 		menu.add(playerItem);
+		menu.add(saveItem);
 		menuBar.add(menu);
 		setJMenuBar(menuBar);
 
@@ -135,7 +148,16 @@ public class Enclos extends JFrame {
 			}
 		});
 		
-		
+		saveItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+				Date date = new Date();
+				SimpleWriter writer = new SimpleWriter(boards.get(0), dateFormat.format(date));
+				System.out.println(dateFormat.format(date));
+			}
+		});
 
 	}
 
