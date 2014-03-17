@@ -44,8 +44,8 @@ public class Board extends JPanel {
 	private Hexagon firstHexSelected = null;
 	private int size = 3;
 	private int nbSheep = 6;
-	
-	Image background = new ImageIcon("resources/grass.jpg").getImage();
+
+	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
 
 	// TODO changer cette merde
 	private Hexagon lastCell = null;
@@ -63,7 +63,7 @@ public class Board extends JPanel {
 				super.componentResized(e);
 
 				for (Shape shape : hexagons) {
-					shape.setSize(getWidth() / 30);
+					shape.setSize(getWidth() / 19);
 				}
 			}
 		});
@@ -90,11 +90,11 @@ public class Board extends JPanel {
 									Board.this.firstHexSelected = null;
 									resetHexagonsColor();
 								}
-							}else if(hex.getSheep() != null){
+							} else if (hex.getSheep() != null && hex.getSheep() != Board.this.firstHexSelected.getSheep()) {
 								Board.this.firstHexSelected = hex;
 								resetHexagonsColor();
 								colorNeighboors(hex);
-							}else{
+							} else {
 								Board.this.firstHexSelected = null;
 								resetHexagonsColor();
 							}
@@ -118,14 +118,14 @@ public class Board extends JPanel {
 			}
 
 			private void resetHexagonsColor() {
-				for(Hexagon hexa : Board.this.hexagons){
+				for (Hexagon hexa : Board.this.hexagons) {
 					hexa.setColor(Color.BLACK);
 				}
-				
+
 			}
-			
-			private void colorNeighboors(Hexagon hex){
-				for(Hexagon hexa : hex.getNeighboors()){
+
+			private void colorNeighboors(Hexagon hex) {
+				for (Hexagon hexa : hex.getNeighboors()) {
 					hexa.setColor(Color.CYAN);
 				}
 			}
@@ -250,7 +250,7 @@ public class Board extends JPanel {
 							(int) targetPoint.getY())) {
 						Point point1, point2, point3, point4;
 						switch (direction.name()) {
-							case "SOUTH_EAST" :
+							case "SOUTH_EAST":
 								point1 = new Point(targetHexa.getPointList()
 										.get(3).x, targetHexa.getPointList()
 										.get(3).y);
@@ -268,7 +268,7 @@ public class Board extends JPanel {
 												.getPointList().get(1).y);
 								polygon.addPoint(point4.x, point4.y);
 								break;
-							case "SOUTH" :
+							case "SOUTH":
 								point1 = new Point(targetHexa.getPointList()
 										.get(4).x, targetHexa.getPointList()
 										.get(4).y);
@@ -286,7 +286,7 @@ public class Board extends JPanel {
 												.getPointList().get(2).y);
 								polygon.addPoint(point4.x, point4.y);
 								break;
-							case "SOUTH_WEST" :
+							case "SOUTH_WEST":
 								point1 = new Point(targetHexa.getPointList()
 										.get(5).x, targetHexa.getPointList()
 										.get(5).y);
@@ -304,7 +304,7 @@ public class Board extends JPanel {
 												.getPointList().get(3).y);
 								polygon.addPoint(point4.x, point4.y);
 								break;
-							case "NORTH_WEST" :
+							case "NORTH_WEST":
 								point1 = new Point(targetHexa.getPointList()
 										.get(0).x, targetHexa.getPointList()
 										.get(0).y);
@@ -322,7 +322,7 @@ public class Board extends JPanel {
 												.getPointList().get(4).y);
 								polygon.addPoint(point4.x, point4.y);
 								break;
-							case "NORTH" :
+							case "NORTH":
 								point1 = new Point(targetHexa.getPointList()
 										.get(1).x, targetHexa.getPointList()
 										.get(1).y);
@@ -340,7 +340,7 @@ public class Board extends JPanel {
 												.getPointList().get(5).y);
 								polygon.addPoint(point4.x, point4.y);
 								break;
-							case "NORTH_EAST" :
+							case "NORTH_EAST":
 								point1 = new Point(targetHexa.getPointList()
 										.get(2).x, targetHexa.getPointList()
 										.get(2).y);
@@ -358,7 +358,7 @@ public class Board extends JPanel {
 												.getPointList().get(0).y);
 								polygon.addPoint(point4.x, point4.y);
 								break;
-							default :
+							default:
 								point1 = null;
 								point2 = null;
 								point3 = null;
@@ -421,12 +421,12 @@ public class Board extends JPanel {
 					- Math.round(currentHexa.getSize() / 2));
 
 			// TODO changer cette merde
-			int imageBounds = (int) Hexagon.getAverageLength();
+			int imageBounds = (int) Hexagon.getAverageLength() + 5;
 			if (imageBounds == 0)
 				break;
 			// if players are two only
 			if (i % 2 == 0) {
-				File img = new File("resources/white_sheep.png");
+				File img = new File("resources/image/white_sheep.png");
 				try {
 					BufferedImage originalImage = ImageIO.read(img);
 					int type = originalImage.getType() == 0
@@ -442,7 +442,7 @@ public class Board extends JPanel {
 				}
 
 			} else {
-				File img = new File("resources/green_sheep.png");
+				File img = new File("resources/image/green_sheep.png");
 				try {
 					BufferedImage originalImage = ImageIO.read(img);
 					int type = originalImage.getType() == 0
@@ -622,9 +622,11 @@ public class Board extends JPanel {
 	public int getBoardSize() {
 		return this.size;
 	}
-	public List<Bridge> getBarriers(){
+
+	public List<Bridge> getBarriers() {
 		return this.barriers;
 	}
+
 	public List<Sheep> getSheeps() {
 		return sheeps;
 	}

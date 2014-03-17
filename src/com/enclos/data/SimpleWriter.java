@@ -14,7 +14,7 @@ import com.enclos.ui.Board;
 public class SimpleWriter {
 	private String jsonFilePath;
 	public SimpleWriter(Board board, String fileName) {
-		this.jsonFilePath = "resources/saves/"+fileName+".json";
+		this.jsonFilePath = "resources/save/"+fileName+".json";
 
 		JSONObject jsonObject = new JSONObject();
 
