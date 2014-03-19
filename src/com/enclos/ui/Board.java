@@ -21,16 +21,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import org.json.simple.JSONArray;
 
 import com.enclos.component.Bridge;
 import com.enclos.component.Hexagon;
 import com.enclos.component.Shape;
 import com.enclos.component.Sheep;
 import com.enclos.data.Direction;
+import com.enclos.data.SimpleReader;
 
 //board de test
 public class Board extends JPanel {
@@ -42,7 +46,7 @@ public class Board extends JPanel {
 	private List<Shape> shapes = new LinkedList<Shape>();
 	private List<Bridge> barriers = new LinkedList<Bridge>();
 	private Hexagon firstHexSelected = null;
-	private int size = 3;
+	private long size = 3;
 	private int nbSheep = 6;
 
 	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
@@ -51,7 +55,7 @@ public class Board extends JPanel {
 	private Hexagon lastCell = null;
 
 	// on met le frame en constructeur juste pour l'exemple
-	public Board(int size, int nbSheep) {
+	public Board(long size, int nbSheep) {
 		this.nbSheep = nbSheep;
 		this.size = size;
 		generateCells();
@@ -130,6 +134,37 @@ public class Board extends JPanel {
 				}
 			}
 		});
+	}
+	
+	public Board(long size, List<JSONArray> barriers, List<JSONArray> sheepPositions){
+		this(size,sheepPositions.size());
+		
+		//OLOL LEU BUG MET TA KOMPRI LEU PR1SSIPE
+		for(JSONArray array : barriers){
+			//LOOOOOL C TRO MAUCHE MET C LA VI
+			String[] firstHexaPosition = ((String)array.get(0)).split(",");
+			Hexagon firstHex = getCorrespondingCell(Integer.parseInt(firstHexaPosition[0]), Integer.parseInt(firstHexaPosition[1]));
+			String[] secondHexaPosition = ((String)array.get(1)).split(",");
+			Hexagon secondHex = getCorrespondingCell(Integer.parseInt(secondHexaPosition[0]), Integer.parseInt(secondHexaPosition[1]));
+
+			this.barriers.add(getBrigeFromIndex(firstHex,secondHex));
+		}
+		
+		//LOL RIZETTE MOTHAFUCKA
+		resetSheep();
+		
+		for(JSONArray array : sheepPositions){
+			//TODO LOL
+		}
+
+	}
+
+	private void resetSheep() {
+		for(Hexagon hexa : hexagons){
+			if(hexa.getSheep()!=null)
+				hexa.setSheep(null);
+		}
+		
 	}
 
 	@Override
@@ -619,7 +654,7 @@ public class Board extends JPanel {
 		return this.nbSheep;
 	}
 
-	public int getBoardSize() {
+	public long getBoardSize() {
 		return this.size;
 	}
 

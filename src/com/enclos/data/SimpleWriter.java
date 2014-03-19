@@ -18,15 +18,15 @@ public class SimpleWriter {
 
 		JSONObject jsonObject = new JSONObject();
 
-		jsonObject.put("SheepNumber", board.getNbSheep() );
+		jsonObject.put("Sheepnumber", board.getNbSheep() );
 
-		jsonObject.put("BoardSize", board.getBoardSize());
+		jsonObject.put("Boardsize", board.getBoardSize());
 		
 		JSONArray sheepsPos = new JSONArray();
 		for(Sheep currentSheep : board.getSheeps()){
 			sheepsPos.add(currentSheep.getOwner()+","+currentSheep.getVirtualIndexHexagon().x+","+currentSheep.getVirtualIndexHexagon().y);
 		}
-		jsonObject.put("SheepsPositions", sheepsPos);
+		jsonObject.put("Sheepspositions", sheepsPos);
 
 
 		JSONArray barriers = new JSONArray();

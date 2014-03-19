@@ -3,6 +3,7 @@ package com.enclos.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +25,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+import org.json.simple.JSONArray;
+
+import com.enclos.component.Bridge;
 import com.enclos.controller.State;
+import com.enclos.data.SimpleReader;
 import com.enclos.data.SimpleWriter;
 
 public class Enclos extends JFrame {
@@ -53,6 +58,7 @@ public class Enclos extends JFrame {
 		
 		setContentPane(this.contentPane);
 		this.boards.add(new Board(3, 6));
+		
 		contentPane.add(boards.get(0));
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,6 +100,17 @@ public class Enclos extends JFrame {
 			}
 		});
 
+		
+		//**************************** TEST LOAD (see console) *****************************************//
+		//LOL TOUSHE PA FISSE 2 PUTE LOL
+		SimpleReader reader = new SimpleReader("2014-03-19_17-54-13");
+		Map<String,Object> params = reader.read();
+
+		long loadBoardSize = (long)params.get("Boardsize");
+		List<JSONArray> barriers = (List<JSONArray>)params.get("Barriers");
+		List<JSONArray> sheepPositions = (List<JSONArray>)params.get("Sheepspositions");
+		new Board(loadBoardSize, barriers,sheepPositions);
+		//**************************** TEST LOAD *****************************************//
 	}
 
 	private void generateMenu() {
