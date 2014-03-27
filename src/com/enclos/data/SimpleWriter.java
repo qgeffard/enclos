@@ -24,7 +24,9 @@ public class SimpleWriter {
 		
 		JSONArray sheepsPos = new JSONArray();
 		for(Sheep currentSheep : board.getSheeps()){
-			sheepsPos.add(currentSheep.getOwner()+","+currentSheep.getVirtualIndexHexagon().x+","+currentSheep.getVirtualIndexHexagon().y);
+			JSONArray sheepPos = new JSONArray();
+			sheepPos.add(currentSheep.getVirtualIndexHexagon().x+","+currentSheep.getVirtualIndexHexagon().y);
+			sheepsPos.add(sheepPos);
 		}
 		jsonObject.put("Sheepspositions", sheepsPos);
 

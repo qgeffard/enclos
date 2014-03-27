@@ -34,13 +34,11 @@ import com.enclos.data.SimpleWriter;
 
 public class Enclos extends JFrame {
 
-	
 	private State state = null;
 	private ScoreFrame scoreFrame = null;
 	private JPanel contentPane = null;
-	private List<Board> boards= new LinkedList<Board>();
-	
-	
+	private List<Board> boards = new LinkedList<Board>();
+
 	public Enclos() {
 		this.state = new State(this);
 		this.scoreFrame = new ScoreFrame(this);
@@ -55,16 +53,29 @@ public class Enclos extends JFrame {
 
 		this.contentPane = new FrameContentPane();
 		this.contentPane.setLayout(new FlowLayout());
-		
+
 		setContentPane(this.contentPane);
-		this.boards.add(new Board(3, 6));
+		/*this.boards.add(new Board(3, 6));
+		contentPane.add(boards.get(0));*/
+
+		SimpleReader reader = new SimpleReader("2014-03-28_00-14-17");
+		Map<String, Object> params = reader.read();
+
+		// LOAD
+		long loadBoardSize = (long) params.get("Boardsize");
+		List<JSONArray> barriers = (List<JSONArray>) params.get("Barriers");
+		List<JSONArray> sheepPositions = (List<JSONArray>) params.get("Sheepspositions");
+		Board loadBoard = new Board(loadBoardSize, sheepPositions.size());
+		this.boards.add(loadBoard);
+		contentPane.add(loadBoard);
+		loadBoard.setData(barriers, sheepPositions);
+		// LOAD
 		
-		contentPane.add(boards.get(0));
+		contentPane.add(loadBoard);
+
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		generateMenu();
-
-		setVisible(true);
 
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -99,18 +110,8 @@ public class Enclos extends JFrame {
 				}
 			}
 		});
-
 		
-		//**************************** TEST LOAD (see console) *****************************************//
-		//LOL TOUSHE PA FISSE 2 PUTE LOL
-		SimpleReader reader = new SimpleReader("2014-03-19_17-54-13");
-		Map<String,Object> params = reader.read();
-
-		long loadBoardSize = (long)params.get("Boardsize");
-		List<JSONArray> barriers = (List<JSONArray>)params.get("Barriers");
-		List<JSONArray> sheepPositions = (List<JSONArray>)params.get("Sheepspositions");
-		new Board(loadBoardSize, barriers,sheepPositions);
-		//**************************** TEST LOAD *****************************************//
+		setVisible(true);
 	}
 
 	private void generateMenu() {
@@ -134,29 +135,30 @@ public class Enclos extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//on recup les paramètres du nouveau game
+				// on recup les paramètres du nouveau game
 				Map<String, String> settings = NewGameForm.display();
-				//si on a pas fait cancel
+				// si on a pas fait cancel
 				if (settings != null) {
 					String boardSize = settings.get("boardSize");
-					//on crée le board qui va bien
-					Board newGame = new Board(Integer.valueOf(boardSize),6);
-					boolean close = settings.get("close").equals("close") ? true
+					// on crée le board qui va bien
+					Board newGame = new Board(Integer.valueOf(boardSize), 6);
+					boolean close = settings.get("close").equals("close")
+							? true
 							: false;
-					//si on a decidé de close les autre jeux
+					// si on a decidé de close les autre jeux
 					if (close) {
-						//on jarte les autres jeux
+						// on jarte les autres jeux
 						Enclos.this.contentPane.removeAll();
 						Enclos.this.contentPane.add(newGame);
-					}else{
-						//sinon on ajoute le jeu après les autres
+					} else {
+						// sinon on ajoute le jeu après les autres
 						Enclos.this.contentPane.add(newGame);
 					}
 				}
 
 			}
 		});
-		
+
 		playerItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -164,14 +166,16 @@ public class Enclos extends JFrame {
 				PlayersFrame playersFrame = new PlayersFrame();
 			}
 		});
-		
+
 		saveItem.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd_HH-mm-ss");
 				Date date = new Date();
-				SimpleWriter writer = new SimpleWriter(boards.get(0), dateFormat.format(date));
+				SimpleWriter writer = new SimpleWriter(boards.get(0),
+						dateFormat.format(date));
 				System.out.println(dateFormat.format(date));
 			}
 		});
