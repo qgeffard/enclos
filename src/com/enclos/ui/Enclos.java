@@ -45,7 +45,7 @@ public class Enclos extends JFrame {
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		setTitle("Jeu de l'enclos");
 
-		// à revoir
+		// ï¿½ revoir
 		// setMaximumSize(getScreenMaximumSize());
 		// enabled tab listener
 		setFocusTraversalKeysEnabled(false);
@@ -55,23 +55,23 @@ public class Enclos extends JFrame {
 		this.contentPane.setLayout(new FlowLayout());
 
 		setContentPane(this.contentPane);
-		/*this.boards.add(new Board(3, 6));
-		contentPane.add(boards.get(0));*/
+		this.boards.add(new Board(3L, 3));
+		contentPane.add(boards.get(0));
 
-		SimpleReader reader = new SimpleReader("2014-03-28_00-14-17");
-		Map<String, Object> params = reader.read();
-
-		// LOAD
-		long loadBoardSize = (long) params.get("Boardsize");
-		List<JSONArray> barriers = (List<JSONArray>) params.get("Barriers");
-		List<JSONArray> sheepPositions = (List<JSONArray>) params.get("Sheepspositions");
-		Board loadBoard = new Board(loadBoardSize, sheepPositions.size());
-		this.boards.add(loadBoard);
-		contentPane.add(loadBoard);
-		loadBoard.setData(barriers, sheepPositions);
+//		SimpleReader reader = new SimpleReader("2014-03-28_00-14-17");
+//		Map<String, Object> params = reader.read();
+//
+//		// LOAD
+//		long loadBoardSize = (long) params.get("Boardsize");
+//		List<JSONArray> barriers = (List<JSONArray>) params.get("Barriers");
+//		List<JSONArray> sheepPositions = (List<JSONArray>) params.get("Sheepspositions");
+//		Board loadBoard = new Board(loadBoardSize, sheepPositions.size());
+//		this.boards.add(loadBoard);
+//		contentPane.add(loadBoard);
+//		loadBoard.setData(barriers, sheepPositions);
 		// LOAD
 		
-		contentPane.add(loadBoard);
+		//contentPane.add(loadBoard);
 
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -135,23 +135,23 @@ public class Enclos extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// on recup les paramètres du nouveau game
+				// on recup les paramï¿½tres du nouveau game
 				Map<String, String> settings = NewGameForm.display();
 				// si on a pas fait cancel
 				if (settings != null) {
 					String boardSize = settings.get("boardSize");
-					// on crée le board qui va bien
-					Board newGame = new Board(Integer.valueOf(boardSize), 6);
+					// on crï¿½e le board qui va bien
+					Board newGame = new Board(Integer.valueOf(boardSize), 3);
 					boolean close = settings.get("close").equals("close")
 							? true
 							: false;
-					// si on a decidé de close les autre jeux
+					// si on a decidï¿½ de close les autre jeux
 					if (close) {
 						// on jarte les autres jeux
 						Enclos.this.contentPane.removeAll();
 						Enclos.this.contentPane.add(newGame);
 					} else {
-						// sinon on ajoute le jeu après les autres
+						// sinon on ajoute le jeu aprï¿½s les autres
 						Enclos.this.contentPane.add(newGame);
 					}
 				}

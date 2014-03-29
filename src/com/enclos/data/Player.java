@@ -5,11 +5,16 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-public class Player {
-	
+public class Player implements PlayerAction{
+	public final static int BEGIN_TURN = 0;
+	public final static int MOVE_SHEEP = 2;
+	public final static int DROP_BARRIER = 1;
+	public final static int END_TURN = 3;
 	private String firstName;
 	private String lastName;
 	private int age;
+	private int turnStatus;
+	
 	
 	//path par defaut ?
 	private Image profilePicture = null;
@@ -29,7 +34,13 @@ public class Player {
 		this.profilePicture = new ImageIcon(picturePath).getImage();
 	}
 	
+	public void startTurn(){
+		this.turnStatus = BEGIN_TURN;
+	}
 	
+	public boolean isEndOfTurn(){
+		return (this.turnStatus >= END_TURN) ? true : false;
+	}
 	
 	public String getFirstName() {
 		return firstName;
@@ -45,6 +56,14 @@ public class Player {
 
 	public Image getProfilePicture() {
 		return profilePicture;
+	}
+
+	public int getTurnStatus() {
+		return turnStatus;
+	}
+
+	public void setTurnStatus(int turnStatus) {
+		this.turnStatus = turnStatus;
 	}
 
 	@Override
@@ -63,6 +82,18 @@ public class Player {
 		description.append(this.profilePicture);
 		description.append("\n");
 		return description.toString();
+	}
+
+	@Override
+	public void moveSheep() {
+		this.turnStatus += MOVE_SHEEP;
+		
+	}
+
+	@Override
+	public void dropBarrier() {
+		System.out.println(this.firstName+" "+this.lastName+" a posé une barriere");
+		this.turnStatus += DROP_BARRIER;
 	}
 	
 	
