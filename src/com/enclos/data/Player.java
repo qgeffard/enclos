@@ -25,6 +25,9 @@ public class Player implements PlayerAction{
 	private int turnStatus;
 	private List<Sheep> sheeps;
 	
+	//only used when saving player
+	private String profilePicturePath;
+	
 	private BufferedImage profilePicture = null;
 	// score correspondant au nom d'une partie
 	//private Map<String, Integer> score;
@@ -38,6 +41,7 @@ public class Player implements PlayerAction{
 	
 	public Player(String firstName, String lastName, int age, String picturePath){
 		this(firstName,lastName,age);
+		this.profilePicturePath = picturePath;
 		try {
 			this.profilePicture = ImageIO.read(new File(picturePath));
 		} catch (IOException e) {
@@ -112,5 +116,8 @@ public class Player implements PlayerAction{
 		return this.sheeps;
 	}
 	
+	public String getProfilePicturePath(){
+		return this.profilePicturePath;
+	}
 	
 }

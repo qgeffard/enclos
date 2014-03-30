@@ -39,8 +39,12 @@ public class FrameContentPane extends JPanel {
 		playersPanel = new JPanel();
 		playersPanel.setLayout(new FlowLayout());
 
-		JButton b1 = new JButton("Add player");
-		b1.addActionListener(new ActionListener() {
+		JButton addPlayerButton = new JButton("Add player");
+		
+		//only workaround I found to keep the 'P' shortcut after clicking the button
+		addPlayerButton.setFocusable(false);
+		
+		addPlayerButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -93,7 +97,7 @@ public class FrameContentPane extends JPanel {
 			}
 		});
 
-		playersPanel.add(b1);
+		playersPanel.add(addPlayerButton);
 		this.add(gamePanel);
 		this.add(playersPanel);
 	}
