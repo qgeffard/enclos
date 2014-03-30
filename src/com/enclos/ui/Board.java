@@ -1,5 +1,7 @@
 package com.enclos.ui;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -26,8 +28,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
-import org.json.simple.JSONArray;
-
 import com.enclos.component.Bridge;
 import com.enclos.component.Hexagon;
 import com.enclos.component.Shape;
@@ -51,11 +51,12 @@ public class Board extends JPanel {
 	private List<Player> playerList = new LinkedList<Player>();
 	private int nbTurn = 0;
 	private Player currentPlayer;
-
+	private List<AudioClip> soundList= new LinkedList<AudioClip>();
+	
 	private boolean guiIsBeingCreated = true;
 	private boolean dataToLoad = false;
-	private List<JSONArray> barriersToLoad;
-	private List<JSONArray> sheepsToLoad;
+//	private List<JSONArray> barriersToLoad;
+//	private List<JSONArray> sheepsToLoad;
 
 	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
 
@@ -83,6 +84,18 @@ public class Board extends JPanel {
 		this.playerList.add(new Player("Parker", "peter", 18));
 		this.playerList.add(new Player("Kent", "clark", 18));
 
+
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/say1.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/say2.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/say3.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/shear.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step1.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step2.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step3.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step4.wav")));
+		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step5.wav")));
+		
+		
 		this.nbSheepPerPlayer = nbSheepPerPlayer;
 		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
 		this.size = size;
@@ -102,8 +115,7 @@ public class Board extends JPanel {
 	public Dimension getPreferredSize() {
 		Container parent = getParent();
 		int numberOfGames = getParent().getComponentCount();
-		return new Dimension(parent.getWidth() / numberOfGames,
-				parent.getHeight() / numberOfGames);
+		return new Dimension(parent.getWidth() / numberOfGames, parent.getHeight() / numberOfGames);
 	}
 
 	private void generateCells() {
@@ -152,12 +164,11 @@ public class Board extends JPanel {
 			// System.out.println(getSize());
 			g.drawImage(this.background, 0, 0, null);
 			Graphics2D g2 = (Graphics2D) g;
-			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			drawHexas(g2);
 			drawBridges(g2);
 			if (dataToLoad) {
-				loadData();
+				//loadData();
 				dataToLoad = false;
 			}
 			drawBarriers(g2);
@@ -221,112 +232,73 @@ public class Board extends JPanel {
 
 			for (Direction direction : Direction.values()) {
 				Polygon polygon = new Polygon();
-				AffineTransform currentTransform = direction
-						.getDirection(Hexagon.getDistanceBetweenHexagons());
+				AffineTransform currentTransform = direction.getDirection(Hexagon.getDistanceBetweenHexagons());
 
 				Point2D targetPoint = new Point();
-				targetPoint = currentTransform.transform(centerOfShape,
-						targetPoint);
+				targetPoint = currentTransform.transform(centerOfShape, targetPoint);
 
 				for (Hexagon targetHexa : hexagons) {
-					if (targetHexa.contains((int) targetPoint.getX(),
-							(int) targetPoint.getY())) {
+					if (targetHexa.contains((int) targetPoint.getX(), (int) targetPoint.getY())) {
 						Point point1, point2, point3, point4;
 						switch (direction.name()) {
 						case "SOUTH_EAST":
-							point1 = new Point(
-									targetHexa.getPointList().get(3).x,
-									targetHexa.getPointList().get(3).y);
+							point1 = new Point(targetHexa.getPointList().get(3).x, targetHexa.getPointList().get(3).y);
 							polygon.addPoint(point1.x, point1.y);
-							point2 = new Point(
-									targetHexa.getPointList().get(4).x,
-									targetHexa.getPointList().get(4).y);
+							point2 = new Point(targetHexa.getPointList().get(4).x, targetHexa.getPointList().get(4).y);
 							polygon.addPoint(point2.x, point2.y);
-							point3 = new Point(hexa.getPointList().get(0).x,
-									hexa.getPointList().get(0).y);
+							point3 = new Point(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
 							polygon.addPoint(point3.x, point3.y);
-							point4 = new Point(hexa.getPointList().get(1).x,
-									hexa.getPointList().get(1).y);
+							point4 = new Point(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
 							polygon.addPoint(point4.x, point4.y);
 							break;
 						case "SOUTH":
-							point1 = new Point(
-									targetHexa.getPointList().get(4).x,
-									targetHexa.getPointList().get(4).y);
+							point1 = new Point(targetHexa.getPointList().get(4).x, targetHexa.getPointList().get(4).y);
 							polygon.addPoint(point1.x, point1.y);
-							point2 = new Point(
-									targetHexa.getPointList().get(5).x,
-									targetHexa.getPointList().get(5).y);
+							point2 = new Point(targetHexa.getPointList().get(5).x, targetHexa.getPointList().get(5).y);
 							polygon.addPoint(point2.x, point2.y);
-							point3 = new Point(hexa.getPointList().get(1).x,
-									hexa.getPointList().get(1).y);
+							point3 = new Point(hexa.getPointList().get(1).x, hexa.getPointList().get(1).y);
 							polygon.addPoint(point3.x, point3.y);
-							point4 = new Point(hexa.getPointList().get(2).x,
-									hexa.getPointList().get(2).y);
+							point4 = new Point(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
 							polygon.addPoint(point4.x, point4.y);
 							break;
 						case "SOUTH_WEST":
-							point1 = new Point(
-									targetHexa.getPointList().get(5).x,
-									targetHexa.getPointList().get(5).y);
+							point1 = new Point(targetHexa.getPointList().get(5).x, targetHexa.getPointList().get(5).y);
 							polygon.addPoint(point1.x, point1.y);
-							point2 = new Point(
-									targetHexa.getPointList().get(0).x,
-									targetHexa.getPointList().get(0).y);
+							point2 = new Point(targetHexa.getPointList().get(0).x, targetHexa.getPointList().get(0).y);
 							polygon.addPoint(point2.x, point2.y);
-							point3 = new Point(hexa.getPointList().get(2).x,
-									hexa.getPointList().get(2).y);
+							point3 = new Point(hexa.getPointList().get(2).x, hexa.getPointList().get(2).y);
 							polygon.addPoint(point3.x, point3.y);
-							point4 = new Point(hexa.getPointList().get(3).x,
-									hexa.getPointList().get(3).y);
+							point4 = new Point(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
 							polygon.addPoint(point4.x, point4.y);
 							break;
 						case "NORTH_WEST":
-							point1 = new Point(
-									targetHexa.getPointList().get(0).x,
-									targetHexa.getPointList().get(0).y);
+							point1 = new Point(targetHexa.getPointList().get(0).x, targetHexa.getPointList().get(0).y);
 							polygon.addPoint(point1.x, point1.y);
-							point2 = new Point(
-									targetHexa.getPointList().get(1).x,
-									targetHexa.getPointList().get(1).y);
+							point2 = new Point(targetHexa.getPointList().get(1).x, targetHexa.getPointList().get(1).y);
 							polygon.addPoint(point2.x, point2.y);
-							point3 = new Point(hexa.getPointList().get(3).x,
-									hexa.getPointList().get(3).y);
+							point3 = new Point(hexa.getPointList().get(3).x, hexa.getPointList().get(3).y);
 							polygon.addPoint(point3.x, point3.y);
-							point4 = new Point(hexa.getPointList().get(4).x,
-									hexa.getPointList().get(4).y);
+							point4 = new Point(hexa.getPointList().get(4).x, hexa.getPointList().get(4).y);
 							polygon.addPoint(point4.x, point4.y);
 							break;
 						case "NORTH":
-							point1 = new Point(
-									targetHexa.getPointList().get(1).x,
-									targetHexa.getPointList().get(1).y);
+							point1 = new Point(targetHexa.getPointList().get(1).x, targetHexa.getPointList().get(1).y);
 							polygon.addPoint(point1.x, point1.y);
-							point2 = new Point(
-									targetHexa.getPointList().get(2).x,
-									targetHexa.getPointList().get(2).y);
+							point2 = new Point(targetHexa.getPointList().get(2).x, targetHexa.getPointList().get(2).y);
 							polygon.addPoint(point2.x, point2.y);
-							point3 = new Point(hexa.getPointList().get(4).x,
-									hexa.getPointList().get(4).y);
+							point3 = new Point(hexa.getPointList().get(4).x, hexa.getPointList().get(4).y);
 							polygon.addPoint(point3.x, point3.y);
-							point4 = new Point(hexa.getPointList().get(5).x,
-									hexa.getPointList().get(5).y);
+							point4 = new Point(hexa.getPointList().get(5).x, hexa.getPointList().get(5).y);
 							polygon.addPoint(point4.x, point4.y);
 							break;
 						case "NORTH_EAST":
-							point1 = new Point(
-									targetHexa.getPointList().get(2).x,
-									targetHexa.getPointList().get(2).y);
+							point1 = new Point(targetHexa.getPointList().get(2).x, targetHexa.getPointList().get(2).y);
 							polygon.addPoint(point1.x, point1.y);
-							point2 = new Point(
-									targetHexa.getPointList().get(3).x,
-									targetHexa.getPointList().get(3).y);
+							point2 = new Point(targetHexa.getPointList().get(3).x, targetHexa.getPointList().get(3).y);
 							polygon.addPoint(point2.x, point2.y);
-							point3 = new Point(hexa.getPointList().get(5).x,
-									hexa.getPointList().get(5).y);
+							point3 = new Point(hexa.getPointList().get(5).x, hexa.getPointList().get(5).y);
 							polygon.addPoint(point3.x, point3.y);
-							point4 = new Point(hexa.getPointList().get(0).x,
-									hexa.getPointList().get(0).y);
+							point4 = new Point(hexa.getPointList().get(0).x, hexa.getPointList().get(0).y);
 							polygon.addPoint(point4.x, point4.y);
 							break;
 						default:
@@ -342,8 +314,7 @@ public class Board extends JPanel {
 						bridge.addPointToList(point2);
 						bridge.addPointToList(point3);
 						bridge.addPointToList(point4);
-						bridge.setVirtualIndex(hexa.getVirtualIndex(),
-								targetHexa.getVirtualIndex());
+						bridge.setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
 
 						// check if it already exist
 						boolean bridgeAlreadyExist = false;
@@ -361,9 +332,7 @@ public class Board extends JPanel {
 							bridges.get(i).addPointToList(point2);
 							bridges.get(i).addPointToList(point3);
 							bridges.get(i).addPointToList(point4);
-							bridges.get(i).setVirtualIndex(
-									hexa.getVirtualIndex(),
-									targetHexa.getVirtualIndex());
+							bridges.get(i).setVirtualIndex(hexa.getVirtualIndex(), targetHexa.getVirtualIndex());
 							i++;
 						}
 						g.fillPolygon(polygon);
@@ -386,11 +355,7 @@ public class Board extends JPanel {
 			Sheep sheep = this.sheeps.get(i - 1);
 			Hexagon currentHexa = findOwnerOfSheep(sheep);
 			if (currentHexa != null) {
-				Point2D centerOfHexa = new Point((int) currentHexa
-						.getPointList().get(3).getX()
-						+ Math.round(currentHexa.getSize() / 2),
-						(int) currentHexa.getPointList().get(3).getY()
-								- Math.round(currentHexa.getSize() / 2));
+				Point2D centerOfHexa = new Point((int) currentHexa.getPointList().get(3).getX() + Math.round(currentHexa.getSize() / 2), (int) currentHexa.getPointList().get(3).getY() - Math.round(currentHexa.getSize() / 2));
 
 				// TODO changer cette merde
 				int imageBounds = (int) Hexagon.getAverageLength() + 5;
@@ -401,13 +366,10 @@ public class Board extends JPanel {
 					File img = new File("resources/image/white_sheep.png");
 					try {
 						BufferedImage originalImage = ImageIO.read(img);
-						int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
-								: originalImage.getType();
+						int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 
-						BufferedImage resizeImageJpg = resizeImage(
-								originalImage, type, imageBounds, imageBounds);
-						g.drawImage(resizeImageJpg, (int) centerOfHexa.getX(),
-								(int) centerOfHexa.getY(), null);
+						BufferedImage resizeImageJpg = resizeImage(originalImage, type, imageBounds, imageBounds);
+						g.drawImage(resizeImageJpg, (int) centerOfHexa.getX(), (int) centerOfHexa.getY(), null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -416,13 +378,10 @@ public class Board extends JPanel {
 					File img = new File("resources/image/green_sheep.png");
 					try {
 						BufferedImage originalImage = ImageIO.read(img);
-						int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB
-								: originalImage.getType();
+						int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 
-						BufferedImage resizeImageJpg = resizeImage(
-								originalImage, type, imageBounds, imageBounds);
-						g.drawImage(resizeImageJpg, (int) centerOfHexa.getX(),
-								(int) centerOfHexa.getY(), null);
+						BufferedImage resizeImageJpg = resizeImage(originalImage, type, imageBounds, imageBounds);
+						g.drawImage(resizeImageJpg, (int) centerOfHexa.getX(), (int) centerOfHexa.getY(), null);
 					} catch (IOException e) {
 
 						e.printStackTrace();
@@ -448,10 +407,7 @@ public class Board extends JPanel {
 		hexagons.get(0).clearPointList();
 		g.setColor(hexagons.get(0).getColor());
 		for (int i = 0; i < 6; i++) {
-			Point point = new Point((int) (this.getWidth() / 2 + hexagons
-					.get(0).getSize() * Math.cos(i * 2 * Math.PI / 6)),
-					(int) (this.getHeight() / 2 + hexagons.get(0).getSize()
-							* Math.sin(i * 2 * Math.PI / 6)));
+			Point point = new Point((int) (this.getWidth() / 2 + hexagons.get(0).getSize() * Math.cos(i * 2 * Math.PI / 6)), (int) (this.getHeight() / 2 + hexagons.get(0).getSize() * Math.sin(i * 2 * Math.PI / 6)));
 			polygon.addPoint(point.x, point.y);
 			hexagons.get(0).addPointToList(point);
 
@@ -463,17 +419,14 @@ public class Board extends JPanel {
 		// System.out.println(Hexagon.getDistanceBetweenHexagons());
 	}
 
-	private void drawCell(Graphics2D g, Hexagon hexaToDraw,
-			Hexagon lastDrawnHexa, Direction direction) {
+	private void drawCell(Graphics2D g, Hexagon hexaToDraw, Hexagon lastDrawnHexa, Direction direction) {
 		g.setColor(hexaToDraw.getColor());
 		Polygon polygon = new Polygon();
 		Direction currentDirection = direction;
 
-		AffineTransform currentTransform = currentDirection
-				.getDirection(Hexagon.getDistanceBetweenHexagons());
+		AffineTransform currentTransform = currentDirection.getDirection(Hexagon.getDistanceBetweenHexagons());
 
-		PathIterator pointsIterator = lastDrawnHexa.getPolygon()
-				.getPathIterator(currentTransform);
+		PathIterator pointsIterator = lastDrawnHexa.getPolygon().getPathIterator(currentTransform);
 		hexaToDraw.clearPointList();
 		while (!pointsIterator.isDone()) {
 			double[] xy = new double[2];
@@ -495,8 +448,7 @@ public class Board extends JPanel {
 
 	private Hexagon getCorrespondingHexagon(int i, int j) {
 		for (Hexagon hexagon : hexagons) {
-			if (hexagon.getVirtualIndex().getX() == i
-					&& hexagon.getVirtualIndex().getY() == j)
+			if (hexagon.getVirtualIndex().getX() == i && hexagon.getVirtualIndex().getY() == j)
 				return hexagon;
 		}
 		return null;
@@ -508,16 +460,14 @@ public class Board extends JPanel {
 			Point2D center = hex.getCenterPoint();
 
 			for (Direction direction : Direction.values()) {
-				AffineTransform currentTransform = direction
-						.getDirection(Hexagon.getDistanceBetweenHexagons());
+				AffineTransform currentTransform = direction.getDirection(Hexagon.getDistanceBetweenHexagons());
 				Point2D targetPoint = new Point();
 				targetPoint = currentTransform.transform(center, targetPoint);
 
 				for (Hexagon hexa : hexagons) {
 					if (hexa.getSheep() == null) {
 						if (hexa.getPolygon().contains(targetPoint)) {
-							Bridge correspondingBridge = this
-									.getBrigeFromIndex(hex, hexa);
+							Bridge correspondingBridge = this.getBrigeFromIndex(hex, hexa);
 							if (!this.barriers.contains(correspondingBridge)) {
 								hex.addNeighboor(hexa);
 							}
@@ -530,8 +480,7 @@ public class Board extends JPanel {
 
 	}
 
-	public static Dimension getScaledDimension(Dimension imgSize,
-			Dimension boundary) {
+	public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
 
 		int original_width = imgSize.width;
 		int original_height = imgSize.height;
@@ -559,10 +508,8 @@ public class Board extends JPanel {
 		return new Dimension(new_width, new_height);
 	}
 
-	private static BufferedImage resizeImage(BufferedImage originalImage,
-			int type, Integer img_width, Integer img_height) {
-		BufferedImage resizedImage = new BufferedImage(img_width, img_height,
-				type);
+	private static BufferedImage resizeImage(BufferedImage originalImage, int type, Integer img_width, Integer img_height) {
+		BufferedImage resizedImage = new BufferedImage(img_width, img_height, type);
 		Graphics2D g = resizedImage.createGraphics();
 		g.drawImage(originalImage, 0, 0, img_width, img_height, null);
 		g.dispose();
@@ -574,10 +521,7 @@ public class Board extends JPanel {
 		Bridge bridge = null;
 
 		for (Bridge currentBridge : this.bridges) {
-			if (currentBridge.getVirtualIndex()
-					.contains(from.getVirtualIndex())
-					&& currentBridge.getVirtualIndex().contains(
-							to.getVirtualIndex())) {
+			if (currentBridge.getVirtualIndex().contains(from.getVirtualIndex()) && currentBridge.getVirtualIndex().contains(to.getVirtualIndex())) {
 				bridge = currentBridge;
 			}
 		}
@@ -637,22 +581,18 @@ public class Board extends JPanel {
 				for (Hexagon hex : Board.this.hexagons) {
 					if (hex.contains(event.getX(), event.getY())) {
 						if (Board.this.firstHexSelected == null) {
-							if (Board.this.currentPlayer.getTurnStatus() != Board.this.currentPlayer.MOVE_SHEEP) {
-								if (hex.getSheep() != null
-										&& hex.getSheep()
-												.getOwner()
-												.equals(Board.this.currentPlayer)) {
+							if (Board.this.currentPlayer.getTurnStatus() != Player.MOVE_SHEEP) {
+								if (hex.getSheep() != null && hex.getSheep().getOwner().equals(Board.this.currentPlayer)) {
 									// System.out.println(hex.getSheep().getOwner().getFirstName());
 									Board.this.firstHexSelected = hex;
 									colorNeighboors(hex);
-
+									Board.this.soundList.get((int)(Math.random() * (3-0)) + 0).play();
 								}
 							}
 						} else {
 							if (selectedHexagon.getNeighboors().contains(hex)) {
 								if (hex.getSheep() == null) {
-									Sheep sheepToMove = selectedHexagon
-											.getSheep();
+									Sheep sheepToMove = selectedHexagon.getSheep();
 									hex.setSheep(sheepToMove);
 									sheepToMove.setHexagon(hex);
 									selectedHexagon.setSheep(null);
@@ -662,17 +602,14 @@ public class Board extends JPanel {
 									if (Board.this.currentPlayer.isEndOfTurn()) {
 										if (!isGameFinished()) {
 											Board.this.nextTurn();
-										}else{
+										} else {
 											System.out.println("Finished");
 										}
 									}
 								}
-							} else if (hex.getSheep() != null
-									&& hex.getSheep() != Board.this.firstHexSelected
-											.getSheep()
-									&& hex.getSheep().getOwner()
-											.equals(Board.this.currentPlayer)) {
+							} else if (hex.getSheep() != null && hex.getSheep() != Board.this.firstHexSelected.getSheep() && hex.getSheep().getOwner().equals(Board.this.currentPlayer)) {
 								Board.this.firstHexSelected = hex;
+								Board.this.soundList.get((int)(Math.random() * (3-0)) + 0).play();
 								resetHexagonsColor();
 								colorNeighboors(hex);
 							} else {
@@ -683,8 +620,7 @@ public class Board extends JPanel {
 					}
 				}
 
-				if (Board.this.firstHexSelected == null
-						&& Board.this.currentPlayer.getTurnStatus() != Board.this.currentPlayer.DROP_BARRIER) {
+				if (Board.this.firstHexSelected == null && Board.this.currentPlayer.getTurnStatus() != Player.DROP_BARRIER) {
 					for (Bridge bridge : Board.this.bridges) {
 						if (bridge.contains(event.getX(), event.getY())) {
 							Board.this.barriers.add(bridge);
@@ -692,7 +628,7 @@ public class Board extends JPanel {
 							if (Board.this.currentPlayer.isEndOfTurn()) {
 								if (!isGameFinished()) {
 									Board.this.nextTurn();
-								}else{
+								} else {
 									System.out.println("Finished");
 								}
 							}
@@ -725,14 +661,13 @@ public class Board extends JPanel {
 	private void nextTurn() {
 
 		this.nbTurn++;
-		this.currentPlayer = this.playerList.get(this.nbTurn
-				% this.playerList.size()); // Get each player one by one
-											// depending on the turn
-											// number
+		this.currentPlayer = this.playerList.get(this.nbTurn % this.playerList.size()); // Get each player one by one
+		// depending on the turn
+		// number
 		this.currentPlayer.startTurn();
 	}
 
-	//un tour de jeu en trop même lorsque la partie est finished
+	// un tour de jeu en trop mï¿½me lorsque la partie est finished
 	private boolean isGameFinished() {
 		boolean lost = true;
 		Player loser = null;
@@ -751,41 +686,35 @@ public class Board extends JPanel {
 		return lost;
 	}
 
-	public void setData(List<JSONArray> barriers, List<JSONArray> sheepPositions) {
-		dataToLoad = true;
-		barriersToLoad = barriers;
-		sheepsToLoad = sheepPositions;
-	}
-
-	public void loadData() {
-		for (JSONArray array : barriersToLoad) {
-
-			String[] firstHexaPosition = ((String) array.get(0)).split(",");
-			Hexagon firstHex = getCorrespondingHexagon(
-					Integer.parseInt(firstHexaPosition[0]),
-					Integer.parseInt(firstHexaPosition[1]));
-			String[] secondHexaPosition = ((String) array.get(1)).split(",");
-			Hexagon secondHex = getCorrespondingHexagon(
-					Integer.parseInt(secondHexaPosition[0]),
-					Integer.parseInt(secondHexaPosition[1]));
-
-			Bridge correspondingBridge = getBrigeFromIndex(firstHex, secondHex);
-			this.barriers.add(correspondingBridge);
-		}
-
-		resetSheep();
-
-		for (JSONArray index : sheepsToLoad) {
-			String[] firstHexaPosition = ((String) index.get(0)).split(",");
-			Hexagon firstHex = getCorrespondingHexagon(
-					Integer.parseInt(firstHexaPosition[0]),
-					Integer.parseInt(firstHexaPosition[1]));
-			Sheep newSheep = new Sheep();
-			sheeps.add(newSheep);
-			firstHex.setSheep(newSheep);
-		}
-
-		repaint();
-	}
+//	public void setData(List<JSONArray> barriers, List<JSONArray> sheepPositions) {
+//		dataToLoad = true;
+//		barriersToLoad = barriers;
+//		sheepsToLoad = sheepPositions;
+//	}
+//
+//	public void loadData() {
+//		for (JSONArray array : barriersToLoad) {
+//
+//			String[] firstHexaPosition = ((String) array.get(0)).split(",");
+//			Hexagon firstHex = getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]), Integer.parseInt(firstHexaPosition[1]));
+//			String[] secondHexaPosition = ((String) array.get(1)).split(",");
+//			Hexagon secondHex = getCorrespondingHexagon(Integer.parseInt(secondHexaPosition[0]), Integer.parseInt(secondHexaPosition[1]));
+//
+//			Bridge correspondingBridge = getBrigeFromIndex(firstHex, secondHex);
+//			this.barriers.add(correspondingBridge);
+//		}
+//
+//		resetSheep();
+//
+//		for (JSONArray index : sheepsToLoad) {
+//			String[] firstHexaPosition = ((String) index.get(0)).split(",");
+//			Hexagon firstHex = getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]), Integer.parseInt(firstHexaPosition[1]));
+//			Sheep newSheep = new Sheep();
+//			sheeps.add(newSheep);
+//			firstHex.setSheep(newSheep);
+//		}
+//
+//		repaint();
+//	}
 
 }
