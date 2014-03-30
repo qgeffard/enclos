@@ -1,6 +1,5 @@
 package com.enclos.ui;
 
-import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Container;
@@ -34,6 +33,7 @@ import com.enclos.component.Shape;
 import com.enclos.component.Sheep;
 import com.enclos.data.Direction;
 import com.enclos.data.Player;
+import com.enclos.resources.song.Speaker;
 
 //board de test
 public class Board extends JPanel {
@@ -45,6 +45,7 @@ public class Board extends JPanel {
 	private List<Shape> shapes = new LinkedList<Shape>();
 	private List<Bridge> barriers = new LinkedList<Bridge>();
 	private Hexagon firstHexSelected = null;
+	private Speaker speaker = new Speaker();
 	private long size = 3;
 	private int nbSheepPerPlayer = 3;
 	private final int NB_SHEEP;
@@ -85,15 +86,7 @@ public class Board extends JPanel {
 		this.playerList.add(new Player("Kent", "clark", 18));
 
 
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/say1.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/say2.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/say3.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/shear.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step1.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step2.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step3.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step4.wav")));
-		this.soundList.add(Applet.newAudioClip(Board.class.getResource("/com/enclos/resources/song/step5.wav")));
+		
 		
 		
 		this.nbSheepPerPlayer = nbSheepPerPlayer;
@@ -586,7 +579,7 @@ public class Board extends JPanel {
 									// System.out.println(hex.getSheep().getOwner().getFirstName());
 									Board.this.firstHexSelected = hex;
 									colorNeighboors(hex);
-									Board.this.soundList.get((int)(Math.random() * (3-0)) + 0).play();
+									Board.this.speaker.playRandomSaySheep();
 								}
 							}
 						} else {
@@ -609,7 +602,7 @@ public class Board extends JPanel {
 								}
 							} else if (hex.getSheep() != null && hex.getSheep() != Board.this.firstHexSelected.getSheep() && hex.getSheep().getOwner().equals(Board.this.currentPlayer)) {
 								Board.this.firstHexSelected = hex;
-								Board.this.soundList.get((int)(Math.random() * (3-0)) + 0).play();
+								Board.this.speaker.playRandomSaySheep();
 								resetHexagonsColor();
 								colorNeighboors(hex);
 							} else {
@@ -625,6 +618,7 @@ public class Board extends JPanel {
 						if (bridge.contains(event.getX(), event.getY())) {
 							Board.this.barriers.add(bridge);
 							Board.this.currentPlayer.dropBarrier();
+							Board.this.speaker.playRandomDropBarrier();
 							if (Board.this.currentPlayer.isEndOfTurn()) {
 								if (!isGameFinished()) {
 									Board.this.nextTurn();
