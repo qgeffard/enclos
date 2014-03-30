@@ -1,15 +1,19 @@
 package com.enclos.ui;
 
 import java.awt.CardLayout;
+import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -50,20 +54,38 @@ public class FrameContentPane extends JPanel {
 
 			private Player createNewPlayer() {
 				Player newPlayer = null;
-				JTextField firstName = new JTextField();
-				JTextField lastName = new JTextField();
-				JTextField age = new JTextField();
+				final JTextField firstName = new JTextField();
+				final JTextField lastName = new JTextField();
+				final JTextField age = new JTextField();
+				final JButton profilPictureButton = new JButton("Choose a profile picture");
+
+				final JFileChooser fileChooser = new JFileChooser();
+				
+				final FileDialog fileDialog = new FileDialog(new JFrame(),"Choose picture", FileDialog.LOAD);
+				profilPictureButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						//fileDialog.setVisible(true);
+						fileChooser.showDialog(FrameContentPane.this, "ok");
+					}
+				});
 				final JComponent[] inputs = new JComponent[] {
 						new JLabel("First Name"),
 						firstName,
 						new JLabel("Last Name"),
 						lastName,
 						new JLabel("Age"),
-						age
+						age,
+						profilPictureButton
 					};
 				JOptionPane.showMessageDialog(null, inputs, "Add a new player", JOptionPane.PLAIN_MESSAGE);
 			try{
-				 newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()));
+				File file = fileChooser.getSelectedFile();
+				System.out.println(file.getAbsolutePath());
+				newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
+
+
 			}catch(Exception e){
 				newPlayer = new Player(firstName.getText(), lastName.getText(), 0);
 			}

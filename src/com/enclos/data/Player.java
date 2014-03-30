@@ -1,11 +1,15 @@
 package com.enclos.data;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import com.enclos.component.Sheep;
@@ -21,9 +25,7 @@ public class Player implements PlayerAction{
 	private int turnStatus;
 	private List<Sheep> sheeps;
 	
-	
-	//path par defaut ?
-	private Image profilePicture = null;
+	private BufferedImage profilePicture = null;
 	// score correspondant au nom d'une partie
 	//private Map<String, Integer> score;
 	
@@ -36,7 +38,12 @@ public class Player implements PlayerAction{
 	
 	public Player(String firstName, String lastName, int age, String picturePath){
 		this(firstName,lastName,age);
-		this.profilePicture = new ImageIcon(picturePath).getImage();
+		try {
+			this.profilePicture = ImageIO.read(new File(picturePath));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void startTurn(){
@@ -59,7 +66,7 @@ public class Player implements PlayerAction{
 		return age;
 	}
 
-	public Image getProfilePicture() {
+	public BufferedImage getProfilePicture() {
 		return profilePicture;
 	}
 

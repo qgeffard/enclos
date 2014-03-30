@@ -1,56 +1,63 @@
 package com.enclos.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.enclos.data.Player;
 
-public class PlayerProfilePanel extends JPanel{
+public class PlayerProfilePanel extends JPanel {
 
-	private Image image = null;
-	private String lastName;
-	private String firstName;
-	private int age;
-	
-	public PlayerProfilePanel(Image image){
-		this.image = image;
+	private static final long serialVersionUID = 1L;
+
+	public PlayerProfilePanel(Player player) {
+
+		JPanel imagePanel = new JPanel();
+
+		JPanel infoPanel = new JPanel();
+		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+		this.add(imagePanel, BorderLayout.WEST);
+		this.add(infoPanel, BorderLayout.EAST);
+
+		imagePanel.add(new JLabel(new ImageIcon(getProfilePicture(player
+				.getProfilePicture()))));
+		infoPanel.add(new JLabel(player.getLastName()));
+		infoPanel.add(new JLabel(player.getFirstName()));
+		infoPanel.add(new JLabel(String.valueOf(player.getAge())));
 	}
-	
-	public PlayerProfilePanel(Player player){
-		this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		//Border border = new LineBorder(Color.red);
-		//this.setBorder(border);
-		this.lastName= player.getLastName();
-		this.firstName = player.getFirstName();
-		this.age = player.getAge();
-		
-		
-		this.add(new JLabel(lastName));
-		this.add(new JLabel(firstName));
-		this.add(new JLabel(String.valueOf(age)));
+
+	private BufferedImage getProfilePicture(BufferedImage profilePicture) {
+		Image image = profilePicture.getScaledInstance(100, 100,
+				Image.SCALE_SMOOTH);
+		return toBufferedImage(image);
 	}
-	
-	@Override
-	public void paintComponent(Graphics g){
-		//g.drawImage(this.image, 0, 0, null);
-	//	setBackground(Color.red);
-		 super.paintComponent(g);
-	        Graphics2D g2d = (Graphics2D) g;
-	        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-	        int w = getWidth();
-	        int h = getHeight();
-	        Color color1 = Color.GRAY;
-	        Color color2 = Color.WHITE;
-	        GradientPaint gp = new GradientPaint(0, 0, color1, 0, h, color2);
-	        g2d.setPaint(gp);
-	        g2d.fillRect(0, 0, w, h);
+
+	public static BufferedImage toBufferedImage(Image img) {
+		if (img instanceof BufferedImage) {
+			return (BufferedImage) img;
+		}
+
+		// Create a buffered image with transparency
+		BufferedImage bimage = new BufferedImage(img.getWidth(null),
+				img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		// Draw the image on to the buffered image
+		Graphics2D bGr = bimage.createGraphics();
+		bGr.drawImage(img, 0, 0, null);
+		bGr.dispose();
+
+		// Return the buffered image
+		return bimage;
 	}
+
 }
