@@ -43,10 +43,7 @@ public class SimpleWriter {
 		}
 		
 		jsonObject.put("Barriers", barriers);
-		
-
 		try {
-
 			FileWriter jsonFileWriter = new FileWriter(jsonFilePath);
 			jsonFileWriter.write(jsonObject.toJSONString());
 			jsonFileWriter.flush();
@@ -57,8 +54,31 @@ public class SimpleWriter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+	}
+	
+	public SimpleWriter(List<Player> listPlayers, String fileName) {
+		this.jsonFilePath = "resources/players/"+fileName+".json";
 
+		JSONObject jsonObject = new JSONObject();
+
+		JSONArray players = new JSONArray();
+		for(Player currentPlayer : listPlayers){
+			JSONArray player = new JSONArray();
+			player.add(currentPlayer.getLastName()+","+currentPlayer.getFirstName()+","+currentPlayer.getAge());
+			players.add(player);
+		}
+		jsonObject.put("Players", players);
+
+		try {
+			FileWriter jsonFileWriter = new FileWriter(jsonFilePath);
+			jsonFileWriter.write(jsonObject.toJSONString());
+			jsonFileWriter.flush();
+			jsonFileWriter.close();
+
+			System.out.print(jsonObject);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
