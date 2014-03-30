@@ -9,7 +9,7 @@ public abstract class Shape {
 	
 	protected int x;
 	protected int y;
-	protected int size;
+	protected long size;
 	protected List<Point> pointList = new ArrayList<>();
 	
 	public List<Point> getPointList() {
@@ -40,12 +40,12 @@ public abstract class Shape {
 		this.y = y;
 	}
 
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
+	public void setSize(long l) {
+		this.size = l;
 	}
 	
 	public abstract boolean contains(int x, int y);

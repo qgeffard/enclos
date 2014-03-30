@@ -167,12 +167,15 @@ public class Enclos extends JFrame {
 				}
 
 			}
+			
+			
 		});
 
 		playerItem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Speaker.playClickEvent();
 				PlayersFrame playersFrame = new PlayersFrame();
 			}
 		});

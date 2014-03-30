@@ -45,13 +45,13 @@ public class Board extends JPanel {
 	private List<Shape> shapes = new LinkedList<Shape>();
 	private List<Bridge> barriers = new LinkedList<Bridge>();
 	private Hexagon firstHexSelected = null;
+	private Speaker speaker = new Speaker();
 	private long size = 3;
 	private int nbSheepPerPlayer = 3;
 	private final int NB_SHEEP;
 	private List<Player> playerList = new LinkedList<Player>();
 	private int nbTurn = 0;
 	private Player currentPlayer;
-	private List<AudioClip> soundList= new LinkedList<AudioClip>();
 	
 	private boolean guiIsBeingCreated = true;
 	private boolean dataToLoad = false;
@@ -83,11 +83,6 @@ public class Board extends JPanel {
 	public Board(long size, int nbSheepPerPlayer) {
 		this.playerList.add(new Player("Parker", "peter", 18));
 		this.playerList.add(new Player("Kent", "clark", 18));
-
-
-		
-		
-		
 		this.nbSheepPerPlayer = nbSheepPerPlayer;
 		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
 		this.size = size;
@@ -556,9 +551,9 @@ public class Board extends JPanel {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				super.componentResized(e);
-
+				
 				for (Shape shape : hexagons) {
-					shape.setSize(getWidth() / 19);
+					shape.setSize(getHeight()/Board.this.size /6);
 				}
 			}
 		});
