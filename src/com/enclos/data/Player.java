@@ -1,9 +1,14 @@
 package com.enclos.data;
 
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+
+import com.enclos.component.Sheep;
 
 public class Player implements PlayerAction{
 	public final static int BEGIN_TURN = 0;
@@ -14,6 +19,7 @@ public class Player implements PlayerAction{
 	private String lastName;
 	private int age;
 	private int turnStatus;
+	private List<Sheep> sheeps;
 	
 	
 	//path par defaut ?
@@ -25,12 +31,11 @@ public class Player implements PlayerAction{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.age = age;
+		this.sheeps = new ArrayList<>();
 	}
 	
 	public Player(String firstName, String lastName, int age, String picturePath){
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.age = age;
+		this(firstName,lastName,age);
 		this.profilePicture = new ImageIcon(picturePath).getImage();
 	}
 	
@@ -96,6 +101,9 @@ public class Player implements PlayerAction{
 		this.turnStatus += DROP_BARRIER;
 	}
 	
+	public List<Sheep> getSheeps(){
+		return this.sheeps;
+	}
 	
 	
 }

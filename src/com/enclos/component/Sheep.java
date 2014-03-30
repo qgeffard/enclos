@@ -9,6 +9,7 @@ import com.enclos.data.Player;
 public class Sheep {
 	private Point virtualIndexHexagon;
 	private Player owner;
+	private Hexagon hexagon;
 	
 	public Player getOwner() {
 		return owner;
@@ -26,7 +27,13 @@ public class Sheep {
 		this.virtualIndexHexagon = virtualIndexHexagon;
 	}
 
+	public void setHexagon(Hexagon hex){
+		this.hexagon = hex;
+	}
 	
+	public Hexagon getHexagon(){
+		return this.hexagon;
+	}
 	
 	@Override
 	public String toString() {
