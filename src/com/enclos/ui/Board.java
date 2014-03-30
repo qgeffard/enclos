@@ -45,7 +45,6 @@ public class Board extends JPanel {
 	private List<Shape> shapes = new LinkedList<Shape>();
 	private List<Bridge> barriers = new LinkedList<Bridge>();
 	private Hexagon firstHexSelected = null;
-	private Speaker speaker = new Speaker();
 	private long size = 3;
 	private int nbSheepPerPlayer = 3;
 	private final int NB_SHEEP;
@@ -579,7 +578,7 @@ public class Board extends JPanel {
 									// System.out.println(hex.getSheep().getOwner().getFirstName());
 									Board.this.firstHexSelected = hex;
 									colorNeighboors(hex);
-									Board.this.speaker.playRandomSaySheep();
+									Speaker.playRandomSaySheep();
 								}
 							}
 						} else {
@@ -602,7 +601,7 @@ public class Board extends JPanel {
 								}
 							} else if (hex.getSheep() != null && hex.getSheep() != Board.this.firstHexSelected.getSheep() && hex.getSheep().getOwner().equals(Board.this.currentPlayer)) {
 								Board.this.firstHexSelected = hex;
-								Board.this.speaker.playRandomSaySheep();
+								Speaker.playRandomSaySheep();
 								resetHexagonsColor();
 								colorNeighboors(hex);
 							} else {
@@ -618,7 +617,7 @@ public class Board extends JPanel {
 						if (bridge.contains(event.getX(), event.getY())) {
 							Board.this.barriers.add(bridge);
 							Board.this.currentPlayer.dropBarrier();
-							Board.this.speaker.playRandomDropBarrier();
+							Speaker.playRandomDropBarrier();
 							if (Board.this.currentPlayer.isEndOfTurn()) {
 								if (!isGameFinished()) {
 									Board.this.nextTurn();

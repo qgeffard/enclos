@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -34,6 +35,7 @@ import com.enclos.controller.State;
 import com.enclos.data.Player;
 import com.enclos.data.SimpleReader;
 import com.enclos.data.SimpleWriter;
+import com.enclos.resources.song.Speaker;
 
 public class Enclos extends JFrame {
 
@@ -127,14 +129,16 @@ public class Enclos extends JFrame {
 
 		JMenu menu = new JMenu("Game");
 		menu.setForeground(Color.white);
-		JMenuItem newGameItem = new JMenuItem("New Game");
-		JMenuItem scoreItem = new JMenuItem("Scores");
-		JMenuItem playerItem = new JMenuItem("Players");
-		JMenuItem saveItem = new JMenuItem("Save");
+		final JMenuItem newGameItem = new JMenuItem("New Game");
+		final JMenuItem scoreItem = new JMenuItem("Scores");
+		final JMenuItem playerItem = new JMenuItem("Players");
+		final JMenuItem saveItem = new JMenuItem("Save");
+		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds",true);
 		menu.add(newGameItem);
 		menu.add(scoreItem);
 		menu.add(playerItem);
 		menu.add(saveItem);
+		menu.add(soundsItem);
 		menuBar.add(menu);
 		setJMenuBar(menuBar);
 
@@ -188,6 +192,14 @@ public class Enclos extends JFrame {
 					SimpleWriter playerWriter = new SimpleWriter(players,
 							"players_test");
 				}
+			}
+		});
+		
+		soundsItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Speaker.isMute(!soundsItem.isSelected());
 			}
 		});
 
