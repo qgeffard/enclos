@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 
 import com.enclos.controller.State;
 import com.enclos.data.Player;
+import com.enclos.data.SimpleReader;
 import com.enclos.data.SimpleWriter;
 import com.enclos.resources.song.Speaker;
 
@@ -34,15 +35,17 @@ public class Enclos extends JFrame {
     private ScoreFrame scoreFrame = null;
     private FrameContentPane contentPane = null;
     private final List<Board> boards = new LinkedList<Board>();
-    private final List<Player> players = new ArrayList<>();
+    private List<Player> players;
 
     public Enclos() {
-        this.state = new State(this);
+        //this.state = new State(this);
         this.scoreFrame = new ScoreFrame(this);
         Toolkit.getDefaultToolkit().setDynamicLayout(false);
         setTitle("Jeu de l'enclos");
 
-        // � revoir
+        
+        this.players = SimpleReader.readPlayer("players_test");
+        // a revoir
         // setMaximumSize(getScreenMaximumSize());
         // enabled tab listener
         setFocusTraversalKeysEnabled(false);
@@ -78,7 +81,7 @@ public class Enclos extends JFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 super.componentResized(e);
-                state.setSize(getSize(), true);
+                //state.setSize(getSize(), true);
                 scoreFrame.setSize(getSize());
             }
         });
@@ -175,11 +178,12 @@ public class Enclos extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
                 Date date = new Date();
-                SimpleWriter writer = new SimpleWriter(boards.get(0), dateFormat.format(date));
+                SimpleWriter.SaveGame(boards.get(0), dateFormat.format(date));
+                //SimpleWriter writer = new SimpleWriter(boards.get(0), dateFormat.format(date));
                 System.out.println(dateFormat.format(date));
 
                 if (players.size() > 0) {
-                    SimpleWriter playerWriter = new SimpleWriter(players, "players_test");
+                    SimpleWriter.SavePlayer(players, "players_test");
                 }
             }
         });
@@ -203,7 +207,7 @@ public class Enclos extends JFrame {
             return new Dimension(screenDimension.height, screenDimension.height);
     }
 
-    public List<Player> GetPlayers() {
+    public List<Player> getPlayers() {
         return this.players;
     }
 

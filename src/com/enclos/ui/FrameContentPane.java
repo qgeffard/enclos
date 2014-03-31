@@ -1,12 +1,17 @@
 package com.enclos.ui;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -23,6 +28,7 @@ public class FrameContentPane extends JPanel {
     private CardLayout cardLayout;
     private JPanel gamePanel;
     private JPanel playersPanel;
+    private JPanel playersGridPanel;
     private Enclos parent;
 
     public FrameContentPane(Enclos parent) {
@@ -35,7 +41,13 @@ public class FrameContentPane extends JPanel {
         gamePanel.setLayout(new FlowLayout());
 
         playersPanel = new JPanel();
-        playersPanel.setLayout(new FlowLayout());
+        playersPanel.setLayout(new BorderLayout());
+        
+        playersGridPanel = new JPanel();
+        playersGridPanel.setLayout(new GridLayout());
+        //manage return carriage
+        playersPanel.add(playersGridPanel);
+        generatePlayersCard(parent);
 
         JButton addPlayerButton = new JButton("Add player");
 
@@ -48,9 +60,8 @@ public class FrameContentPane extends JPanel {
             public void actionPerformed(ActionEvent arg0) {
                 Player newPlayer = createNewPlayer();
                 PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer);
-                FrameContentPane.this.parent.GetPlayers().add(newPlayer);
-                FrameContentPane.this.playersPanel.add(playerProfile);
-
+                FrameContentPane.this.playersGridPanel.add(playerProfile);
+                FrameContentPane.this.parent.getPlayers().add(newPlayer);
                 revalidate();
             }
 
@@ -87,12 +98,22 @@ public class FrameContentPane extends JPanel {
             }
         });
 
-        playersPanel.add(addPlayerButton);
+        playersPanel.add(addPlayerButton, BorderLayout.SOUTH);
         this.add(gamePanel);
         this.add(playersPanel);
     }
 
-    @Override
+    private void generatePlayersCard(Enclos parent) {
+		List<Player> players = parent.getPlayers();
+		for(Player currentPlayer : players){
+			PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer);
+	        FrameContentPane.this.playersGridPanel.add(playerProfile);
+		}
+
+
+	}
+
+	@Override
     public void paintComponent(Graphics g) {
         // g.drawImage(this.background, 0, 0, null);
     }

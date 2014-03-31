@@ -13,9 +13,10 @@ import com.enclos.ui.Board;
 
 public class SimpleWriter {
 	private String jsonFilePath;
-	public SimpleWriter(Board board, String fileName) {
-		this.jsonFilePath = "resources/save/"+fileName+".json";
-
+	
+	public static void SaveGame(Board board, String fileName){
+		String jsonFilePath = "resources/save/"+fileName+".json";
+		
 		JSONObject jsonObject = new JSONObject();
 
 		jsonObject.put("Sheepnumber", board.getNbSheep() );
@@ -56,9 +57,9 @@ public class SimpleWriter {
 		}
 	}
 	
-	public SimpleWriter(List<Player> listPlayers, String fileName) {
-		this.jsonFilePath = "resources/players/"+fileName+".json";
-
+	public static void SavePlayer(List<Player> listPlayers, String fileName){
+		String jsonFilePath ="resources/players/"+fileName+".json";
+		
 		JSONObject jsonObject = new JSONObject();
 
 		JSONArray players = new JSONArray();
