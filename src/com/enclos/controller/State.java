@@ -20,28 +20,20 @@ public class State {
 		}
 
 		int height = newSize.height;
-		int widht = newSize.width;
+		int width = newSize.width;
 
-		int check = checkContractOrExpand(newSize);
+		boolean check = checkExpand(newSize);
 
 		//if we expand
-		if (check == 1) {
-			if (height > widht) {
-				size = new Dimension(height, height);
-			} else {
-				size = new Dimension(widht, widht);
-			}
+		if (check) {
+			size = (height > width) ? new Dimension(height, height) : new Dimension(width, width);
 		}else{
-			if (height < widht) {
-				size = new Dimension(height, height);
-			} else {
-				size = new Dimension(widht, widht);
-			}
+			size = (height < width) ? new Dimension(height, height) : new Dimension(width, width);
 		}
 		this.target.setSize(size);
 	}
 
-	private int checkContractOrExpand(Dimension newSize) {
+	private boolean checkExpand(Dimension newSize) {
 		// since the frame is a square
 		int oldSize = size.width;
 
@@ -49,8 +41,8 @@ public class State {
 		int newWidth = newSize.width;
 
 		if ((oldSize < newHeight) || (oldSize < newWidth))
-			return 1;
+			return true;
 		else
-			return -1;
+			return false;
 	}
 }

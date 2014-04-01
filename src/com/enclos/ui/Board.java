@@ -43,12 +43,11 @@ public class Board extends JPanel {
 	private List<Sheep> sheeps = new LinkedList<Sheep>();
 	private final List<Shape> shapes = new LinkedList<Shape>();
 	private final List<Bridge> barriers = new LinkedList<Bridge>();
+	private final List<Player> playerList = new LinkedList<Player>();
 	private Hexagon firstHexSelected = null;
-	private final Speaker speaker = new Speaker();
 	private long size = 3;
 	private int nbSheepPerPlayer = 3;
 	private final int NB_SHEEP;
-	private final List<Player> playerList = new LinkedList<Player>();
 	private int nbTurn = 0;
 	private Player currentPlayer;
 

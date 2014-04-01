@@ -105,11 +105,12 @@ public class FrameContentPane extends JPanel {
 
     private void generatePlayersCard(Enclos parent) {
 		List<Player> players = parent.getPlayers();
-		for(Player currentPlayer : players){
-			PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer);
-	        FrameContentPane.this.playersGridPanel.add(playerProfile);
+		if(players != null && players.size() > 0){
+			for(Player currentPlayer : players){
+				PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer);
+		        FrameContentPane.this.playersGridPanel.add(playerProfile);
+			}
 		}
-
 
 	}
 
