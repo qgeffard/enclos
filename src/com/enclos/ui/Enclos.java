@@ -23,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import com.enclos.component.EnclosMenu;
 import com.enclos.controller.State;
 import com.enclos.data.Player;
 import com.enclos.data.SimpleReader;
@@ -75,7 +76,9 @@ public class Enclos extends JFrame {
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        generateMenu();
+        EnclosMenu menu = new EnclosMenu(this);
+        this.setJMenuBar(menu);
+        //generateMenu();
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -127,11 +130,14 @@ public class Enclos extends JFrame {
         final JMenuItem scoreItem = new JMenuItem("Scores");
         final JMenuItem playerItem = new JMenuItem("Players");
         final JMenuItem saveItem = new JMenuItem("Save");
+        final JMenu loadItem = new JMenu("Load");
+        loadItem.add(new JMenuItem ("test"));
         final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", true);
         menu.add(newGameItem);
         menu.add(scoreItem);
         menu.add(playerItem);
         menu.add(saveItem);
+        menu.add(loadItem);
         menu.add(soundsItem);
         menuBar.add(menu);
         setJMenuBar(menuBar);
@@ -209,6 +215,14 @@ public class Enclos extends JFrame {
 
     public List<Player> getPlayers() {
         return this.players;
+    }
+    
+    public FrameContentPane getFrameContentPane(){
+    	return this.contentPane;
+    }
+    
+    public List<Board> getBoards(){
+    	return this.boards;
     }
 
 }

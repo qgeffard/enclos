@@ -26,6 +26,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import org.json.simple.JSONArray;
+
 import com.enclos.component.Bridge;
 import com.enclos.component.Hexagon;
 import com.enclos.component.Shape;
@@ -53,8 +55,8 @@ public class Board extends JPanel {
 
 	private boolean guiIsBeingCreated = true;
 	private boolean dataToLoad = false;
-	// private List<JSONArray> barriersToLoad;
-	// private List<JSONArray> sheepsToLoad;
+	 private List<JSONArray> barriersToLoad;
+	 private List<JSONArray> sheepsToLoad;
 
 	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
 
@@ -155,7 +157,7 @@ public class Board extends JPanel {
 			drawHexas(g2);
 			drawBridges(g2);
 			if (dataToLoad) {
-				// loadData();
+				loadData();
 				dataToLoad = false;
 			}
 			drawBarriers(g2);
@@ -767,42 +769,42 @@ public class Board extends JPanel {
 		return lost;
 	}
 
-	// public void setData(List<JSONArray> barriers, List<JSONArray>
-	// sheepPositions) {
-	// dataToLoad = true;
-	// barriersToLoad = barriers;
-	// sheepsToLoad = sheepPositions;
-	// }
-	//
-	// public void loadData() {
-	// for (JSONArray array : barriersToLoad) {
-	//
-	// String[] firstHexaPosition = ((String) array.get(0)).split(",");
-	// Hexagon firstHex =
-	// getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]),
-	// Integer.parseInt(firstHexaPosition[1]));
-	// String[] secondHexaPosition = ((String) array.get(1)).split(",");
-	// Hexagon secondHex =
-	// getCorrespondingHexagon(Integer.parseInt(secondHexaPosition[0]),
-	// Integer.parseInt(secondHexaPosition[1]));
-	//
-	// Bridge correspondingBridge = getBrigeFromIndex(firstHex, secondHex);
-	// this.barriers.add(correspondingBridge);
-	// }
-	//
-	// resetSheep();
-	//
-	// for (JSONArray index : sheepsToLoad) {
-	// String[] firstHexaPosition = ((String) index.get(0)).split(",");
-	// Hexagon firstHex =
-	// getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]),
-	// Integer.parseInt(firstHexaPosition[1]));
-	// Sheep newSheep = new Sheep();
-	// sheeps.add(newSheep);
-	// firstHex.setSheep(newSheep);
-	// }
-	//
-	// repaint();
-	// }
+	 public void setData(List<JSONArray> barriers, List<JSONArray>
+	 sheepPositions) {
+	 dataToLoad = true;
+	 barriersToLoad = barriers;
+	 sheepsToLoad = sheepPositions;
+	 }
+	
+	 public void loadData() {
+	 for (JSONArray array : barriersToLoad) {
+	
+	 String[] firstHexaPosition = ((String) array.get(0)).split(",");
+	 Hexagon firstHex =
+	 getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]),
+	 Integer.parseInt(firstHexaPosition[1]));
+	 String[] secondHexaPosition = ((String) array.get(1)).split(",");
+	 Hexagon secondHex =
+	 getCorrespondingHexagon(Integer.parseInt(secondHexaPosition[0]),
+	 Integer.parseInt(secondHexaPosition[1]));
+	
+	 Bridge correspondingBridge = getBrigeFromIndex(firstHex, secondHex);
+	 this.barriers.add(correspondingBridge);
+	 }
+	
+	 resetSheep();
+	
+	 for (JSONArray index : sheepsToLoad) {
+	 String[] firstHexaPosition = ((String) index.get(0)).split(",");
+	 Hexagon firstHex =
+	 getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]),
+	 Integer.parseInt(firstHexaPosition[1]));
+	 Sheep newSheep = new Sheep();
+	 sheeps.add(newSheep);
+	 firstHex.setSheep(newSheep);
+	 }
+	
+	 repaint();
+	 }
 
 }
