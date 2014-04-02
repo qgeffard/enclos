@@ -46,8 +46,12 @@ public class Player implements PlayerAction{
 		try {
 			this.profilePicture = ImageIO.read(new File(picturePath));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				this.profilePicture = ImageIO.read(new File("resources/image/default_avatar.png"));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			System.out.println(firstName + lastName +" : default picture");
 		}
 	}
 	

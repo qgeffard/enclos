@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.enclos.data.Player;
 
@@ -45,7 +48,7 @@ public class FrameContentPane extends JPanel {
         
         playersGridPanel = new JPanel();
         playersGridPanel.setLayout(new GridLayout());
-        //manage return carriage
+        //TODO manage return carriage
         playersPanel.add(playersGridPanel);
         generatePlayersCard(parent);
 
@@ -103,21 +106,34 @@ public class FrameContentPane extends JPanel {
         this.add(playersPanel);
     }
 
-    private void generatePlayersCard(Enclos parent) {
-		List<Player> players = parent.getPlayers();
+    private void generatePlayersCard(final Enclos parent) {
+		final List<Player> players = parent.getPlayers();
 		if(players != null && players.size() > 0){
-			for(Player currentPlayer : players){
-				PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer);
+			for(final Player currentPlayer : players){
+				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer);
 		        FrameContentPane.this.playersGridPanel.add(playerProfile);
+		        
+				
+		        playerProfile.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						super.mouseClicked(e);
+						if(SwingUtilities.isRightMouseButton(e)){
+							int choice = JOptionPane.showConfirmDialog(FrameContentPane.this, "Delete "+currentPlayer.getLastName() + " " + currentPlayer.getFirstName() +"?" );
+							
+							if(choice == JOptionPane.OK_OPTION){
+								players.remove(currentPlayer);
+								FrameContentPane.this.playersGridPanel.remove(playerProfile);
+								FrameContentPane.this.playersGridPanel.revalidate();
+								FrameContentPane.this.playersGridPanel.repaint();
+							}
+						}
+					}
+				});
 			}
 		}
 
 	}
-
-	@Override
-    public void paintComponent(Graphics g) {
-        // g.drawImage(this.background, 0, 0, null);
-    }
 
     public void addToGamePanel(Board board) {
         gamePanel.add(board);

@@ -45,7 +45,7 @@ public class Enclos extends JFrame {
         setTitle("Jeu de l'enclos");
 
         
-        //this.players = SimpleReader.readPlayer("players_test");
+        this.players = SimpleReader.readPlayer("players_test");
         // a revoir
         // setMaximumSize(getScreenMaximumSize());
         // enabled tab listener

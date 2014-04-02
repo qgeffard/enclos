@@ -7,12 +7,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import com.enclos.data.Player;
 
@@ -29,13 +35,14 @@ public class PlayerProfilePanel extends JPanel {
 		this.add(imagePanel, BorderLayout.WEST);
 		this.add(infoPanel, BorderLayout.EAST);
 
+		
 		imagePanel.add(new JLabel(new ImageIcon(getProfilePicture(player
 				.getProfilePicture()))));
 		infoPanel.add(new JLabel(player.getLastName()));
 		infoPanel.add(new JLabel(player.getFirstName()));
 		infoPanel.add(new JLabel(String.valueOf(player.getAge())));
-	}
 
+	}
 	private BufferedImage getProfilePicture(BufferedImage profilePicture) {
 		Image image = profilePicture.getScaledInstance(100, 100,
 				Image.SCALE_SMOOTH);
