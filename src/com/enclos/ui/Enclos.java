@@ -32,197 +32,111 @@ import com.enclos.resources.song.Speaker;
 
 public class Enclos extends JFrame {
 
-    private State state = null;
-    private ScoreFrame scoreFrame = null;
-    private FrameContentPane contentPane = null;
-    private final List<Board> boards = new LinkedList<Board>();
-    private List<Player> players;
+	private State state = null;
+	private ScoreFrame scoreFrame = null;
+	private FrameContentPane contentPane = null;
+	private final List<Board> boards = new LinkedList<Board>();
+	private List<Player> players;
 
-    public Enclos() {
-        //this.state = new State(this);
-        this.scoreFrame = new ScoreFrame(this);
-        Toolkit.getDefaultToolkit().setDynamicLayout(false);
-        setTitle("Jeu de l'enclos");
+	public Enclos() {
+		// this.state = new State(this);
+		this.scoreFrame = new ScoreFrame(this);
+		Toolkit.getDefaultToolkit().setDynamicLayout(false);
+		setTitle("Jeu de l'enclos");
 
-        
-        this.players = SimpleReader.readPlayer("players_test");
-        // a revoir
-        // setMaximumSize(getScreenMaximumSize());
-        // enabled tab listener
-        setFocusTraversalKeysEnabled(false);
-        setSize(500, 500);
+		this.players = SimpleReader.readPlayer("players_test");
+		// a revoir
+		// setMaximumSize(getScreenMaximumSize());
+		// enabled tab listener
+		setFocusTraversalKeysEnabled(false);
+		setSize(500, 500);
 
-        this.contentPane = new FrameContentPane(this);
+		this.contentPane = new FrameContentPane(this);
 
-        setContentPane(this.contentPane);
-        this.boards.add(new Board(3L, 3));
-        contentPane.addToGamePanel(boards.get(0));
+		setContentPane(this.contentPane);
+		this.boards.add(new Board(3L, 3));
+		contentPane.addToGamePanel(boards.get(0));
 
-        // SimpleReader reader = new SimpleReader("2014-03-28_00-14-17");
-        // Map<String, Object> params = reader.read();
-        //
-        // // LOAD
-        // long loadBoardSize = (long) params.get("Boardsize");
-        // List<JSONArray> barriers = (List<JSONArray>) params.get("Barriers");
-        // List<JSONArray> sheepPositions = (List<JSONArray>)
-        // params.get("Sheepspositions");
-        // Board loadBoard = new Board(loadBoardSize, sheepPositions.size());
-        // this.boards.add(loadBoard);
-        // contentPane.add(loadBoard);
-        // loadBoard.setData(barriers, sheepPositions);
-        // LOAD
+		// SimpleReader reader = new SimpleReader("2014-03-28_00-14-17");
+		// Map<String, Object> params = reader.read();
+		//
+		// // LOAD
+		// long loadBoardSize = (long) params.get("Boardsize");
+		// List<JSONArray> barriers = (List<JSONArray>) params.get("Barriers");
+		// List<JSONArray> sheepPositions = (List<JSONArray>)
+		// params.get("Sheepspositions");
+		// Board loadBoard = new Board(loadBoardSize, sheepPositions.size());
+		// this.boards.add(loadBoard);
+		// contentPane.add(loadBoard);
+		// loadBoard.setData(barriers, sheepPositions);
+		// LOAD
 
-        // contentPane.add(loadBoard);
+		// contentPane.add(loadBoard);
 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        EnclosMenu menu = new EnclosMenu(this);
-        this.setJMenuBar(menu);
-        //generateMenu();
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		EnclosMenu menu = new EnclosMenu(this);
+		this.setJMenuBar(menu);
 
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                super.componentResized(e);
-                //state.setSize(getSize(), true);
-                scoreFrame.setSize(getSize());
-            }
-        });
+		addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				super.componentResized(e);
+				// state.setSize(getSize(), true);
+				scoreFrame.setSize(getSize());
+			}
+		});
 
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (!scoreFrame.isVisible()) {
-                        scoreFrame.setLocation(getLocation());
-                        scoreFrame.setVisible(true);
-                        requestFocus();
-                    }
-                }
-                if (e.getKeyCode() == KeyEvent.VK_P) {
-                    System.out.println("pressed");
-                    Enclos.this.contentPane.switchPanel();
-                }
-            }
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				super.keyPressed(e);
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if (!scoreFrame.isVisible()) {
+						scoreFrame.setLocation(getLocation());
+						scoreFrame.setVisible(true);
+						requestFocus();
+					}
+				}
+				if (e.getKeyCode() == KeyEvent.VK_P) {
+					System.out.println("pressed");
+					Enclos.this.contentPane.switchPanel();
+				}
+			}
 
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    scoreFrame.setVisible(false);
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyPressed(e);
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					scoreFrame.setVisible(false);
 
-                    System.out.println("released");
-                }
-            }
-        });
+					System.out.println("released");
+				}
+			}
+		});
 
-        setVisible(true);
-    }
+		setVisible(true);
+	}
 
-    private void generateMenu() {
-        JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(Color.black);
+	private Dimension getScreenMaximumSize() {
+		Dimension maxDimension = null;
+		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+		if (screenDimension.getHeight() > screenDimension.getWidth())
+			return new Dimension(screenDimension.width, screenDimension.width);
+		else
+			return new Dimension(screenDimension.height, screenDimension.height);
+	}
 
-        JMenu menu = new JMenu("Game");
-        menu.setForeground(Color.white);
-        final JMenuItem newGameItem = new JMenuItem("New Game");
-        final JMenuItem scoreItem = new JMenuItem("Scores");
-        final JMenuItem playerItem = new JMenuItem("Players");
-        final JMenuItem saveItem = new JMenuItem("Save");
-        final JMenu loadItem = new JMenu("Load");
-        loadItem.add(new JMenuItem ("test"));
-        final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", true);
-        menu.add(newGameItem);
-        menu.add(scoreItem);
-        menu.add(playerItem);
-        menu.add(saveItem);
-        menu.add(loadItem);
-        menu.add(soundsItem);
-        menuBar.add(menu);
-        setJMenuBar(menuBar);
+	public List<Player> getPlayers() {
+		return this.players;
+	}
 
-        newGameItem.addActionListener(new ActionListener() {
+	public FrameContentPane getFrameContentPane() {
+		return this.contentPane;
+	}
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // on recup les param�tres du nouveau game
-                Map<String, String> settings = NewGameForm.display();
-                // si on a pas fait cancel
-                if (settings != null) {
-                    String boardSize = settings.get("boardSize");
-                    // on cr�e le board qui va bien
-                    Board newGame = new Board(Integer.valueOf(boardSize), 3);
-                    boolean close = settings.get("close").equals("close") ? true : false;
-                    // si on a decid� de close les autre jeux
-                    if (close) {
-                        // on jarte les autres jeux
-                        Enclos.this.contentPane.resetGamePanel();
-                        Enclos.this.contentPane.addToGamePanel(newGame);
-                    } else {
-                        // sinon on ajoute le jeu apr�s les autres
-                        Enclos.this.contentPane.addToGamePanel(newGame);
-                    }
-                }
-
-            }
-
-        });
-
-        playerItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Speaker.playClickEvent();
-                PlayersFrame playersFrame = new PlayersFrame();
-            }
-        });
-
-        saveItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-                Date date = new Date();
-                SimpleWriter.SaveGame(boards.get(0), dateFormat.format(date));
-                //SimpleWriter writer = new SimpleWriter(boards.get(0), dateFormat.format(date));
-                System.out.println(dateFormat.format(date));
-
-                if (players.size() > 0) {
-                    SimpleWriter.SavePlayer(players, "players_test");
-                }
-            }
-        });
-
-        soundsItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Speaker.isMute(!soundsItem.isSelected());
-            }
-        });
-
-    }
-
-    private Dimension getScreenMaximumSize() {
-        Dimension maxDimension = null;
-        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        if (screenDimension.getHeight() > screenDimension.getWidth())
-            return new Dimension(screenDimension.width, screenDimension.width);
-        else
-            return new Dimension(screenDimension.height, screenDimension.height);
-    }
-
-    public List<Player> getPlayers() {
-        return this.players;
-    }
-    
-    public FrameContentPane getFrameContentPane(){
-    	return this.contentPane;
-    }
-    
-    public List<Board> getBoards(){
-    	return this.boards;
-    }
+	public List<Board> getBoards() {
+		return this.boards;
+	}
 
 }

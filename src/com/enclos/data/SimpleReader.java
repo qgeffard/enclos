@@ -99,7 +99,7 @@ public class SimpleReader {
 
 
 	private enum Params {
-		SHEEPNUMBER, BOARDSIZE, SHEEPSPOSITIONS, BARRIERS; // ; is required
+		SHEEPNUMBER, BOARDSIZE, PLAYERS, SHEEPSPOSITIONS, BARRIERS; // ; is required
 															// here.
 
 		@Override

@@ -20,7 +20,8 @@ public class SimpleWriter {
 		JSONObject jsonObject = new JSONObject();
 
 		jsonObject.put("Sheepnumber", board.getNbSheep() );
-
+		jsonObject.put("Players", board.getPlayers().size());
+		
 		jsonObject.put("Boardsize", board.getBoardSize());
 		
 		JSONArray sheepsPos = new JSONArray();
