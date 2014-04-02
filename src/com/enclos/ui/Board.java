@@ -792,15 +792,27 @@ public class Board extends JPanel {
 		}
 
 		resetSheep();
-
-		for (JSONArray index : sheepsToLoad) {
+		
+/*		  for (JSONArray index : sheepsToLoad) { String[] firstHexaPosition =
+		  ((String) index.get(0)).split(","); Hexagon firstHex =
+		  getCorrespondingHexagon( Integer.parseInt(firstHexaPosition[0]),
+		  Integer.parseInt(firstHexaPosition[1])); Sheep newSheep = new
+		  Sheep(); sheeps.add(newSheep); firstHex.setSheep(newSheep);
+		  
+		  }*/
+		 
+		//TODO BUG TOUT LES MOUTONS NE S'AFFICHENT PAS
+		for (int i = 0; i < sheepsToLoad.size(); i++) {
+			JSONArray index = sheepsToLoad.get(i);
 			String[] firstHexaPosition = ((String) index.get(0)).split(",");
 			Hexagon firstHex = getCorrespondingHexagon(
 					Integer.parseInt(firstHexaPosition[0]),
 					Integer.parseInt(firstHexaPosition[1]));
 			Sheep newSheep = new Sheep();
+			newSheep.setOwner(playerList.get(i%playerList.size()));
 			sheeps.add(newSheep);
 			firstHex.setSheep(newSheep);
+			
 		}
 
 		repaint();
