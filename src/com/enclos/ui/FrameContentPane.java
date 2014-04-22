@@ -2,16 +2,11 @@ package com.enclos.ui;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.List;
 
@@ -23,37 +18,43 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import com.enclos.data.Player;
 
 public class FrameContentPane extends JPanel {
-    private CardLayout cardLayout;
+    	
+	private CardLayout cardLayout;
     private JPanel gamePanel;
     private JPanel playersPanel;
-    private JPanel playersGridPanel;
+    private PlayersGridPanel playersGridPanel;
+    private JPanel playersChooser;
     private Enclos parent;
 
+    private String GAMEPANELNAME = "GamePanel";
+
+    private String PLAYERGRIDNAME = "PlayersGrid";
+    
     public FrameContentPane(Enclos parent) {
         this.parent = parent;
 
         cardLayout = new CardLayout();
         this.setLayout(cardLayout);
 
+        playersGridPanel = new PlayersGridPanel();
+        
         gamePanel = new JPanel();
         gamePanel.setLayout(new FlowLayout());
 
         playersPanel = new JPanel();
         playersPanel.setLayout(new BorderLayout());
         
-        playersGridPanel = new JPanel();
-        playersGridPanel.setLayout(new GridLayout());
+
         //TODO manage return carriage
-        playersPanel.add(playersGridPanel);
+        playersPanel.add(playersGridPanel,BorderLayout.NORTH);
         generatePlayersCard(parent);
 
         JButton addPlayerButton = new JButton("Add player");
-
+        
         // only workaround I found to keep the 'P' shortcut after clicking the button
         addPlayerButton.setFocusable(false);
 
@@ -62,8 +63,8 @@ public class FrameContentPane extends JPanel {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 Player newPlayer = createNewPlayer();
-                PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer);
-                FrameContentPane.this.playersGridPanel.add(playerProfile);
+                PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, FrameContentPane.this, false);
+                FrameContentPane.this.playersGridPanel.addPlayerProfile(playerProfile);
                 FrameContentPane.this.parent.getPlayers().add(newPlayer);
                 revalidate();
             }
@@ -102,34 +103,17 @@ public class FrameContentPane extends JPanel {
         });
 
         playersPanel.add(addPlayerButton, BorderLayout.SOUTH);
-        this.add(gamePanel);
-        this.add(playersPanel);
+        
+        this.add(gamePanel, GAMEPANELNAME);
+        this.add(playersPanel, PLAYERGRIDNAME);        
     }
 
     private void generatePlayersCard(final Enclos parent) {
 		final List<Player> players = parent.getPlayers();
 		if(players != null && players.size() > 0){
 			for(final Player currentPlayer : players){
-				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer);
-		        FrameContentPane.this.playersGridPanel.add(playerProfile);
-		        
-				
-		        playerProfile.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						super.mouseClicked(e);
-						if(SwingUtilities.isRightMouseButton(e)){
-							int choice = JOptionPane.showConfirmDialog(FrameContentPane.this, "Delete "+currentPlayer.getLastName() + " " + currentPlayer.getFirstName() +"?" );
-							
-							if(choice == JOptionPane.OK_OPTION){
-								players.remove(currentPlayer);
-								FrameContentPane.this.playersGridPanel.remove(playerProfile);
-								FrameContentPane.this.playersGridPanel.revalidate();
-								FrameContentPane.this.playersGridPanel.repaint();
-							}
-						}
-					}
-				});
+				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer, this, false);
+		        FrameContentPane.this.playersGridPanel.addPlayerProfile(playerProfile);
 			}
 		}
 
@@ -146,4 +130,16 @@ public class FrameContentPane extends JPanel {
     public void switchPanel() {
         cardLayout.next(this);
     }
+    
+    public void goToPlayersGrid() {
+        cardLayout.show(this,PLAYERGRIDNAME);
+    }
+	
+	public Enclos getParent(){
+		return this.parent;
+	}
+    
+	public PlayersGridPanel getPlayersGrid(){
+		return this.playersGridPanel;
+	}
 }

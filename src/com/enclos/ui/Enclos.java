@@ -39,8 +39,6 @@ public class Enclos extends JFrame {
         this.contentPane = new FrameContentPane(this);
 
         setContentPane(this.contentPane);
-        this.boards.add(new Board(3L, 3));
-        contentPane.addToGamePanel(boards.get(0));
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,6 +68,7 @@ public class Enclos extends JFrame {
                 if (e.getKeyCode() == KeyEvent.VK_P) {
                     System.out.println("pressed");
                     Enclos.this.contentPane.switchPanel();
+                    Enclos.this.contentPane.getPlayersGrid().setSelectable(false);
                 }
             }
 
