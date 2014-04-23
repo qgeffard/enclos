@@ -68,7 +68,7 @@ public class Enclos extends JFrame {
                 if (e.getKeyCode() == KeyEvent.VK_P) {
                     System.out.println("pressed");
                     Enclos.this.contentPane.switchPanel();
-                    Enclos.this.contentPane.getPlayersGrid().setSelectable(false);
+                    Enclos.this.contentPane.setPlayersPanelSelectable(false);
                 }
             }
 
