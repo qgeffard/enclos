@@ -46,7 +46,7 @@ public class Board extends JPanel {
     private List<Sheep> sheeps = new LinkedList<Sheep>();
     private final List<Shape> shapes = new LinkedList<Shape>();
     private final List<Bridge> barriers = new LinkedList<Bridge>();
-    private final List<Player> playerList = new LinkedList<Player>();
+    private List<Player> playerList = new LinkedList<Player>();
     private Hexagon firstHexSelected = null;
     private long size = 3;
     private int nbSheepPerPlayer = 3;
@@ -84,6 +84,14 @@ public class Board extends JPanel {
     public Board(long size, int nbSheepPerPlayer) {
         this.playerList.add(new Player("Parker", "peter", 18));
         this.playerList.add(new Player("Kent", "clark", 18));
+        this.nbSheepPerPlayer = nbSheepPerPlayer;
+        this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
+        this.size = size;
+        initGame();
+    }
+    
+    public Board(long size, int nbSheepPerPlayer, List<Player> players){
+    	this.playerList = players;
         this.nbSheepPerPlayer = nbSheepPerPlayer;
         this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
         this.size = size;

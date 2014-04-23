@@ -2,7 +2,10 @@ package com.enclos.ui;
 
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 public class FrameContentPane extends JPanel {
@@ -24,11 +27,12 @@ public class FrameContentPane extends JPanel {
 
         gamePanel = new JPanel();
         gamePanel.setLayout(new FlowLayout());
-
+        
         playersPanel = new PlayersMainPanel(parent, this);
 
         this.add(gamePanel, GAMEPANELNAME);
         this.add(playersPanel, PLAYERGRIDNAME);
+
     }
 
     public void addToGamePanel(Board board) {
@@ -43,6 +47,10 @@ public class FrameContentPane extends JPanel {
         cardLayout.next(this);
     }
 
+    public void goToGameGrid() {
+        cardLayout.show(this, GAMEPANELNAME);
+    }
+    
     public void goToPlayersGrid() {
         cardLayout.show(this, PLAYERGRIDNAME);
     }

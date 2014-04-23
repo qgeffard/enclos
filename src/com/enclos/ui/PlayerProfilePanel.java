@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.enclos.data.Player;
+import com.enclos.data.PlayerProfilePanelState;
 
 public class PlayerProfilePanel extends JPanel {
 
@@ -26,9 +27,11 @@ public class PlayerProfilePanel extends JPanel {
 
     private Color baseColor = null;
     private PlayersMainPanel parent = null;
+    private Player player = null;
 
     public PlayerProfilePanel(final Player player, final PlayersMainPanel parent, boolean isSelectingEnabled) {
 
+    	this.player = player;
         if (isSelectingEnabled) {
             state = PlayerProfilePanelState.NOTSELECTED;
         }
@@ -122,8 +125,17 @@ public class PlayerProfilePanel extends JPanel {
             this.imagePanel.setBackground(this.baseColor);
         }
     }
-
-    private enum PlayerProfilePanelState {
-        DISABLE, SELECTED, NOTSELECTED;
+    
+    public PlayerProfilePanelState getState(){
+    	return this.state;
+    }
+    
+    public Player getPlayer(){
+    	return this.player;
+    }
+    
+    public void unSelect()
+    {
+        this.state = PlayerProfilePanelState.NOTSELECTED;
     }
 }

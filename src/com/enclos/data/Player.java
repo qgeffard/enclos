@@ -32,6 +32,12 @@ public class Player implements PlayerAction {
         this.lastName = lastName;
         this.age = age;
         this.sheeps = new ArrayList<>();
+        try {
+			this.profilePicture = ImageIO.read(new File("resources/image/default_avatar.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public Player(String firstName, String lastName, int age, String picturePath) {

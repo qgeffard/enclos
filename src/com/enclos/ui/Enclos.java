@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.enclos.component.EnclosMenu;
