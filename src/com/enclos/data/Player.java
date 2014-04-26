@@ -133,4 +133,8 @@ public class Player implements PlayerAction {
         this.hasLost = true;
     }
 
+	public void alive() {
+		this.hasLost = false;
+	}
+
 }

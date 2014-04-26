@@ -6,7 +6,6 @@ public class UI {
 
         // frame normale avec le resize non dynamique
         // UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-
         Enclos enclos = new Enclos();
 
     }

@@ -108,7 +108,7 @@ public class PlayerProfilePanel extends JPanel {
     public void toggleState() {
         if (this.state != PlayerProfilePanelState.DISABLE) {
             if (this.state == PlayerProfilePanelState.NOTSELECTED) {
-                this.state = PlayerProfilePanelState.SELECTED;
+            	this.state = PlayerProfilePanelState.SELECTED;
                 this.imagePanel.setBackground(Color.green);
             } else {
                 this.state = PlayerProfilePanelState.NOTSELECTED;
@@ -137,5 +137,6 @@ public class PlayerProfilePanel extends JPanel {
     public void unSelect()
     {
         this.state = PlayerProfilePanelState.NOTSELECTED;
+        this.imagePanel.setBackground(this.baseColor);
     }
 }

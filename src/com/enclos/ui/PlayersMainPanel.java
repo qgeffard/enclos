@@ -52,24 +52,22 @@ public class PlayersMainPanel extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				int nbPlayers = PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount();
-				
-				if(nbPlayers>=2){
-				Map<String,String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());	
-				int x = 0;
-				System.out.println(String.valueOf(x));
-				
-				Long size = Long.valueOf(params.get("boardSize"));
-				int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
-				Board newBoard = new Board(size,nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected());
-				
-				if(params.get("close").equals("close")){
-					PlayersMainPanel.this.parent.resetGamePanel();
-				}
-				PlayersMainPanel.this.parent.addToGamePanel(newBoard);
-				PlayersMainPanel.this.parent.goToGameGrid();
-				
-				PlayersMainPanel.this.playersGridPanel.reset();
-				}else{
+
+				if (nbPlayers >= 2) {
+					Map<String, String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());
+
+					Long size = Long.valueOf(params.get("boardSize"));
+					int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
+					Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected());
+
+					if (params.get("close").equals("close")) {
+						PlayersMainPanel.this.parent.resetGamePanel();
+					}
+					PlayersMainPanel.this.parent.addToGamePanel(newBoard);
+					PlayersMainPanel.this.parent.goToGameGrid();
+
+					PlayersMainPanel.this.playersGridPanel.reset();
+				} else {
 					JOptionPane.showConfirmDialog(PlayersMainPanel.this, "Not enough players.");
 				}
 			}
@@ -85,10 +83,8 @@ public class PlayersMainPanel extends JPanel {
 				super.mouseClicked(e);
 				Player newPlayer = createNewPlayer();
 				if (newPlayer != null) {
-					PlayerProfilePanel playerProfile = new PlayerProfilePanel(
-							newPlayer, PlayersMainPanel.this, PlayersMainPanel.this.isSelectable);
-					PlayersMainPanel.this.playersGridPanel
-							.addPlayerProfile(playerProfile);
+					PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, PlayersMainPanel.this, PlayersMainPanel.this.isSelectable);
+					PlayersMainPanel.this.playersGridPanel.addPlayerProfile(playerProfile);
 					PlayersMainPanel.this.enclos.getPlayers().add(newPlayer);
 					revalidate();
 				}
@@ -99,13 +95,11 @@ public class PlayersMainPanel extends JPanel {
 				final JTextField firstName = new JTextField();
 				final JTextField lastName = new JTextField();
 				final JTextField age = new JTextField();
-				final JButton profilPictureButton = new JButton(
-						"Choose a profile picture");
+				final JButton profilPictureButton = new JButton("Choose a profile picture");
 
 				final JFileChooser fileChooser = new JFileChooser();
 
-				final FileDialog fileDialog = new FileDialog(new JFrame(),
-						"Choose picture", FileDialog.LOAD);
+				final FileDialog fileDialog = new FileDialog(new JFrame(), "Choose picture", FileDialog.LOAD);
 				profilPictureButton.addActionListener(new ActionListener() {
 
 					@Override
@@ -114,18 +108,12 @@ public class PlayersMainPanel extends JPanel {
 						fileChooser.showDialog(PlayersMainPanel.this, "ok");
 					}
 				});
-				final JComponent[] inputs = new JComponent[]{
-						new JLabel("First Name"), firstName,
-						new JLabel("Last Name"), lastName, new JLabel("Age"),
-						age, profilPictureButton};
-				JOptionPane.showMessageDialog(null, inputs, "Add a new player",
-						JOptionPane.PLAIN_MESSAGE);
+				final JComponent[] inputs = new JComponent[] { new JLabel("First Name"), firstName, new JLabel("Last Name"), lastName, new JLabel("Age"), age, profilPictureButton };
+				JOptionPane.showMessageDialog(null, inputs, "Add a new player", JOptionPane.PLAIN_MESSAGE);
 				try {
 					File file = fileChooser.getSelectedFile();
 					System.out.println(file.getAbsolutePath());
-					newPlayer = new Player(firstName.getText(), lastName
-							.getText(), Integer.parseInt(age.getText()), file
-							.getAbsolutePath());
+					newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
 
 				} catch (Exception e) {
 					return null;
@@ -145,8 +133,7 @@ public class PlayersMainPanel extends JPanel {
 		final List<Player> players = this.enclos.getPlayers();
 		if (players != null && players.size() > 0) {
 			for (final Player currentPlayer : players) {
-				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(
-						currentPlayer, this, false);
+				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer, this, false);
 				this.playersGridPanel.addPlayerProfile(playerProfile);
 			}
 		}
