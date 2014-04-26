@@ -55,18 +55,19 @@ public class PlayersMainPanel extends JPanel {
 
 				if (nbPlayers >= 2) {
 					Map<String, String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());
+					if (params != null) {
+						Long size = Long.valueOf(params.get("boardSize"));
+						int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
+						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected());
 
-					Long size = Long.valueOf(params.get("boardSize"));
-					int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
-					Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected());
+						if (params.get("close").equals("close")) {
+							PlayersMainPanel.this.parent.resetGamePanel();
+						}
+						PlayersMainPanel.this.parent.addToGamePanel(newBoard);
+						PlayersMainPanel.this.parent.goToGameGrid();
 
-					if (params.get("close").equals("close")) {
-						PlayersMainPanel.this.parent.resetGamePanel();
+						PlayersMainPanel.this.playersGridPanel.reset();
 					}
-					PlayersMainPanel.this.parent.addToGamePanel(newBoard);
-					PlayersMainPanel.this.parent.goToGameGrid();
-
-					PlayersMainPanel.this.playersGridPanel.reset();
 				} else {
 					JOptionPane.showConfirmDialog(PlayersMainPanel.this, "Not enough players.");
 				}

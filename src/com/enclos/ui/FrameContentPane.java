@@ -20,8 +20,11 @@ public class FrameContentPane extends JPanel {
 
     private final String PLAYERGRIDNAME = "PlayersGrid";
 
+    private Enclos parent = null;
+    
     public FrameContentPane(Enclos parent) {
-
+    	this.parent = parent;
+    	
         cardLayout = new CardLayout();
         this.setLayout(cardLayout);
 
@@ -29,12 +32,6 @@ public class FrameContentPane extends JPanel {
         gamePanel.setLayout(new BorderLayout());
         
         playersPanel = new PlayersMainPanel(parent, this);
-        
-        Board newBoard1 = new Board(3L, 3);
-        Board newBoard2 = new Board(3L, 3);
-        
-        gamePanel.add(newBoard1, BorderLayout.NORTH);
-        gamePanel.add(newBoard2, BorderLayout.SOUTH);
 
         this.add(gamePanel, GAMEPANELNAME);
         this.add(playersPanel, PLAYERGRIDNAME);
@@ -42,7 +39,9 @@ public class FrameContentPane extends JPanel {
     }
 
     public void addToGamePanel(Board board) {
+    	parent.getBoards().add(board);
         gamePanel.add(board);
+        parent.refreshMenu();
     }
 
     public void resetGamePanel() {

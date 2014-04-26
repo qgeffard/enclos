@@ -37,7 +37,7 @@ public class Sheep {
 	
 	@Override
 	public String toString() {
-		return super.toString() + " Sheep ";
+		return super.toString() + "Owner:"+ this.owner.toString()  +" Sheep " + virtualIndexHexagon.toString();
 	}
 
 }

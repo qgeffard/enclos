@@ -19,8 +19,10 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -38,7 +40,7 @@ import com.enclos.data.Player;
 import com.enclos.resources.song.Speaker;
 
 //board de test
-public class Board extends JPanel {
+public class Board extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private final List<Hexagon> hexagons = new LinkedList<Hexagon>();
@@ -52,42 +54,16 @@ public class Board extends JPanel {
 	private int nbSheepPerPlayer = 3;
 	private final int NB_SHEEP;
 	private int nbTurn = 0;
-	private Player currentPlayer;
+	private Player currentPlayer = null;
 
 	private boolean guiIsBeingCreated = true;
 	private boolean dataToLoad = false;
 	private List<JSONArray> barriersToLoad;
-	private List<JSONArray> sheepsToLoad;
+	private Map<Sheep, Point> sheepInfosToLoad;
 
 	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
 
 	private Hexagon lastCell = null;
-
-	public Board() {
-		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
-		initGame();
-	}
-
-	public Board(long size) {
-		this.size = size;
-		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
-		initGame();
-	}
-
-	public Board(int nbSheepPerPlayer) {
-		this.nbSheepPerPlayer = nbSheepPerPlayer;
-		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
-		initGame();
-	}
-
-	public Board(long size, int nbSheepPerPlayer) {
-		this.playerList.add(new Player("Parker", "peter", 18));
-		this.playerList.add(new Player("Kent", "clark", 18));
-		this.nbSheepPerPlayer = nbSheepPerPlayer;
-		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
-		this.size = size;
-		initGame();
-	}
 
 	public Board(long size, int nbSheepPerPlayer, List<Player> players) {
 		this.playerList = players;
@@ -103,7 +79,6 @@ public class Board extends JPanel {
 				hexa.setSheep(null);
 		}
 		sheeps.clear();
-
 	}
 
 	@Override
@@ -123,8 +98,9 @@ public class Board extends JPanel {
 		}
 
 		// SHEEP
-		for (int i = 1; i <= this.NB_SHEEP; i++) {
-			Hexagon currentHexa = this.hexagons.get(i);
+		int cout = 1;
+		for (int i = 0; i < this.NB_SHEEP; i++) {
+			Hexagon currentHexa = this.hexagons.get(cout);
 			Player owner = this.playerList.get(i % this.playerList.size());
 			Sheep sheep = new Sheep();
 			sheep.setOwner(owner);
@@ -132,7 +108,8 @@ public class Board extends JPanel {
 			owner.getSheeps().add(sheep);
 			this.sheeps.add(sheep);
 			currentHexa.setSheep(sheep);
-
+			System.out.println(sheep);
+			cout++;
 		}
 
 		// BRIDGES
@@ -648,8 +625,10 @@ public class Board extends JPanel {
 	}
 
 	private void firstTurn() {
+		if(this.currentPlayer == null)
+			this.currentPlayer = this.playerList.get((this.nbTurn) % this.playerList.size());
+		
 		this.nbTurn++;
-		this.currentPlayer = this.playerList.get((this.nbTurn) % this.playerList.size());
 		this.currentPlayer.startTurn();
 	}
 	
@@ -677,8 +656,8 @@ public class Board extends JPanel {
 		Player nextPlayer = null;
 		do {
 			// saute le tour du joueur s'il a déja perdu
-			this.nbTurn++;
 			nextPlayer = this.playerList.get((this.nbTurn) % this.playerList.size());
+			this.nbTurn++;
 		} while (nextPlayer.hasLost());
 		this.currentPlayer = nextPlayer;
 		this.currentPlayer.startTurn();
@@ -700,10 +679,11 @@ public class Board extends JPanel {
 		}
 	}
 
-	public void setData(List<JSONArray> barriers, List<JSONArray> sheepPositions) {
+	public void setData(List<JSONArray> barriers, Map<Sheep, Point> sheepInfos, Player currentPlay) {
 		dataToLoad = true;
 		barriersToLoad = barriers;
-		sheepsToLoad = sheepPositions;
+		sheepInfosToLoad = sheepInfos;
+		currentPlayer = currentPlay;
 	}
 
 	public void loadData() {
@@ -720,22 +700,23 @@ public class Board extends JPanel {
 
 		resetSheep();
 
-		// TODO debugger pourquoi les moutons ne s'affichent pas tous
-		for (int i = 0; i < sheepsToLoad.size(); i++) {
-			JSONArray index = sheepsToLoad.get(i);
-			String[] firstHexaPosition = ((String) index.get(0)).split(",");
-			Hexagon firstHex = getCorrespondingHexagon(Integer.parseInt(firstHexaPosition[0]), Integer.parseInt(firstHexaPosition[1]));
-			Sheep newSheep = new Sheep();
-			newSheep.setOwner(playerList.get(i % playerList.size()));
-			sheeps.add(newSheep);
-			firstHex.setSheep(newSheep);
-
+		for(Sheep sheep : sheepInfosToLoad.keySet()){
+			Hexagon hexa  = getCorrespondingHexagon(sheepInfosToLoad.get(sheep).x, sheepInfosToLoad.get(sheep).y);
+			hexa.setSheep(sheep);
+			sheeps.add(sheep);
 		}
+		
 		repaint();
 	}
 
 	public List<Player> getPlayers() {
 		return this.playerList;
 	}
+
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
+	
+	
 
 }
