@@ -25,9 +25,8 @@ public class SimpleWriter {
 		for (Player player : board.getPlayers()) {
 			JSONArray sheepsByPLayer = new JSONArray();
 			
-			System.out.println(player);
+			System.out.println(player.getSheeps().size());
 			for (Sheep sheep : player.getSheeps()) {
-				System.out.println(sheep);
 				sheepsByPLayer.add(sheep.getVirtualIndexHexagon().x + "," + sheep.getVirtualIndexHexagon().y);
 			}
 

@@ -72,6 +72,12 @@ public class Enclos extends JFrame {
 					Enclos.this.contentPane.switchPanel();
 					Enclos.this.contentPane.setPlayersPanelSelectable(false);
 				}
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					Enclos.this.contentPane.displayNextGame();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+					Enclos.this.contentPane.displayPreviousGame();
+				}
 			}
 
 			@Override

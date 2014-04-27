@@ -9,8 +9,9 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import com.enclos.component.Sheep;
+import com.enclos.ui.Board;
 
-public class Player implements PlayerAction {
+public class Player implements PlayerAction, Cloneable {
     public final static int BEGIN_TURN = 0;
     public final static int MOVE_SHEEP = 2;
     public final static int DROP_BARRIER = 1;
@@ -20,7 +21,7 @@ public class Player implements PlayerAction {
     private final int age;
     private int turnStatus;
     private boolean hasLost = false;
-    private final List<Sheep> sheeps;
+    private List<Sheep> sheeps;
 
     // only used when saving player
     private String profilePicturePath;
@@ -135,6 +136,23 @@ public class Player implements PlayerAction {
 
 	public void alive() {
 		this.hasLost = false;
+	}
+	
+	
+	private void deepCopySheepList(){
+		this.sheeps = new ArrayList<Sheep>();
+	}
+	
+	
+	public Player clone() {
+		Player clone = null;
+		try {
+			clone = (Player) super.clone();
+			clone.deepCopySheepList();
+		} catch(CloneNotSupportedException cnse) {
+			cnse.printStackTrace(System.err);
+		}
+		return clone;
 	}
 
 }

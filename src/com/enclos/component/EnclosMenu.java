@@ -51,7 +51,9 @@ public class EnclosMenu extends JMenuBar {
 		final JMenuItem newGameItem = new JMenuItem("New Game");
 		addNewGameItemListener(newGameItem);
 		final JMenuItem scoreItem = new JMenuItem("Scores");
-		final JMenu saveItem = generateSaveMenu();
+		// final JMenu saveItem = generateSaveMenu();
+		final JMenuItem saveItem = new JMenuItem("Save");
+		addSaveItemListener(saveItem);
 		final JMenu loadMenu = generateLoadMenu();
 		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", true);
 		addSoundsItemListener(soundsItem);
@@ -76,20 +78,24 @@ public class EnclosMenu extends JMenuBar {
 
 	}
 
-	private void addSaveItemListener(JMenuItem saveItem, String boardName) {
+	private void addSaveItemListener(JMenuItem saveItem) {
 
 		saveItem.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//Save good one with its boardName
-				
+
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 				Date date = new Date();
-				SimpleWriter.SaveGame(EnclosMenu.this.parent.getBoards().get(0), dateFormat.format(date));
+				Board boardToSave = EnclosMenu.this.parent.getFrameContentPane().getDisplayedBoard();
+				if (boardToSave != null) {
+					SimpleWriter.SaveGame(boardToSave, dateFormat.format(date));
+				}
 				if (EnclosMenu.this.parent.getPlayers().size() > 0) {
 					SimpleWriter.SavePlayer(EnclosMenu.this.parent.getPlayers(), "players_test");
 				}
+				
+				EnclosMenu.this.parent.refreshMenu();
 			}
 		});
 
@@ -125,18 +131,6 @@ public class EnclosMenu extends JMenuBar {
 		}
 		return loadMenu;
 	}
-	
-	private JMenu generateSaveMenu() {
-		final JMenu saveMenu = new JMenu("Save");
-		int numBoard = 0;
-		for(Board board : this.parent.getBoards()){
-			numBoard ++;
-			JMenuItem saveBoard = new JMenuItem("Partie"+numBoard); 
-			addSaveItemListener(saveBoard, saveBoard.getName());
-			saveMenu.add(saveBoard);
-		}
-		return saveMenu;
-	}
 
 	private void addLoadFileListener(JMenuItem loadFile, final String exactName) {
 		loadFile.addActionListener(new ActionListener() {
@@ -145,7 +139,8 @@ public class EnclosMenu extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 
 				System.out.println(exactName);
-				//Map<String, Object> params = SimpleReader.readGame(exactName);
+				// Map<String, Object> params =
+				// SimpleReader.readGame(exactName);
 
 				// LOADING
 				JSONParser parser = new JSONParser();
@@ -165,7 +160,7 @@ public class EnclosMenu extends JMenuBar {
 
 				List<JSONArray> players = (List<JSONArray>) root.get("Players");
 				Map<Sheep, Point> sheepsInfo = new LinkedHashMap<Sheep, Point>();
-				List<Player> playersList = new LinkedList<Player>(); 
+				List<Player> playersList = new LinkedList<Player>();
 				for (JSONArray player : players) {
 					for (Object obj : player) {
 						JSONObject jsonobj = (JSONObject) obj;
@@ -185,13 +180,11 @@ public class EnclosMenu extends JMenuBar {
 				Player currentPlayer = EnclosMenu.this.parent.getCorrespondingPlayer((String) root.get("currentPLayerFirstName"), (String) root.get("currentPLayerLastName"));
 
 				List<JSONArray> barriers = (List<JSONArray>) root.get("Barriers");
-				Board loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()),playersList);
+				Board loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList);
 				EnclosMenu.this.parent.getBoards().add(loadBoard);
 				EnclosMenu.this.parent.getFrameContentPane().addToGamePanel(loadBoard);
 
 				loadBoard.setData(barriers, sheepsInfo, currentPlayer);
-
-				System.out.println(exactName);
 			}
 		});
 	}

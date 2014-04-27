@@ -49,8 +49,8 @@ public class PlayersMainPanel extends JPanel {
 		next = new JButton("Next");
 		next.addMouseListener(new MouseAdapter() {
 
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
+			public void mousePressed(MouseEvent e) {
+				super.mousePressed(e);
 				int nbPlayers = PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount();
 
 				if (nbPlayers >= 2) {
