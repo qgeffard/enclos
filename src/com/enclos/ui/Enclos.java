@@ -26,13 +26,13 @@ public class Enclos extends JFrame {
 	private final List<Player> players;
 
 	public Enclos() {
-		// si jamais on veut utiliser le principe de la fenêtre carrée
+		// si jamais on veut utiliser le principe de la fenï¿½tre carrï¿½e
 		// this.state = new State(this);
 		this.scoreFrame = new ScoreFrame(this);
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		setTitle("Jeu de l'enclos");
 
-		this.players = SimpleReader.readPlayer("players_test");
+		this.players = SimpleReader.readPlayer("players");
 
 		// enabled tab listener
 		setFocusTraversalKeysEnabled(false);
@@ -68,7 +68,6 @@ public class Enclos extends JFrame {
 					}
 				}
 				if (e.getKeyCode() == KeyEvent.VK_P) {
-					System.out.println("pressed");
 					Enclos.this.contentPane.switchPanel();
 					Enclos.this.contentPane.setPlayersPanelSelectable(false);
 				}

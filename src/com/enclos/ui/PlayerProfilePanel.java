@@ -2,6 +2,7 @@ package com.enclos.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -41,8 +42,10 @@ public class PlayerProfilePanel extends JPanel {
 
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        this.add(imagePanel, BorderLayout.WEST);
-        this.add(infoPanel, BorderLayout.EAST);
+        this.setPreferredSize(new Dimension(150,150));
+        this.add(imagePanel);
+        this.add(infoPanel);
+        
 
         imagePanel.add(new JLabel(new ImageIcon(getProfilePicture(player.getProfilePicture()))));
         infoPanel.add(new JLabel(player.getLastName()));

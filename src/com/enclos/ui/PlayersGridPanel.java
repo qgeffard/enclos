@@ -1,6 +1,6 @@
 package com.enclos.ui;
 
-import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,8 @@ public class PlayersGridPanel extends JPanel {
 
 	public PlayersGridPanel() {
 		profiles = new ArrayList<PlayerProfilePanel>();
-		this.setLayout(new GridLayout());
+		
+		this.setLayout(new GridLayout((int) Math.ceil(this.profiles.size()/2),4));
 	}
 
 	public void addPlayerProfile(PlayerProfilePanel playerProfilePanel) {
