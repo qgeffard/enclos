@@ -2,6 +2,7 @@ package com.enclos.component;
 
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
+import java.io.File;
 import java.util.List;
 
 import com.enclos.data.Player;
@@ -10,6 +11,7 @@ public class Sheep {
 	private Point virtualIndexHexagon;
 	private Player owner;
 	private Hexagon hexagon;
+	private File imgPath;
 	
 	public Player getOwner() {
 		return owner;
@@ -35,6 +37,14 @@ public class Sheep {
 		return this.hexagon;
 	}
 	
+	public File getImgPath() {
+		return imgPath;
+	}
+
+	public void setImgPath(File imgPath) {
+		this.imgPath = imgPath;
+	}
+
 	@Override
 	public String toString() {
 		return super.toString() + "Owner:"+ this.owner.toString()  +" Sheep " + virtualIndexHexagon.toString();

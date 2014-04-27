@@ -72,7 +72,7 @@ public class FrameContentPane extends JPanel {
     }
 
 	public void displayPreviousGame() {
-    	this.gamePanelCardLayout.next(this.gamePanel);
+    	this.gamePanelCardLayout.previous(this.gamePanel);
 	}
 	
 	public Board getDisplayedBoard(){
@@ -82,5 +82,13 @@ public class FrameContentPane extends JPanel {
 		    }
 		}
 		return null;
+	}
+
+	public void removeDisplayedGame() {
+		for (Component comp : this.gamePanel.getComponents()) {
+		    if (comp.isVisible() == true) {
+		        this.gamePanel.remove(comp);
+		    }
+		}
 	}
 }

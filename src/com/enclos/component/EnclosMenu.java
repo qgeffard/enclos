@@ -20,6 +20,7 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -84,18 +85,23 @@ public class EnclosMenu extends JMenuBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+				
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 				Date date = new Date();
 				Board boardToSave = EnclosMenu.this.parent.getFrameContentPane().getDisplayedBoard();
 				if (boardToSave != null) {
-					SimpleWriter.SaveGame(boardToSave, dateFormat.format(date));
+					if(boardToSave.getCurrentPlayer().isBeginOfTurn()){
+						SimpleWriter.SaveGame(boardToSave, dateFormat.format(date));
+					} else {
+						JOptionPane.showMessageDialog(null, "Please finish your turn before saving","Error", JOptionPane.PLAIN_MESSAGE);
+					}
 				}
 				if (EnclosMenu.this.parent.getPlayers().size() > 0) {
 					SimpleWriter.SavePlayer(EnclosMenu.this.parent.getPlayers(), "players_test");
 				}
 				
 				EnclosMenu.this.parent.refreshMenu();
+				//EnclosMenu.this.repaint();
 			}
 		});
 
@@ -161,26 +167,36 @@ public class EnclosMenu extends JMenuBar {
 				List<JSONArray> players = (List<JSONArray>) root.get("Players");
 				Map<Sheep, Point> sheepsInfo = new LinkedHashMap<Sheep, Point>();
 				List<Player> playersList = new LinkedList<Player>();
+								
 				for (JSONArray player : players) {
 					for (Object obj : player) {
 						JSONObject jsonobj = (JSONObject) obj;
 						Player owner = EnclosMenu.this.parent.getCorrespondingPlayer((String) jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
 						playersList.add(owner);
+					}
+				}
+				Board loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList, EnclosMenu.this.parent);
+				
+				for (JSONArray player : players) {
+					for (Object obj : player) {
+						JSONObject jsonobj = (JSONObject) obj;
+						Player owner = loadBoard.getCorrespondingPlayer((String) jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
+						playersList.add(owner);
 						JSONArray sheepsPosition = (JSONArray) jsonobj.get("sheeps");
 						for (Object position : sheepsPosition) {
 							Sheep newSheep = new Sheep();
 							newSheep.setOwner(owner);
-
+							newSheep.setImgPath( new File((String) jsonobj.get("imgPath")));
 							String[] hexaPosition = ((String) position).split(",");
 							Point pos = new Point(Integer.valueOf(hexaPosition[0]), Integer.valueOf(hexaPosition[1]));
 							sheepsInfo.put(newSheep, pos);
 						}
 					}
 				}
-				Player currentPlayer = EnclosMenu.this.parent.getCorrespondingPlayer((String) root.get("currentPLayerFirstName"), (String) root.get("currentPLayerLastName"));
+				Player currentPlayer = loadBoard.getCorrespondingPlayer((String) root.get("currentPLayerFirstName"), (String) root.get("currentPLayerLastName"));
 
 				List<JSONArray> barriers = (List<JSONArray>) root.get("Barriers");
-				Board loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList);
+
 				EnclosMenu.this.parent.getBoards().add(loadBoard);
 				EnclosMenu.this.parent.getFrameContentPane().addToGamePanel(loadBoard);
 

@@ -63,6 +63,10 @@ public class Player implements PlayerAction, Cloneable {
     public boolean isEndOfTurn() {
         return (this.turnStatus >= END_TURN) ? true : false;
     }
+    
+    public boolean isBeginOfTurn(){
+    	return (this.turnStatus == BEGIN_TURN) ? true : false;
+    }
 
     public String getFirstName() {
         return firstName;

@@ -31,7 +31,7 @@ public class PlayersMainPanel extends JPanel {
 	private final JPanel buttonPanel;
 	private JButton next;
 
-	public PlayersMainPanel(Enclos enclos, FrameContentPane parent) {
+	public PlayersMainPanel(final Enclos enclos, FrameContentPane parent) {
 		this.enclos = enclos;
 		this.parent = parent;
 
@@ -58,7 +58,7 @@ public class PlayersMainPanel extends JPanel {
 					if (params != null) {
 						Long size = Long.valueOf(params.get("boardSize"));
 						int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
-						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected());
+						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(),PlayersMainPanel.this.enclos);
 
 						if (params.get("close").equals("close")) {
 							PlayersMainPanel.this.parent.resetGamePanel();
@@ -113,8 +113,16 @@ public class PlayersMainPanel extends JPanel {
 				JOptionPane.showMessageDialog(null, inputs, "Add a new player", JOptionPane.PLAIN_MESSAGE);
 				try {
 					File file = fileChooser.getSelectedFile();
-					System.out.println(file.getAbsolutePath());
-					newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
+					if(enclos.getCorrespondingPlayer(firstName.getText(), lastName.getText()) == null ){
+						if(file != null){
+							newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
+						}else{
+							newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()));
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "The Couple lastname, firstname already exists, plaese choose another one","Error", JOptionPane.PLAIN_MESSAGE);
+					}
+	
 
 				} catch (Exception e) {
 					return null;

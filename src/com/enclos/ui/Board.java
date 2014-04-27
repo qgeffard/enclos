@@ -61,12 +61,17 @@ public class Board extends JPanel {
 	private List<JSONArray> barriersToLoad;
 	private Map<Sheep, Point> sheepInfosToLoad;
 
+	private Enclos parent;
+
 	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
 
 	private Hexagon lastCell = null;
 
-	public Board(long size, int nbSheepPerPlayer, List<Player> players) {
-		for(Player player : players){
+	public Board(long size, int nbSheepPerPlayer, List<Player> players, Enclos parent) {
+
+		this.parent = parent;
+
+		for (Player player : players) {
 			Player playerCloned = player.clone();
 			this.playerList.add(playerCloned);
 		}
@@ -106,12 +111,34 @@ public class Board extends JPanel {
 			Hexagon currentHexa = this.hexagons.get(cout);
 			Player owner = this.playerList.get(i % this.playerList.size());
 			Sheep sheep = new Sheep();
+
+			File imgPath = null;
+			switch (i % playerList.size()) {
+			case 0:
+				imgPath = new File("resources/image/white_sheep.png");
+				break;
+			case 1:
+				imgPath = new File("resources/image/green_sheep.png");
+				break;
+			case 2:
+				imgPath = new File("resources/image/rasta_sheep.png");
+				break;
+			case 3:
+				imgPath = new File("resources/image/red_sheep.png");
+				break;
+			case 4:
+				imgPath = new File("resources/image/ultra_sheep.png");
+				break;
+			default:
+				break;
+			}
+
+			sheep.setImgPath(imgPath);
 			sheep.setOwner(owner);
 			sheep.setHexagon(currentHexa);
 			owner.getSheeps().add(sheep);
 			this.sheeps.add(sheep);
 			currentHexa.setSheep(sheep);
-			System.out.println(sheep);
 			cout++;
 		}
 
@@ -331,27 +358,7 @@ public class Board extends JPanel {
 				int imageBounds = (int) Hexagon.getAverageLength() + 5;
 				if (imageBounds == 0)
 					break;
-				File img = null;
-				switch (i % playerList.size()) {
-				case 0:
-					img = new File("resources/image/white_sheep.png");
-					break;
-				case 1:
-					img = new File("resources/image/green_sheep.png");
-					break;
-				case 2:
-					img = new File("resources/image/rasta_sheep.png");
-					break;
-				case 3:
-					img = new File("resources/image/red_sheep.png");
-					break;
-				case 4:
-					img = new File("resources/image/ultra_sheep.png");
-					break;
-				default:
-					break;
-				}
-
+				File img = sheep.getImgPath();
 				try {
 					BufferedImage originalImage = ImageIO.read(img);
 					int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
@@ -605,7 +612,8 @@ public class Board extends JPanel {
 				Board.this.repaint();
 				if (action) {
 					if (isGameFinished()) {
-						JOptionPane.showMessageDialog(null, "GAME OVER ET ARRETE DE JOUER BATARD !!!!");
+						JOptionPane.showMessageDialog(null, "GAME OVER !!!!");
+						Board.this.parent.getFrameContentPane().removeDisplayedGame();
 					} else if (Board.this.currentPlayer.hasLost() && !Board.this.currentPlayer.isEndOfTurn()) {
 						Board.this.nextTurn();
 					}
@@ -663,6 +671,7 @@ public class Board extends JPanel {
 			this.nbTurn++;
 		} while (nextPlayer.hasLost());
 		this.currentPlayer = nextPlayer;
+
 		this.currentPlayer.startTurn();
 	}
 
@@ -701,11 +710,19 @@ public class Board extends JPanel {
 			this.barriers.add(correspondingBridge);
 		}
 
+		// reset board list of sheeps
 		resetSheep();
 
+		for (Player player : this.playerList) {
+			player.getSheeps().clear();
+		}
+		
 		for (Sheep sheep : sheepInfosToLoad.keySet()) {
 			Hexagon hexa = getCorrespondingHexagon(sheepInfosToLoad.get(sheep).x, sheepInfosToLoad.get(sheep).y);
 			hexa.setSheep(sheep);
+			sheep.setHexagon(hexa);
+			//add the new sheeps with their new position to the player's sheep's list
+			sheep.getOwner().getSheeps().add(sheep);
 			sheeps.add(sheep);
 		}
 
@@ -718,6 +735,15 @@ public class Board extends JPanel {
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+
+	public Player getCorrespondingPlayer(String firstName, String lastName) {
+		for (Player player : this.playerList) {
+			if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
+				return player;
+			}
+		}
+		return null;
 	}
 
 }

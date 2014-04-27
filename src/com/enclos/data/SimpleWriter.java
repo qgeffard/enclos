@@ -1,9 +1,9 @@
 package com.enclos.data;
 
 import java.awt.Point;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -12,7 +12,6 @@ import org.json.simple.JSONObject;
 import com.enclos.component.Bridge;
 import com.enclos.component.Sheep;
 import com.enclos.ui.Board;
-import com.google.gson.Gson;
 
 public class SimpleWriter {
 	private String jsonFilePath;
@@ -26,7 +25,9 @@ public class SimpleWriter {
 			JSONArray sheepsByPLayer = new JSONArray();
 			
 			System.out.println(player.getSheeps().size());
+			File imgPath = null;
 			for (Sheep sheep : player.getSheeps()) {
+				imgPath = sheep.getImgPath();
 				sheepsByPLayer.add(sheep.getVirtualIndexHexagon().x + "," + sheep.getVirtualIndexHexagon().y);
 			}
 
@@ -38,6 +39,7 @@ public class SimpleWriter {
 			playerRoot.put("age", player.getAge());
 			playerRoot.put("picturePath", player.getProfilePicturePath());
 			playerRoot.put("sheeps", sheepsByPLayer);
+			playerRoot.put("imgPath", imgPath.toString());
 
 			players.add(playerInfos);
 		}
