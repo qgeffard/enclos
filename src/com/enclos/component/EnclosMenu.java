@@ -136,6 +136,8 @@ public class EnclosMenu extends JMenuBar {
 					loadMenu.add(loadFile);
 				}
 			}
+		}else{
+			loadMenu.add(new JMenuItem("Please save a game before load"));
 		}
 		return loadMenu;
 	}

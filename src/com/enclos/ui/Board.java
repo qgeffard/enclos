@@ -3,6 +3,7 @@ package com.enclos.ui;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -174,6 +175,7 @@ public class Board extends JPanel {
 			}
 			drawBarriers(g2);
 			drawSheep(g2);
+			drawCurrentPlayer(g2);
 			generateNeighboors();
 
 			this.shapes.clear();
@@ -347,7 +349,7 @@ public class Board extends JPanel {
 		}
 	}
 
-	// TODO trouver taille adéquate au mouton
+	// TODO trouver taille adï¿½quate au mouton
 	private void drawSheep(Graphics2D g) {
 		for (int i = 1; i < this.NB_SHEEP + 1; i++) {
 			Sheep sheep = this.sheeps.get(i - 1);
@@ -370,6 +372,25 @@ public class Board extends JPanel {
 				}
 			}
 		}
+	}
+	
+	private void drawCurrentPlayer(Graphics2D g) {
+		try {
+			BufferedImage originalImage = ImageIO.read(this.currentPlayer.getSheeps().get(0).getImgPath());
+			int imageBounds = (int) this.getWidth()/10;
+			
+			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+			BufferedImage resizeImageJpg = resizeImage(originalImage, type, imageBounds, imageBounds);
+			
+			g.drawImage(resizeImageJpg, resizeImageJpg.getWidth()/2, resizeImageJpg.getHeight()/2, null);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		g.setFont(new Font("Arial", Font.BOLD, 20));
+//		g.setColor(Color.black);
+//		g.drawString("Turn of : "+this.currentPlayer.getFirstName()+" "+this.currentPlayer.getLastName()+" !", 25, 25);
+		
 	}
 
 	private Hexagon findOwnerOfSheep(Sheep sheep) {
@@ -666,7 +687,7 @@ public class Board extends JPanel {
 	private void nextTurn() {
 		Player nextPlayer = null;
 		do {
-			// saute le tour du joueur s'il a déja perdu
+			// saute le tour du joueur s'il a dï¿½ja perdu
 			nextPlayer = this.playerList.get((this.nbTurn) % this.playerList.size());
 			this.nbTurn++;
 		} while (nextPlayer.hasLost());
