@@ -101,6 +101,7 @@ public class EnclosMenu extends JMenuBar {
 				}
 
 				EnclosMenu.this.parent.refreshMenu();
+				EnclosMenu.this.parent.revalidate();
 				// EnclosMenu.this.repaint();
 			}
 		});
