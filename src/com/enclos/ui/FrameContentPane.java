@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class FrameContentPane extends JPanel {
 
@@ -35,9 +37,10 @@ public class FrameContentPane extends JPanel {
         gamePanel.setLayout(gamePanelCardLayout);
         
         playersPanel = new PlayersMainPanel(parent, this);
+        JScrollPane scrollPanel = new JScrollPane(playersPanel);
 
         this.add(gamePanel, GAMEPANELNAME);
-        this.add(playersPanel, PLAYERGRIDNAME);
+        this.add(scrollPanel, PLAYERGRIDNAME);
 
     }
 
