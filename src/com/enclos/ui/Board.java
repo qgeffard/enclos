@@ -132,6 +132,9 @@ public class Board extends JPanel {
 			case 4:
 				imgPath = new File("resources/image/ultra_sheep.png");
 				break;
+			case 5:
+				imgPath = new File("resources/image/dark_sheep_of_the_death.png");
+				break;
 			default:
 				break;
 			}
