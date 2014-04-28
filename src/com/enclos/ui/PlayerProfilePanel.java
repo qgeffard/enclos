@@ -50,7 +50,8 @@ public class PlayerProfilePanel extends JPanel {
         imagePanel.add(new JLabel(new ImageIcon(getProfilePicture(player.getProfilePicture()))));
         infoPanel.add(new JLabel(player.getLastName()));
         infoPanel.add(new JLabel(player.getFirstName()));
-        infoPanel.add(new JLabel(String.valueOf(player.getAge())));
+        infoPanel.add(new JLabel(String.valueOf(player.getAge())+" ans"));
+        infoPanel.add(new JLabel("Score : "+String.valueOf(player.getScore())));
 
         addMouseListener(new MouseAdapter() {
             @Override

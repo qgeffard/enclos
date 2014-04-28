@@ -19,6 +19,7 @@ public class Player implements PlayerAction, Cloneable {
     private final String firstName;
     private final String lastName;
     private final int age;
+    private int score;
     private int turnStatus;
     private boolean hasLost = false;
     private List<Sheep> sheeps;
@@ -33,12 +34,18 @@ public class Player implements PlayerAction, Cloneable {
         this.lastName = lastName;
         this.age = age;
         this.sheeps = new ArrayList<>();
+
+        
         try {
 			this.profilePicture = ImageIO.read(new File("resources/image/default_avatar.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+    
+    public int test(){
+    	return this.score;
     }
 
     public Player(String firstName, String lastName, int age, String picturePath) {
@@ -56,7 +63,12 @@ public class Player implements PlayerAction, Cloneable {
         }
     }
 
-    public void startTurn() {
+    public Player(String firstName, String lastName, int age, int score, String picturePath) {
+    	this(firstName,lastName,age,picturePath);
+    	this.score = score;
+	}
+
+	public void startTurn() {
         this.turnStatus = BEGIN_TURN;
     }
 
@@ -129,6 +141,14 @@ public class Player implements PlayerAction, Cloneable {
     public String getProfilePicturePath() {
         return this.profilePicturePath;
     }
+    
+    public int getScore(){
+    	return this.score;
+    }
+    
+    public void win(){
+    	this.score++;
+    }
 
     public boolean hasLost() {
         return this.hasLost;
@@ -158,5 +178,4 @@ public class Player implements PlayerAction, Cloneable {
 		}
 		return clone;
 	}
-
 }

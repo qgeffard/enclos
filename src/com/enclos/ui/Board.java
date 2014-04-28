@@ -49,6 +49,7 @@ public class Board extends JPanel {
 	private List<Sheep> sheeps = new LinkedList<Sheep>();
 	private final List<Shape> shapes = new LinkedList<Shape>();
 	private final List<Bridge> barriers = new LinkedList<Bridge>();
+	private List<Player> realPlayersList = new LinkedList<Player>();
 	private List<Player> playerList = new LinkedList<Player>();
 	private Hexagon firstHexSelected = null;
 	private long size = 3;
@@ -71,6 +72,7 @@ public class Board extends JPanel {
 	public Board(long size, int nbSheepPerPlayer, List<Player> players, Enclos parent) {
 
 		this.parent = parent;
+		this.realPlayersList = players;
 
 		for (Player player : players) {
 			Player playerCloned = player.clone();
@@ -373,24 +375,25 @@ public class Board extends JPanel {
 			}
 		}
 	}
-	
+
 	private void drawCurrentPlayer(Graphics2D g) {
 		try {
 			BufferedImage originalImage = ImageIO.read(this.currentPlayer.getSheeps().get(0).getImgPath());
-			int imageBounds = (int) this.getWidth()/10;
-			
+			int imageBounds = (int) this.getWidth() / 10;
+
 			int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 			BufferedImage resizeImageJpg = resizeImage(originalImage, type, imageBounds, imageBounds);
-			
-			g.drawImage(resizeImageJpg, resizeImageJpg.getWidth()/2, resizeImageJpg.getHeight()/2, null);
+
+			g.drawImage(resizeImageJpg, resizeImageJpg.getWidth() / 2, resizeImageJpg.getHeight() / 2, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		g.setFont(new Font("Arial", Font.BOLD, 20));
-//		g.setColor(Color.black);
-//		g.drawString("Turn of : "+this.currentPlayer.getFirstName()+" "+this.currentPlayer.getLastName()+" !", 25, 25);
-		
+		// g.setFont(new Font("Arial", Font.BOLD, 20));
+		// g.setColor(Color.black);
+		// g.drawString("Turn of : "+this.currentPlayer.getFirstName()+" "+this.currentPlayer.getLastName()+" !",
+		// 25, 25);
+
 	}
 
 	private Hexagon findOwnerOfSheep(Sheep sheep) {
@@ -697,15 +700,24 @@ public class Board extends JPanel {
 	}
 
 	private boolean isGameFinished() {
+		Player winner = null;
 		int playersLeft = this.playerList.size();
 		updateLoseStatusPlayer();
 
 		for (Player player : this.playerList) {
 			if (player.hasLost()) {
 				playersLeft--;
+			} else {
+				winner = player;
 			}
 		}
 		if (playersLeft <= 1) {
+			if (winner != null) {
+				Player realWinner = getCorrespondingRealPlayer(winner.getFirstName(), winner.getLastName());
+				if (realWinner != null) {
+					realWinner.win();
+				}
+			}
 			return true;
 		} else {
 			return false;
@@ -737,12 +749,13 @@ public class Board extends JPanel {
 		for (Player player : this.playerList) {
 			player.getSheeps().clear();
 		}
-		
+
 		for (Sheep sheep : sheepInfosToLoad.keySet()) {
 			Hexagon hexa = getCorrespondingHexagon(sheepInfosToLoad.get(sheep).x, sheepInfosToLoad.get(sheep).y);
 			hexa.setSheep(sheep);
 			sheep.setHexagon(hexa);
-			//add the new sheeps with their new position to the player's sheep's list
+			// add the new sheeps with their new position to the player's
+			// sheep's list
 			sheep.getOwner().getSheeps().add(sheep);
 			sheeps.add(sheep);
 		}
@@ -760,6 +773,15 @@ public class Board extends JPanel {
 
 	public Player getCorrespondingPlayer(String firstName, String lastName) {
 		for (Player player : this.playerList) {
+			if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
+				return player;
+			}
+		}
+		return null;
+	}
+
+	public Player getCorrespondingRealPlayer(String firstName, String lastName) {
+		for (Player player : this.realPlayersList) {
 			if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
 				return player;
 			}
