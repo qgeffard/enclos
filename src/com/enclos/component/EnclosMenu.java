@@ -21,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,6 +34,7 @@ import com.enclos.resources.song.Speaker;
 import com.enclos.ui.Board;
 import com.enclos.ui.Enclos;
 import com.enclos.ui.FrameContentPane;
+import com.enclos.ui.ScorePanel;
 
 public class EnclosMenu extends JMenuBar {
 
@@ -45,26 +47,52 @@ public class EnclosMenu extends JMenuBar {
 		JMenu menu = new JMenu("Game");
 		menu.setForeground(Color.white);
 		addSubItems(menu);
+
 	}
 
 	public void addSubItems(JMenu menu) {
 
 		final JMenuItem newGameItem = new JMenuItem("New Game");
 		addNewGameItemListener(newGameItem);
-		final JMenuItem scoreItem = new JMenuItem("Scores");
-		// final JMenu saveItem = generateSaveMenu();
 		final JMenuItem saveItem = new JMenuItem("Save");
 		addSaveItemListener(saveItem);
+		final JMenuItem scoreItem = new JMenuItem("Scores");
+		addScoreItemListener(scoreItem);
+		final JMenuItem playersItem = new JMenuItem("Players");
+		addPlayersItemListener(playersItem);
 		final JMenu loadMenu = generateLoadMenu();
 		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", true);
 		addSoundsItemListener(soundsItem);
 
 		menu.add(newGameItem);
 		menu.add(scoreItem);
+		menu.add(playersItem);
 		menu.add(saveItem);
 		menu.add(loadMenu);
 		menu.add(soundsItem);
 		this.add(menu);
+
+	}
+
+	private void addPlayersItemListener(JMenuItem playersItem) {
+		playersItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.getFrameContentPane().goToPlayersPanel();
+				parent.getFrameContentPane().setPlayersPanelSelectable(false);
+			}
+		});
+	}
+
+	private void addScoreItemListener(JMenuItem scoreItem) {
+		scoreItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.getFrameContentPane().goToScorePanel();
+			}
+		});
 
 	}
 
@@ -116,7 +144,7 @@ public class EnclosMenu extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 
 				FrameContentPane contentPane = ((FrameContentPane) EnclosMenu.this.parent.getContentPane());
-				contentPane.goToPlayersGrid();
+				contentPane.goToPlayersPanel();
 				contentPane.setPlayersPanelSelectable(true);
 			}
 		});
@@ -137,7 +165,7 @@ public class EnclosMenu extends JMenuBar {
 					loadMenu.add(loadFile);
 				}
 			}
-		}else{
+		} else {
 			loadMenu.add(new JMenuItem("Please save a game before load"));
 		}
 		return loadMenu;

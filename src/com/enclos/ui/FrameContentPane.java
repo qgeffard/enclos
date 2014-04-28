@@ -7,11 +7,14 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+
+import com.enclos.data.Player;
 
 public class FrameContentPane extends JPanel {
 
@@ -19,10 +22,12 @@ public class FrameContentPane extends JPanel {
     private final JPanel gamePanel;
     private final CardLayout gamePanelCardLayout;
     private final PlayersMainPanel playersPanel;
+    private final ScorePanel scorePanel;
     
     private final String GAMEPANELNAME = "GamePanel";
-
     private final String PLAYERGRIDNAME = "PlayersGrid";
+    private final String SCOREPANELNAME = "ScorePanel";
+
 
     private Enclos parent = null;
     
@@ -39,9 +44,11 @@ public class FrameContentPane extends JPanel {
         playersPanel = new PlayersMainPanel(parent, this);
         JScrollPane scrollPanel = new JScrollPane(playersPanel);
 
+        scorePanel = new ScorePanel(parent.getPlayers());        
+        
         this.add(gamePanel, GAMEPANELNAME);
         this.add(scrollPanel, PLAYERGRIDNAME);
-
+        this.add(scorePanel, SCOREPANELNAME); 
     }
 
     public void addToGamePanel(Board board) {
@@ -58,12 +65,16 @@ public class FrameContentPane extends JPanel {
         contentPaneCardLayout.next(this);
     }
 
-    public void goToGameGrid() {
+    public void goToGamePanel() {
         contentPaneCardLayout.show(this, GAMEPANELNAME);
     }
     
-    public void goToPlayersGrid() {
+    public void goToPlayersPanel() {
         contentPaneCardLayout.show(this, PLAYERGRIDNAME);
+    }
+    
+    public void goToScorePanel() {
+        contentPaneCardLayout.show(this, SCOREPANELNAME);
     }
 
     public void setPlayersPanelSelectable(boolean isPlayerPanelSelectable) {
@@ -93,5 +104,10 @@ public class FrameContentPane extends JPanel {
 		        this.gamePanel.remove(comp);
 		    }
 		}
+	}
+	
+	
+	public void refreshScorePanel(List<Player> players){
+		scorePanel.feedTable(players);
 	}
 }

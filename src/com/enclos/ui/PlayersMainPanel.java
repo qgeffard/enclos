@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.enclos.data.Player;
+import com.enclos.data.SimpleReader;
+import com.enclos.data.SimpleWriter;
 
 public class PlayersMainPanel extends JPanel {
 
@@ -64,7 +66,7 @@ public class PlayersMainPanel extends JPanel {
 							PlayersMainPanel.this.parent.resetGamePanel();
 						}
 						PlayersMainPanel.this.parent.addToGamePanel(newBoard);
-						PlayersMainPanel.this.parent.goToGameGrid();
+						PlayersMainPanel.this.parent.goToGamePanel();
 
 						PlayersMainPanel.this.playersGridPanel.reset();
 					}
@@ -87,6 +89,8 @@ public class PlayersMainPanel extends JPanel {
 					PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, PlayersMainPanel.this, PlayersMainPanel.this.isSelectable);
 					PlayersMainPanel.this.playersGridPanel.addPlayerProfile(playerProfile);
 					PlayersMainPanel.this.enclos.getPlayers().add(newPlayer);
+					SimpleWriter.SavePlayer(PlayersMainPanel.this.enclos.getPlayers(), "players");
+					PlayersMainPanel.this.enclos.getFrameContentPane().refreshScorePanel(PlayersMainPanel.this.enclos.getPlayers());
 					revalidate();
 				}
 			}
