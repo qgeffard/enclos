@@ -806,17 +806,17 @@ public class Board extends JPanel {
 		if(!currentPlayer.isBeginOfTurn()){
 			if(currentPlayer.getTurnStatus() == Player.DROP_BARRIER){
 				barriers.remove(barriers.size()-1);
-				repaint();
 			}else{
 				lastHexagonPosition.setSheep(lastMovedSheep);
 				lastMovedSheep.getHexagon().setSheep(null);
 				lastMovedSheep.setHexagon(lastHexagonPosition);	
-				repaint();
+				lastMovedSheep = null;
+				lastHexagonPosition = null;
 			}
+			repaint();
 			currentPlayer.setTurnStatus(Player.BEGIN_TURN);
 		}else{                    
 			JOptionPane.showMessageDialog(null, "No last action to cancel");
 		}		
 	}
-
 }
