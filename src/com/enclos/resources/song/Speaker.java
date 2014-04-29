@@ -12,6 +12,7 @@ public class Speaker {
 	private static List<AudioClip> dropBarrier = new LinkedList<AudioClip>();
 	private static List<AudioClip> hoverEvent = new LinkedList<AudioClip>();
 	private static AudioClip click;
+	private static AudioClip intro;
 	private static boolean isMute = false;
 
 	static {
@@ -40,6 +41,9 @@ public class Speaker {
 		
 		//Click
 		Speaker.click = Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/click.wav"));
+		
+		//Intro
+		Speaker.intro = Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/intro.wav"));
 	}
 
 	public static void playRandomSaySheep() {
@@ -75,6 +79,13 @@ public class Speaker {
 			Speaker.click.play();
 		}
 	}
+	
+	public static void playIntro(){
+		if(!Speaker.isMute){
+			Speaker.intro.play();
+		}
+	}
+	
 	public static void isMute(boolean isMute) {
 		Speaker.isMute = isMute;
 	}
