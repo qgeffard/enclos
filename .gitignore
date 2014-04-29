@@ -1,7 +1,10 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
- .classpath .projet .settings/*
+ .classpath 
+ .projet 
+ .settings/*
+ bin/*
+
