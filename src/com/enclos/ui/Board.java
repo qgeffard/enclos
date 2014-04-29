@@ -11,6 +11,8 @@ import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
@@ -56,7 +58,9 @@ public class Board extends JPanel {
     private final int NB_SHEEP;
     private int nbTurn = 0;
     private Player currentPlayer = null;
-
+    private Sheep lastMovedSheep = null;
+    private Hexagon lastHexagonPosition = null;
+    
     private boolean guiIsBeingCreated = true;
     private boolean dataToLoad = false;
     private List<JSONArray> barriersToLoad;
@@ -598,9 +602,11 @@ public class Board extends JPanel {
                                     hex.setSheep(sheepToMove);
                                     sheepToMove.setHexagon(hex);
                                     selectedHexagon.setSheep(null);
+                                    Board.this.lastHexagonPosition = Board.this.firstHexSelected;
                                     Board.this.firstHexSelected = null;
                                     resetHexagonsColor();
                                     Board.this.currentPlayer.moveSheep();
+                                    Board.this.lastMovedSheep = sheepToMove;
                                     if (Board.this.currentPlayer.isEndOfTurn()) {
                                         Board.this.nextTurn();
                                     }
@@ -795,5 +801,22 @@ public class Board extends JPanel {
         }
         return null;
     }
+
+	public void cancelAction() {
+		if(!currentPlayer.isBeginOfTurn()){
+			if(currentPlayer.getTurnStatus() == Player.DROP_BARRIER){
+				barriers.remove(barriers.size()-1);
+				repaint();
+			}else{
+				lastHexagonPosition.setSheep(lastMovedSheep);
+				lastMovedSheep.getHexagon().setSheep(null);
+				lastMovedSheep.setHexagon(lastHexagonPosition);	
+				repaint();
+			}
+			currentPlayer.setTurnStatus(Player.BEGIN_TURN);
+		}else{                    
+			JOptionPane.showMessageDialog(null, "No last action to cancel");
+		}		
+	}
 
 }

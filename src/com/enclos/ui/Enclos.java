@@ -28,24 +28,24 @@ public class Enclos extends JFrame {
 		// si jamais on veut utiliser le principe de la fen�tre carr�e
 		// this.state = new State(this);
 		this.scoreFrame = new ScoreFrame(this);
-		
+
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		setTitle("Jeu de l'enclos");
 
-        this.players = SimpleReader.readPlayer("players");
+		this.players = SimpleReader.readPlayer("players");
 
-        // enabled tab listener
-        setFocusTraversalKeysEnabled(false);
-        setSize(500, 500);
+		// enabled tab listener
+		setFocusTraversalKeysEnabled(false);
+		setSize(500, 500);
 
-        this.contentPane = new FrameContentPane(this);
+		this.contentPane = new FrameContentPane(this);
 
-        setContentPane(this.contentPane);
+		setContentPane(this.contentPane);
 
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        EnclosMenu menu = new EnclosMenu(this);
-        this.setJMenuBar(menu);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		EnclosMenu menu = new EnclosMenu(this);
+		this.setJMenuBar(menu);
 
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -53,94 +53,102 @@ public class Enclos extends JFrame {
 				super.componentResized(e);
 				// state.setSize(getSize(), true);
 				scoreFrame.setSize(getSize());
-				introFrame.setSize(getSize());
+				// introFrame.setSize(getSize());
 			}
 		});
 
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    if (!scoreFrame.isVisible()) {
-                        scoreFrame.setLocation(getLocation());
-                        scoreFrame.setVisible(true);
-                        requestFocus();
-                    }
-                }
-                if (e.getKeyCode() == KeyEvent.VK_P) {
-                    Enclos.this.contentPane.goToPlayersPanel();
-                    Enclos.this.contentPane.setPlayersPanelSelectable(false);
-                }
-                if (e.getKeyCode() == KeyEvent.VK_G) {
-                    Enclos.this.contentPane.goToGamePanel();
-                    Enclos.this.contentPane.setPlayersPanelSelectable(false);
-                }
-                if (e.getKeyCode() == KeyEvent.VK_S) {
-                    Enclos.this.contentPane.goToScorePanel();
-                    Enclos.this.contentPane.setPlayersPanelSelectable(false);
-                }
-                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    Enclos.this.contentPane.displayNextGame();
-                }
-                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    Enclos.this.contentPane.displayPreviousGame();
-                }
-            }
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				super.keyPressed(e);
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					if (!scoreFrame.isVisible()) {
+						scoreFrame.setLocation(getLocation());
+						scoreFrame.setVisible(true);
+						requestFocus();
+					}
+				}
+				if (e.getKeyCode() == KeyEvent.VK_P) {
+					Enclos.this.contentPane.goToPlayersPanel();
+					Enclos.this.contentPane.setPlayersPanelSelectable(false);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_G) {
+					Enclos.this.contentPane.goToGamePanel();
+					Enclos.this.contentPane.setPlayersPanelSelectable(false);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_S) {
+					Enclos.this.contentPane.goToScorePanel();
+					Enclos.this.contentPane.setPlayersPanelSelectable(false);
+				}
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					Enclos.this.contentPane.displayNextGame();
+				}
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+					Enclos.this.contentPane.displayPreviousGame();
+				}
 
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_TAB) {
-                    scoreFrame.setVisible(false);
+				if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+					Board targetBoard = Enclos.this.contentPane.getDisplayedBoard();
+					if (targetBoard != null) {
+						targetBoard.cancelAction();
+					}
+				}
+
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				super.keyPressed(e);
+				if (e.getKeyCode() == KeyEvent.VK_TAB) {
+					scoreFrame.setVisible(false);
 					System.out.println("released");
 				}
 			}
 		});
-		
-		this.introFrame = new IntroFrame(this);
-		this.introFrame.setLocation(getLocation());
 
-        setVisible(true);
-    }
+		// this.introFrame = new IntroFrame(this);
+		// this.introFrame.setLocation(getLocation());
 
-    private Dimension getScreenMaximumSize() {
-        Dimension maxDimension = null;
-        Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        if (screenDimension.getHeight() > screenDimension.getWidth())
-            return new Dimension(screenDimension.width, screenDimension.width);
-        else
-            return new Dimension(screenDimension.height, screenDimension.height);
-    }
+		setVisible(true);
+	}
 
-    public List<Player> getPlayers() {
-        return this.players;
-    }
+	private Dimension getScreenMaximumSize() {
+		Dimension maxDimension = null;
+		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+		if (screenDimension.getHeight() > screenDimension.getWidth())
+			return new Dimension(screenDimension.width, screenDimension.width);
+		else
+			return new Dimension(screenDimension.height, screenDimension.height);
+	}
 
-    public FrameContentPane getFrameContentPane() {
-        return this.contentPane;
-    }
+	public List<Player> getPlayers() {
+		return this.players;
+	}
 
-    public List<Board> getBoards() {
-        return this.boards;
-    }
+	public FrameContentPane getFrameContentPane() {
+		return this.contentPane;
+	}
 
-    public Player getCorrespondingPlayer(String firstName, String lastName) {
-        for (Player player : players) {
-            if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
-                return player;
-            }
-        }
-        return null;
-    }
+	public List<Board> getBoards() {
+		return this.boards;
+	}
 
-    public void refreshMenu() {
-        EnclosMenu menu = new EnclosMenu(this);
-        this.setJMenuBar(menu);
-    }
+	public Player getCorrespondingPlayer(String firstName, String lastName) {
+		for (Player player : players) {
+			if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
+				return player;
+			}
+		}
+		return null;
+	}
 
-    public void refreshPlayersInfo() {
-        getFrameContentPane().refreshPlayersInfo(players);
-    }
+	public void refreshMenu() {
+		EnclosMenu menu = new EnclosMenu(this);
+		this.setJMenuBar(menu);
+	}
+
+	public void refreshPlayersInfo() {
+		getFrameContentPane().refreshPlayersInfo(players);
+	}
 
 }
