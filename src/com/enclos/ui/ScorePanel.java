@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import com.enclos.data.Player;
 import com.enclos.data.Row;
@@ -22,7 +23,7 @@ public class ScorePanel extends JPanel {
 
     public void feedTable(List<Player> players) {
         this.removeAll();
-        List<String> columns = Arrays.asList("First Name", "Last Name", "Age", "Score");
+        List<String> columns = Arrays.asList("First Name", "Last Name", "Age", "Games won", "Games lost");
 
         List<Row> rows = new ArrayList<Row>();
 
@@ -48,10 +49,12 @@ public class ScorePanel extends JPanel {
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         table.setFillsViewportHeight(true);
         table.setAutoCreateRowSorter(true);
 

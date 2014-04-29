@@ -70,12 +70,12 @@ public class SimpleReader {
                 String lastName = playerInfo[0];
                 String firstName = playerInfo[1];
                 int age = Integer.parseInt(playerInfo[2]);
-                int score =  Integer.parseInt(playerInfo[3]);
-                String picturePath = playerInfo[4];
+                int gamesWon =  Integer.parseInt(playerInfo[3]);
+                int gamesLost =  Integer.parseInt(playerInfo[4]);
+                String picturePath = playerInfo[5];
 
-                listPlayers.add(new Player(firstName, lastName, age,score, picturePath));
+                listPlayers.add(new Player(firstName, lastName, age,gamesWon, gamesLost, picturePath));
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

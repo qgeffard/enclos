@@ -83,7 +83,7 @@ public class SimpleWriter {
 		JSONArray players = new JSONArray();
 		for (Player currentPlayer : listPlayers) {
 			JSONArray player = new JSONArray();
-			player.add(currentPlayer.getLastName() + "," + currentPlayer.getFirstName() + "," + currentPlayer.getAge() + "," + currentPlayer.getScore() + "," + currentPlayer.getProfilePicturePath());
+			player.add(currentPlayer.getLastName() + "," + currentPlayer.getFirstName() + "," + currentPlayer.getAge() + "," + currentPlayer.getNumberOfGamesWon() + ","  + currentPlayer.getNumberOfGamesLost() + "," + currentPlayer.getProfilePicturePath());
 			players.add(player);
 		}
 		jsonObject.put("Players", players);

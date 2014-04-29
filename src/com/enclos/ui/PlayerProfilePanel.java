@@ -51,7 +51,8 @@ public class PlayerProfilePanel extends JPanel {
         infoPanel.add(new JLabel(player.getLastName()));
         infoPanel.add(new JLabel(player.getFirstName()));
         infoPanel.add(new JLabel(String.valueOf(player.getAge())+" ans"));
-        infoPanel.add(new JLabel("Score : "+String.valueOf(player.getScore())));
+        infoPanel.add(new JLabel("Games won : "+String.valueOf(player.getNumberOfGamesWon())));
+        infoPanel.add(new JLabel("Games lost : "+String.valueOf(player.getNumberOfGamesLost())));
 
         addMouseListener(new MouseAdapter() {
             @Override

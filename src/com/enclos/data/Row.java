@@ -8,13 +8,14 @@ public class Row implements Comparable {
     private final List<String> values;
 
     public Row(Player player) {
-        this.score = player.getScore();
+        this.score = player.getNumberOfGamesWon();
 
         values = new ArrayList<>();
         values.add(player.getFirstName());
         values.add(player.getLastName());
         values.add(String.valueOf(player.getAge()));
-        values.add(String.valueOf(player.getScore()));
+        values.add(String.valueOf(player.getNumberOfGamesWon()));
+        values.add(String.valueOf(player.getNumberOfGamesLost()));
     }
 
     // reverse order
