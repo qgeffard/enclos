@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import com.enclos.component.EnclosMenu;
 import com.enclos.data.Player;
 import com.enclos.data.SimpleReader;
-import com.enclos.resources.song.Speaker;
 
 public class Enclos extends JFrame {
 
@@ -37,7 +36,7 @@ public class Enclos extends JFrame {
 
 		// enabled tab listener
 		setFocusTraversalKeysEnabled(false);
-		setSize(1200, 700);
+		setSize(500, 500);
 
 		this.contentPane = new FrameContentPane(this);
 
@@ -54,7 +53,7 @@ public class Enclos extends JFrame {
 				super.componentResized(e);
 				// state.setSize(getSize(), true);
 				scoreFrame.setSize(getSize());
-				introFrame.setSize(getSize());
+				// introFrame.setSize(getSize());
 			}
 		});
 
@@ -87,6 +86,14 @@ public class Enclos extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					Enclos.this.contentPane.displayPreviousGame();
 				}
+
+				if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+					Board targetBoard = Enclos.this.contentPane.getDisplayedBoard();
+					if (targetBoard != null) {
+						targetBoard.cancelAction();
+					}
+				}
+
 			}
 
 			@Override
@@ -99,8 +106,8 @@ public class Enclos extends JFrame {
 			}
 		});
 
-		this.introFrame = new IntroFrame(this);
-		this.introFrame.setLocation(getLocation());
+		 this.introFrame = new IntroFrame(this);
+		 this.introFrame.setLocation(getLocation());
 
 		setVisible(true);
 	}

@@ -19,7 +19,7 @@ public class Player implements PlayerAction, Cloneable {
     private final String firstName;
     private final String lastName;
     private final int age;
-    private int score;
+    private int score = 0;
     private int turnStatus;
     private boolean hasLost = false;
     private List<Sheep> sheeps;
@@ -34,12 +34,10 @@ public class Player implements PlayerAction, Cloneable {
         this.lastName = lastName;
         this.age = age;
         this.sheeps = new ArrayList<>();
-
         
         try {
 			this.profilePicture = ImageIO.read(new File("resources/image/default_avatar.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -125,7 +123,6 @@ public class Player implements PlayerAction, Cloneable {
     @Override
     public void moveSheep() {
         this.turnStatus += MOVE_SHEEP;
-
     }
 
     @Override
