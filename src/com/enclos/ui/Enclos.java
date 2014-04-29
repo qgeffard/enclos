@@ -36,7 +36,7 @@ public class Enclos extends JFrame {
 
 		// enabled tab listener
 		setFocusTraversalKeysEnabled(false);
-		setSize(500, 500);
+		setSize(1200, 700);
 
 		this.contentPane = new FrameContentPane(this);
 
