@@ -21,6 +21,7 @@ public class Enclos extends JFrame {
 
 	// private final State state = null;
 	private ScoreFrame scoreFrame = null;
+	private IntroFrame introFrame = null;
 	private FrameContentPane contentPane = null;
 	private final List<Board> boards = new LinkedList<Board>();
 	private final List<Player> players;
@@ -29,6 +30,7 @@ public class Enclos extends JFrame {
 		// si jamais on veut utiliser le principe de la fen�tre carr�e
 		// this.state = new State(this);
 		this.scoreFrame = new ScoreFrame(this);
+		
 		Toolkit.getDefaultToolkit().setDynamicLayout(false);
 		setTitle("Jeu de l'enclos");
 
@@ -53,6 +55,7 @@ public class Enclos extends JFrame {
 				super.componentResized(e);
 				// state.setSize(getSize(), true);
 				scoreFrame.setSize(getSize());
+				introFrame.setSize(getSize());
 			}
 		});
 
@@ -97,6 +100,9 @@ public class Enclos extends JFrame {
 				}
 			}
 		});
+		
+		this.introFrame = new IntroFrame(this);
+		this.introFrame.setLocation(getLocation());
 
 		setVisible(true);
 	}
