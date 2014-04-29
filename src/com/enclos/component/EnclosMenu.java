@@ -234,6 +234,10 @@ public class EnclosMenu extends JMenuBar {
 				EnclosMenu.this.parent.getFrameContentPane().addToGamePanel(loadBoard);
 
 				loadBoard.setData(barriers, sheepsInfo, currentPlayer);
+				
+				FrameContentPane contentPane = ((FrameContentPane) EnclosMenu.this.parent.getContentPane());
+				contentPane.goToGamePanel();
+				EnclosMenu.this.parent.revalidate();
 			}
 		});
 	}

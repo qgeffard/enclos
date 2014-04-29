@@ -37,6 +37,9 @@ public class IntroFrame extends JFrame implements WindowListener {
 		// start a timer
 		Thread t = new Timer();
 		t.start();
+
+		
+		
 		
 		this.addWindowListener(this);
 
