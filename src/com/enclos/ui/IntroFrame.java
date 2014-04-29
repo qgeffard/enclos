@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import com.enclos.resources.song.Speaker;
-import com.enclos.ui.ClosingFrame.Timer;
 
 public class IntroFrame extends JFrame implements WindowListener {
 
