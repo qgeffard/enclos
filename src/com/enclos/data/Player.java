@@ -19,7 +19,8 @@ public class Player implements PlayerAction, Cloneable {
     private final String firstName;
     private final String lastName;
     private final int age;
-    private int score = 0;
+    private int gamesWon = 0;
+    private int gamesLost = 0;
     private int turnStatus;
     private boolean hasLost = false;
     private List<Sheep> sheeps;
@@ -43,7 +44,7 @@ public class Player implements PlayerAction, Cloneable {
     }
     
     public int test(){
-    	return this.score;
+    	return this.gamesWon;
     }
 
     public Player(String firstName, String lastName, int age, String picturePath) {
@@ -61,9 +62,10 @@ public class Player implements PlayerAction, Cloneable {
         }
     }
 
-    public Player(String firstName, String lastName, int age, int score, String picturePath) {
+    public Player(String firstName, String lastName, int age, int gamesWon, int gamesLost, String picturePath) {
     	this(firstName,lastName,age,picturePath);
-    	this.score = score;
+    	this.gamesWon = gamesWon;
+    	this.gamesLost = gamesLost;
 	}
 
 	public void startTurn() {
@@ -139,12 +141,16 @@ public class Player implements PlayerAction, Cloneable {
         return this.profilePicturePath;
     }
     
-    public int getScore(){
-    	return this.score;
+    public int getNumberOfGamesWon(){
+    	return this.gamesWon;
+    }
+    
+    public int getNumberOfGamesLost(){
+    	return this.gamesLost;
     }
     
     public void win(){
-    	this.score++;
+    	this.gamesWon++;
     }
 
     public boolean hasLost() {
@@ -153,10 +159,13 @@ public class Player implements PlayerAction, Cloneable {
 
     public void lose() {
         this.hasLost = true;
+        gamesLost++;
+        int x = 0;
     }
 
 	public void alive() {
 		this.hasLost = false;
+        gamesLost--;
 	}
 	
 	
