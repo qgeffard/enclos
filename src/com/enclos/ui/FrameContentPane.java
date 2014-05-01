@@ -62,15 +62,12 @@ public class FrameContentPane extends JPanel {
     }
 
     public void goToPlayersPanel() {
+    	playersPanel.resetSelectedPlayers();
         contentPaneCardLayout.show(this, PLAYERGRIDNAME);
     }
 
     public void goToScorePanel() {
         contentPaneCardLayout.show(this, SCOREPANELNAME);
-    }
-
-    public void setPlayersPanelSelectable(boolean isPlayerPanelSelectable) {
-        this.playersPanel.setSelectable(isPlayerPanelSelectable);
     }
 
     public void displayNextGame() {

@@ -2,6 +2,8 @@ package com.enclos.ui;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class PlayersGridPanel extends JPanel {
 	private List<PlayerProfilePanel> profiles = null;
 
 	public PlayersGridPanel() {
+        
 		profiles = new ArrayList<PlayerProfilePanel>();
 		
 		this.setLayout(new GridLayout((int) Math.ceil(this.profiles.size()/2),4));
@@ -28,12 +31,6 @@ public class PlayersGridPanel extends JPanel {
 	public void removePlayerProfile(PlayerProfilePanel playerProfilePanel) {
 		remove(playerProfilePanel);
 		profiles.remove(playerProfilePanel);
-	}
-
-	public void setSelectable(boolean isSelectable) {
-		for (PlayerProfilePanel playerProfilePanel : profiles) {
-			playerProfilePanel.setSelectable(isSelectable);
-		}
 	}
 
 	public List<PlayerProfilePanel> getProfiles() {

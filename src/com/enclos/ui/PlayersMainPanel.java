@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -27,10 +29,9 @@ public class PlayersMainPanel extends JPanel {
     private final Enclos enclos;
     private final FrameContentPane parent;
     private final PlayersGridPanel playersGridPanel;
-
-    private boolean isSelectable = true;
+    
     private final JPanel buttonPanel;
-    private JButton next;
+    private JButton createGameButton;
 
     public PlayersMainPanel(final Enclos enclos, FrameContentPane parent) {
         this.enclos = enclos;
@@ -48,8 +49,9 @@ public class PlayersMainPanel extends JPanel {
         JButton addPlayerButton = new JButton("Add player");
         JButton removePlayerButton = new JButton("Delete selected players");
 
-        next = new JButton("Create game");
-        next.addMouseListener(new MouseAdapter() {
+        createGameButton = new JButton("Create game");
+        createGameButton.setFocusable(false);
+        createGameButton.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -69,12 +71,12 @@ public class PlayersMainPanel extends JPanel {
                         }
                         PlayersMainPanel.this.parent.addToGamePanel(newBoard);
                         PlayersMainPanel.this.parent.goToGamePanel();
-
-                        PlayersMainPanel.this.playersGridPanel.reset();
                     }
                 } else {
                     JOptionPane.showConfirmDialog(PlayersMainPanel.this, "The number of player must be between 2 and 5");
                 }
+                PlayersMainPanel.this.createGameButton.setEnabled(false);
+                PlayersMainPanel.this.createGameButton.setEnabled(true);
             }
         });
         
@@ -104,7 +106,7 @@ public class PlayersMainPanel extends JPanel {
                 super.mouseClicked(e);
                 Player newPlayer = createNewPlayer();
                 if (newPlayer != null) {
-                    PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, PlayersMainPanel.this, PlayersMainPanel.this.isSelectable);
+                    PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, PlayersMainPanel.this);
                     PlayersMainPanel.this.playersGridPanel.addPlayerProfile(playerProfile);
                     PlayersMainPanel.this.enclos.getPlayers().add(newPlayer);
                     SimpleWriter.SavePlayer(PlayersMainPanel.this.enclos.getPlayers(), "players");
@@ -156,10 +158,9 @@ public class PlayersMainPanel extends JPanel {
         
         buttonPanel.add(addPlayerButton);
         buttonPanel.add(removePlayerButton);
-        buttonPanel.add(next);
-        
-
+        buttonPanel.add(createGameButton);
         this.add(buttonPanel, BorderLayout.SOUTH);
+
     }
 
     // TODO manage return carriage
@@ -167,19 +168,9 @@ public class PlayersMainPanel extends JPanel {
         final List<Player> players = this.enclos.getPlayers();
         if (players != null && players.size() > 0) {
             for (final Player currentPlayer : players) {
-                final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer, this, false);
+                final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer, this);
                 this.playersGridPanel.addPlayerProfile(playerProfile);
             }
-        }
-    }
-
-    public void setSelectable(boolean isPlayerPanelSelectable) {
-        this.isSelectable = isPlayerPanelSelectable;
-        this.playersGridPanel.setSelectable(isPlayerPanelSelectable);
-        if (isPlayerPanelSelectable) {
-            this.next.setVisible(true);
-        } else {
-            this.next.setVisible(false);
         }
     }
 
@@ -189,6 +180,10 @@ public class PlayersMainPanel extends JPanel {
 
     public PlayersGridPanel getGridPanel() {
         return this.playersGridPanel;
+    }
+    
+    public void resetSelectedPlayers(){
+    	playersGridPanel.reset();
     }
 
     public void refresh() {

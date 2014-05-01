@@ -81,7 +81,6 @@ public class EnclosMenu extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				parent.getFrameContentPane().goToPlayersPanel();
-				parent.getFrameContentPane().setPlayersPanelSelectable(true);
 			}
 		});
 	}
@@ -146,7 +145,6 @@ public class EnclosMenu extends JMenuBar {
 
 				FrameContentPane contentPane = ((FrameContentPane) EnclosMenu.this.parent.getContentPane());
 				contentPane.goToPlayersPanel();
-				contentPane.setPlayersPanelSelectable(true);
 			}
 		});
 	}
@@ -199,6 +197,7 @@ public class EnclosMenu extends JMenuBar {
 					Map<Sheep, Point> sheepsInfo = new LinkedHashMap<Sheep, Point>();
 					List<Player> playersList = new LinkedList<Player>();
 
+
 					for (JSONArray player : players) {
 						for (Object obj : player) {
 							JSONObject jsonobj = (JSONObject) obj;
@@ -238,7 +237,6 @@ public class EnclosMenu extends JMenuBar {
 					EnclosMenu.this.parent.revalidate();
 				} catch (Exception e1) {
                     int deleteLoad = JOptionPane.showConfirmDialog(parent, "Load file was corrupted, do you want delete it ?");
-                    
                     
                     if (deleteLoad == JOptionPane.OK_OPTION) {
                     	System.out.println("hello");
