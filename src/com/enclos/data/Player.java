@@ -42,10 +42,6 @@ public class Player implements PlayerAction, Cloneable {
 			e.printStackTrace();
 		}
     }
-    
-    public int test(){
-    	return this.gamesWon;
-    }
 
     public Player(String firstName, String lastName, int age, String picturePath) {
         this(firstName, lastName, age);
@@ -157,17 +153,18 @@ public class Player implements PlayerAction, Cloneable {
         return this.hasLost;
     }
 
-    public void lose() {
+    public void paralyzed(){
         this.hasLost = true;
+    }
+    
+    public void lose() {
         gamesLost++;
     }
 
 	public void alive() {
 		this.hasLost = false;
-        gamesLost--;
 	}
-	
-	
+
 	private void deepCopySheepList(){
 		this.sheeps = new ArrayList<Sheep>();
 	}

@@ -677,8 +677,9 @@ public class Board extends JPanel {
 
 	private boolean updateLoseStatusPlayer() {
 		generateNeighboors();
-		boolean lost = true;
+		boolean lost = false;
 		for (Player player : this.playerList) {
+			lost = true;
 			for (Sheep sheep : player.getSheeps()) {
 				if (sheep.getHexagon().getNeighboors().size() > 0) {
 					lost = false;
@@ -686,15 +687,10 @@ public class Board extends JPanel {
 			}
 			if (lost) {
 				if (!player.hasLost()) {
-				Player realPlayer = getCorrespondingRealPlayer(player.getFirstName(), player.getLastName());
-				realPlayer.lose();
-				player.lose();
+				player.paralyzed();
 				}
 			} else {
 				if (player.hasLost()) {
-					//BUG QUAND LE JOUEUR GAGNE APPAREMMENT CA LUI FAIT -1 EN GAMES LOST
-					Player realPlayer = getCorrespondingRealPlayer(player.getFirstName(), player.getLastName());
-					realPlayer.alive();
 					player.alive();
 				}
 			}
@@ -716,30 +712,32 @@ public class Board extends JPanel {
 	}
 
 	private boolean isGameFinished() {
-		Player winner = null;
 		int playersLeft = this.playerList.size();
 		updateLoseStatusPlayer();
 
 		for (Player player : this.playerList) {
 			if (player.hasLost()) {
 				playersLeft--;
-			} else {
-				winner = player;
-			}
+			} 
 		}
+		
 		if (playersLeft <= 1) {
-			if (winner != null) {
-				Player realWinner = getCorrespondingRealPlayer(winner.getFirstName(), winner.getLastName());
-				if (realWinner != null) {
-					realWinner.win();
-					SimpleWriter.SavePlayer(parent.getPlayers(), "players");
-					parent.refreshPlayersInfo();
-					
-					for(Player player : realPlayersList){
-						player.resetLoseStatus();
-					}
+			for(Player player : playerList){
+				Player realPlayer = getCorrespondingRealPlayer(player.getFirstName(), player.getLastName());
+				if(player.hasLost()){
+					realPlayer.lose();
+				}else{
+					realPlayer.win();
 				}
 			}
+			
+			SimpleWriter.SavePlayer(parent.getPlayers(), "players");
+			parent.refreshPlayersInfo();
+
+			for(Player player : realPlayersList){
+				player.resetLoseStatus();
+			}
+			
 			return true;
 		} else {
 			return false;
