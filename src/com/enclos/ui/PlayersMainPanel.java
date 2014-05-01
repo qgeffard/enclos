@@ -58,21 +58,14 @@ public class PlayersMainPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
-				int nbPlayers = PlayersMainPanel.this.playersGridPanel
-						.getPlayerSelectedCount();
+				int nbPlayers = PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount();
 
 				if (nbPlayers >= 2 && nbPlayers < 6) {
-					Map<String, String> params = NewGameForm
-							.display(PlayersMainPanel.this.playersGridPanel
-									.getPlayerSelectedCount());
+					Map<String, String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());
 					if (params != null) {
 						Long size = Long.valueOf(params.get("boardSize"));
-						int nbSheep = Integer.valueOf(params
-								.get("nbSheepPerPlayer"));
-						Board newBoard = new Board(size, nbSheep,
-								PlayersMainPanel.this.playersGridPanel
-										.getPlayersSelected(),
-								PlayersMainPanel.this.enclos);
+						int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
+						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(), PlayersMainPanel.this.enclos);
 
 						if (params.get("close").equals("close")) {
 							PlayersMainPanel.this.parent.resetGamePanel();
@@ -81,8 +74,7 @@ public class PlayersMainPanel extends JPanel {
 						PlayersMainPanel.this.parent.goToGamePanel();
 					}
 				} else {
-					JOptionPane.showConfirmDialog(PlayersMainPanel.this,
-							"The number of player must be between 1 and 5");
+					JOptionPane.showConfirmDialog(PlayersMainPanel.this, "The number of player must be between 1 and 5");
 				}
 				PlayersMainPanel.this.createGameButton.setEnabled(false);
 				PlayersMainPanel.this.createGameButton.setEnabled(true);
@@ -94,19 +86,20 @@ public class PlayersMainPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				for (Player playerToRemove : PlayersMainPanel.this.playersGridPanel
-						.getPlayersSelected()) {
-					PlayersMainPanel.this.enclos.getPlayers().remove(
-							playerToRemove);
-					SimpleWriter.SavePlayer(
-							PlayersMainPanel.this.enclos.getPlayers(),
-							"players");
-					PlayersMainPanel.this.enclos.getContentPane()
-							.refreshPlayersInfo(
-									PlayersMainPanel.this.enclos.getPlayers());
-					PlayersMainPanel.this.enclos.getFrameContentPane()
-							.refreshScorePanel(
-									PlayersMainPanel.this.enclos.getPlayers());
+				for (Player playerToRemove : PlayersMainPanel.this.playersGridPanel.getPlayersSelected()) {
+					boolean inGame = false;
+					for (Board board : PlayersMainPanel.this.enclos.getBoards()) {
+						if (board.getRealPlayerList().contains(playerToRemove)) {
+							inGame = true;
+						}
+					}
+					if (inGame) {
+						JOptionPane.showMessageDialog(PlayersMainPanel.this, "Cannot delete "+playerToRemove.getLastName()+" "+playerToRemove.getFirstName()+", player in a game");
+					} else
+					PlayersMainPanel.this.enclos.getPlayers().remove(playerToRemove);
+					SimpleWriter.SavePlayer(PlayersMainPanel.this.enclos.getPlayers(), "players");
+					PlayersMainPanel.this.enclos.getContentPane().refreshPlayersInfo(PlayersMainPanel.this.enclos.getPlayers());
+					PlayersMainPanel.this.enclos.getFrameContentPane().refreshScorePanel(PlayersMainPanel.this.enclos.getPlayers());
 					PlayersMainPanel.this.playersGridPanel.revalidate();
 				}
 				revalidate();
@@ -124,17 +117,11 @@ public class PlayersMainPanel extends JPanel {
 				super.mouseClicked(e);
 				Player newPlayer = createNewPlayer();
 				if (newPlayer != null) {
-					PlayerProfilePanel playerProfile = new PlayerProfilePanel(
-							newPlayer, PlayersMainPanel.this);
-					PlayersMainPanel.this.playersGridPanel
-							.addPlayerProfile(playerProfile);
+					PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, PlayersMainPanel.this);
+					PlayersMainPanel.this.playersGridPanel.addPlayerProfile(playerProfile);
 					PlayersMainPanel.this.enclos.getPlayers().add(newPlayer);
-					SimpleWriter.SavePlayer(
-							PlayersMainPanel.this.enclos.getPlayers(),
-							"players");
-					PlayersMainPanel.this.enclos.getFrameContentPane()
-							.refreshScorePanel(
-									PlayersMainPanel.this.enclos.getPlayers());
+					SimpleWriter.SavePlayer(PlayersMainPanel.this.enclos.getPlayers(), "players");
+					PlayersMainPanel.this.enclos.getFrameContentPane().refreshScorePanel(PlayersMainPanel.this.enclos.getPlayers());
 					revalidate();
 				}
 			}
@@ -144,13 +131,11 @@ public class PlayersMainPanel extends JPanel {
 				final JTextField firstName = new JTextField();
 				final JTextField lastName = new JTextField();
 				final JTextField age = new JTextField();
-				final JButton profilPictureButton = new JButton(
-						"Choose a profile picture");
+				final JButton profilPictureButton = new JButton("Choose a profile picture");
 
 				final JFileChooser fileChooser = new JFileChooser();
 
-				final FileDialog fileDialog = new FileDialog(new JFrame(),
-						"Choose picture", FileDialog.LOAD);
+				final FileDialog fileDialog = new FileDialog(new JFrame(), "Choose picture", FileDialog.LOAD);
 				profilPictureButton.addActionListener(new ActionListener() {
 
 					@Override
@@ -159,31 +144,18 @@ public class PlayersMainPanel extends JPanel {
 						fileChooser.showDialog(PlayersMainPanel.this, "ok");
 					}
 				});
-				final JComponent[] inputs = new JComponent[] {
-						new JLabel("First Name"), firstName,
-						new JLabel("Last Name"), lastName, new JLabel("Age"),
-						age, profilPictureButton };
-				JOptionPane.showMessageDialog(null, inputs, "Add a new player",
-						JOptionPane.PLAIN_MESSAGE);
+				final JComponent[] inputs = new JComponent[] { new JLabel("First Name"), firstName, new JLabel("Last Name"), lastName, new JLabel("Age"), age, profilPictureButton };
+				JOptionPane.showMessageDialog(null, inputs, "Add a new player", JOptionPane.PLAIN_MESSAGE);
 				try {
 					File file = fileChooser.getSelectedFile();
-					if (enclos.getCorrespondingPlayer(firstName.getText(),
-							lastName.getText()) == null) {
+					if (enclos.getCorrespondingPlayer(firstName.getText(), lastName.getText()) == null) {
 						if (file != null) {
-							newPlayer = new Player(firstName.getText(),
-									lastName.getText(), Integer.parseInt(age
-											.getText()), file.getAbsolutePath());
+							newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
 						} else {
-							newPlayer = new Player(firstName.getText(),
-									lastName.getText(), Integer.parseInt(age
-											.getText()));
+							newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()));
 						}
 					} else {
-						JOptionPane
-								.showMessageDialog(
-										null,
-										"The Couple lastname, firstname already exists, plaese choose another one",
-										"Error", JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(null, "The Couple lastname, firstname already exists, plaese choose another one", "Error", JOptionPane.PLAIN_MESSAGE);
 					}
 
 				} catch (Exception e) {
@@ -205,8 +177,7 @@ public class PlayersMainPanel extends JPanel {
 		final List<Player> players = this.enclos.getPlayers();
 		if (players != null && players.size() > 0) {
 			for (final Player currentPlayer : players) {
-				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(
-						currentPlayer, this);
+				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer, this);
 				this.playersGridPanel.addPlayerProfile(playerProfile);
 			}
 		}
@@ -230,11 +201,11 @@ public class PlayersMainPanel extends JPanel {
 	}
 
 	public void displayPlayersManagementButton(boolean displayPlayersManagementButton) {
-		if(displayPlayersManagementButton){
+		if (displayPlayersManagementButton) {
 			addPlayerButton.setVisible(true);
 			removePlayerButton.setVisible(true);
-		createGameButton.setVisible(false);
-		}else{
+			createGameButton.setVisible(false);
+		} else {
 			createGameButton.setVisible(true);
 			addPlayerButton.setVisible(false);
 			removePlayerButton.setVisible(false);

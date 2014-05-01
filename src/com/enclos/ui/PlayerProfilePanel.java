@@ -52,21 +52,6 @@ public class PlayerProfilePanel extends JPanel {
 
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				if (SwingUtilities.isRightMouseButton(e)) {
-					int choice = JOptionPane.showConfirmDialog(parent, "Delete " + player.getLastName() + " " + player.getFirstName() + "?");
-
-					if (choice == JOptionPane.OK_OPTION) {
-						parent.getEnclos().getPlayers().remove(player);
-						parent.getGridPanel().remove(PlayerProfilePanel.this);
-						parent.getGridPanel().revalidate();
-						parent.getGridPanel().repaint();
-					}
-				}
-			}
-
-			@Override
 			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
 				if (SwingUtilities.isLeftMouseButton(e)) {

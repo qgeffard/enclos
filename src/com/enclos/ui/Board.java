@@ -826,4 +826,8 @@ public class Board extends JPanel {
 			JOptionPane.showMessageDialog(null, "No last action to cancel");
 		}
 	}
+	
+	public List<Player> getRealPlayerList(){
+		return realPlayersList;
+	}
 }
