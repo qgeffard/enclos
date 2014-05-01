@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import com.enclos.component.EnclosMenu;
-import com.enclos.data.Player;
+import com.enclos.data.Human;
 import com.enclos.data.SimpleReader;
 
 public class Enclos extends JFrame {
@@ -22,7 +22,7 @@ public class Enclos extends JFrame {
 	private IntroFrame introFrame = null;
 	private FrameContentPane contentPane = null;
 	private final List<Board> boards = new LinkedList<Board>();
-	private final List<Player> players;
+	private final List<Human> players;
 
 	public Enclos() {
 		// si jamais on veut utiliser le principe de la fen�tre carr�e
@@ -118,7 +118,7 @@ public class Enclos extends JFrame {
 			return new Dimension(screenDimension.height, screenDimension.height);
 	}
 
-	public List<Player> getPlayers() {
+	public List<Human> getPlayers() {
 		return this.players;
 	}
 
@@ -130,8 +130,8 @@ public class Enclos extends JFrame {
 		return this.boards;
 	}
 
-	public Player getCorrespondingPlayer(String firstName, String lastName) {
-		for (Player player : players) {
+	public Human getCorrespondingPlayer(String firstName, String lastName) {
+		for (Human player : players) {
 			if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
 				return player;
 			}

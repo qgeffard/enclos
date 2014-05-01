@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import com.enclos.data.Player;
+import com.enclos.data.Human;
 import com.enclos.data.PlayerProfilePanelState;
 
 public class PlayersGridPanel extends JPanel {
@@ -49,9 +49,9 @@ public class PlayersGridPanel extends JPanel {
 		return count;
 	}
 
-	public List<Player> getPlayersSelected() {
+	public List<Human> getPlayersSelected() {
 
-		List<Player> selectedPlayers = new ArrayList<Player>();
+		List<Human> selectedPlayers = new ArrayList<Human>();
 
 		for (PlayerProfilePanel profile : profiles) {
 			if (profile.getState() == PlayerProfilePanelState.SELECTED) {

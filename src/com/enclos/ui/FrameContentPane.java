@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.enclos.data.Player;
+import com.enclos.data.Human;
 
 public class FrameContentPane extends JPanel {
 
@@ -96,15 +96,15 @@ public class FrameContentPane extends JPanel {
         }
     }
 
-    public void refreshScorePanel(List<Player> players) {
+    public void refreshScorePanel(List<Human> players) {
         scorePanel.feedTable(players);
     }
 
-    private void refreshPlayersPanel(List<Player> players) {
+    private void refreshPlayersPanel(List<Human> players) {
         playersPanel.refresh();
     }
 
-    public void refreshPlayersInfo(List<Player> players) {
+    public void refreshPlayersInfo(List<Human> players) {
         refreshScorePanel(players);
         refreshPlayersPanel(players);
     }

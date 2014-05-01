@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.enclos.data.Player;
+import com.enclos.data.Human;
 import com.enclos.data.SimpleWriter;
 
 public class PlayersMainPanel extends JPanel {
@@ -60,7 +60,21 @@ public class PlayersMainPanel extends JPanel {
 				super.mousePressed(e);
 				int nbPlayers = PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount();
 
-				if (nbPlayers >= 2 && nbPlayers < 6) {
+				if(nbPlayers == 1){
+					Map<String, String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());
+					if (params != null) {
+						Long size = Long.valueOf(params.get("boardSize"));
+						int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
+						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(), PlayersMainPanel.this.enclos, true);
+
+						if (params.get("close").equals("close")) {
+							PlayersMainPanel.this.parent.resetGamePanel();
+						}
+						PlayersMainPanel.this.parent.addToGamePanel(newBoard);
+						PlayersMainPanel.this.parent.goToGamePanel();
+					}
+				}
+				else if (nbPlayers >= 2 && nbPlayers < 6) {
 					Map<String, String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());
 					if (params != null) {
 						Long size = Long.valueOf(params.get("boardSize"));
@@ -86,7 +100,7 @@ public class PlayersMainPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				for (Player playerToRemove : PlayersMainPanel.this.playersGridPanel.getPlayersSelected()) {
+				for (Human playerToRemove : PlayersMainPanel.this.playersGridPanel.getPlayersSelected()) {
 					boolean inGame = false;
 					for (Board board : PlayersMainPanel.this.enclos.getBoards()) {
 						if (board.getRealPlayerList().contains(playerToRemove)) {
@@ -115,7 +129,7 @@ public class PlayersMainPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				Player newPlayer = createNewPlayer();
+				Human newPlayer = createNewPlayer();
 				if (newPlayer != null) {
 					PlayerProfilePanel playerProfile = new PlayerProfilePanel(newPlayer, PlayersMainPanel.this);
 					PlayersMainPanel.this.playersGridPanel.addPlayerProfile(playerProfile);
@@ -126,8 +140,8 @@ public class PlayersMainPanel extends JPanel {
 				}
 			}
 
-			private Player createNewPlayer() {
-				Player newPlayer = null;
+			private Human createNewPlayer() {
+				Human newPlayer = null;
 				final JTextField firstName = new JTextField();
 				final JTextField lastName = new JTextField();
 				final JTextField age = new JTextField();
@@ -150,9 +164,9 @@ public class PlayersMainPanel extends JPanel {
 					File file = fileChooser.getSelectedFile();
 					if (enclos.getCorrespondingPlayer(firstName.getText(), lastName.getText()) == null) {
 						if (file != null) {
-							newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
+							newPlayer = new Human(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()), file.getAbsolutePath());
 						} else {
-							newPlayer = new Player(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()));
+							newPlayer = new Human(firstName.getText(), lastName.getText(), Integer.parseInt(age.getText()));
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "The Couple lastname, firstname already exists, plaese choose another one", "Error", JOptionPane.PLAIN_MESSAGE);
@@ -174,9 +188,9 @@ public class PlayersMainPanel extends JPanel {
 
 	// TODO manage return carriage
 	private void generatePlayersCard() {
-		final List<Player> players = this.enclos.getPlayers();
+		final List<Human> players = this.enclos.getPlayers();
 		if (players != null && players.size() > 0) {
-			for (final Player currentPlayer : players) {
+			for (final Human currentPlayer : players) {
 				final PlayerProfilePanel playerProfile = new PlayerProfilePanel(currentPlayer, this);
 				this.playersGridPanel.addPlayerProfile(playerProfile);
 			}

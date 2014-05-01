@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.enclos.data.Player;
+import com.enclos.data.Human;
 import com.enclos.data.PlayerProfilePanelState;
 
 public class PlayerProfilePanel extends JPanel {
@@ -28,9 +28,9 @@ public class PlayerProfilePanel extends JPanel {
 
 	private Color baseColor = null;
 	private PlayersMainPanel parent = null;
-	private Player player = null;
+	private Human player = null;
 
-	public PlayerProfilePanel(final Player player, final PlayersMainPanel parent) {
+	public PlayerProfilePanel(final Human player, final PlayersMainPanel parent) {
 
 		this.player = player;
 
@@ -106,7 +106,7 @@ public class PlayerProfilePanel extends JPanel {
 		return this.state;
 	}
 
-	public Player getPlayer() {
+	public Human getPlayer() {
 		return this.player;
 	}
 

@@ -17,11 +17,11 @@ public class SimpleWriter {
 	private String jsonFilePath;
 
 	public static void SaveGame(Board board, String fileName) {
-		String jsonFilePath = "resources/save/" + fileName + ".json";
+	/*	String jsonFilePath = "resources/save/" + fileName + ".json";
 
 		JSONObject jsonObject = new JSONObject();
 		JSONArray players = new JSONArray();
-		for (Player player : board.getPlayers()) {
+		for (Human player : board.getPlayers()) {
 			JSONArray sheepsByPLayer = new JSONArray();
 			
 			System.out.println(player.getSheeps().size());
@@ -72,16 +72,16 @@ public class SimpleWriter {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
-	public static void SavePlayer(List<Player> listPlayers, String fileName) {
+	public static void SavePlayer(List<Human> listPlayers, String fileName) {
 		String jsonFilePath = "resources/players/" + fileName + ".json";
 
 		JSONObject jsonObject = new JSONObject();
 
 		JSONArray players = new JSONArray();
-		for (Player currentPlayer : listPlayers) {
+		for (Human currentPlayer : listPlayers) {
 			JSONArray player = new JSONArray();
 			player.add(currentPlayer.getLastName() + "," + currentPlayer.getFirstName() + "," + currentPlayer.getAge() + "," + currentPlayer.getNumberOfGamesWon() + ","  + currentPlayer.getNumberOfGamesLost() + "," + currentPlayer.getProfilePicturePath());
 			players.add(player);

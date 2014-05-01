@@ -48,7 +48,7 @@ public class SimpleReader {
         return values;
     }
 
-    public static List<Player> readPlayer(String fileName) {
+    public static List<Human> readPlayer(String fileName) {
         JSONParser parser = new JSONParser();
         Object targetFile = null;
         try {
@@ -57,7 +57,7 @@ public class SimpleReader {
             e.printStackTrace();
         }
 
-        List<Player> listPlayers = new ArrayList<>();
+        List<Human> listPlayers = new ArrayList<>();
         try {
             JSONObject reader = (JSONObject) targetFile;
             JSONArray players = (JSONArray) reader.get("Players");
@@ -74,7 +74,7 @@ public class SimpleReader {
                 int gamesLost =  Integer.parseInt(playerInfo[4]);
                 String picturePath = playerInfo[5];
 
-                listPlayers.add(new Player(firstName, lastName, age,gamesWon, gamesLost, picturePath));
+                listPlayers.add(new Human(firstName, lastName, age,gamesWon, gamesLost, picturePath));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,6 +5,7 @@ import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.util.List;
 
+import com.enclos.data.Human;
 import com.enclos.data.Player;
 
 public class Sheep {

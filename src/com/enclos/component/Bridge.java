@@ -9,7 +9,7 @@ public class Bridge extends Shape {
 
     private Polygon polygon = null;
     private final List<Point> virtualIndex = new ArrayList<Point>();
-
+    
     public Bridge() {
         this.setVirtualIndex(new Point(0, 0), new Point(0, 0));
     }

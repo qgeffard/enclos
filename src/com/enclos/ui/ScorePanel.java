@@ -12,22 +12,22 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import com.enclos.data.Player;
+import com.enclos.data.Human;
 import com.enclos.data.Row;
 
 public class ScorePanel extends JPanel {
 
-    public ScorePanel(List<Player> players) {
+    public ScorePanel(List<Human> players) {
         feedTable(players);
     }
 
-    public void feedTable(List<Player> players) {
+    public void feedTable(List<Human> players) {
         this.removeAll();
         List<String> columns = Arrays.asList("First Name", "Last Name", "Age", "Games won", "Games lost");
 
         List<Row> rows = new ArrayList<Row>();
 
-        for (Player player : players) {
+        for (Human player : players) {
             rows.add(new Row(player));
         }
 

@@ -7,7 +7,7 @@ public class Row implements Comparable {
     private int score = 0;
     private final List<String> values;
 
-    public Row(Player player) {
+    public Row(Human player) {
         this.score = player.getNumberOfGamesWon();
 
         values = new ArrayList<>();
