@@ -2,7 +2,7 @@ package com.enclos.data;
 
 
 public enum Difficulty {
-	RETARD, NORMAL, HELL;
+	RAINBOW, NORMAL, HELL;
 
 	@Override
 	public String toString() {

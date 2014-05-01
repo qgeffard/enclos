@@ -197,7 +197,7 @@ public class EnclosMenu extends JMenuBar {
 					for (JSONArray player : players) {
 						for (Object obj : player) {
 							JSONObject jsonobj = (JSONObject) obj;
-							if (!jsonobj.get("firstname").equals("Computer")) {
+							if (!jsonobj.get("firstname").equals("add9cf0f98bd686c95909c8c9160fa5463225c10")) {
 								Human owner = EnclosMenu.this.parent.getCorrespondingPlayer((String) jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
 								playersList.add(owner);
 							}
@@ -208,7 +208,7 @@ public class EnclosMenu extends JMenuBar {
 					for (JSONArray player : players) {
 						for (Object obj : player) {
 							JSONObject jsonobj = (JSONObject) obj;
-							if (!jsonobj.get("firstname").equals("Computer")) {
+							if (!jsonobj.get("firstname").equals("add9cf0f98bd686c95909c8c9160fa5463225c10")) {
 								Human owner = loadBoard.getCorrespondingPlayer((String) jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
 								JSONArray sheepsPosition = (JSONArray) jsonobj.get("sheeps");
 								for (Object position : sheepsPosition) {

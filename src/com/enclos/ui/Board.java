@@ -20,6 +20,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -475,7 +476,6 @@ public class Board extends JPanel {
 	}
 
 	private void generateNeighboors() {
-		System.out.println("regen");
 		for (Hexagon hex : hexagons) {
 			hex.getNeighboors().clear();
 			Point2D center = hex.getCenterPoint();
@@ -652,11 +652,10 @@ public class Board extends JPanel {
 
 				Board.this.repaint();
 				if (action) {
-					if (isGameFinished()) {
-						JOptionPane.showMessageDialog(null, "GAME OVER !!!!");
-						Board.this.parent.getFrameContentPane().removeDisplayedGame();
-					} else if ((Board.this.currentPlayer.hasLost() && !Board.this.currentPlayer.isEndOfTurn()) || (Board.this.currentPlayer.isEndOfTurn())) {
-						Board.this.nextTurn();
+					if (!isGameFinished()) {
+						if ((Board.this.currentPlayer.hasLost() && !Board.this.currentPlayer.isEndOfTurn()) || (Board.this.currentPlayer.isEndOfTurn())) {
+							Board.this.nextTurn();
+						}
 					}
 				}
 			}
@@ -755,6 +754,8 @@ public class Board extends JPanel {
 				player.resetLoseStatus();
 			}
 
+			JOptionPane.showMessageDialog(null, "GAME OVER !!!!");
+			Board.this.parent.getFrameContentPane().removeDisplayedGame();
 			return true;
 		} else {
 			return false;
@@ -855,7 +856,7 @@ public class Board extends JPanel {
 
 	private class Computer extends Player implements PlayerAction {
 
-		private Difficulty difficulty = Difficulty.RETARD;
+		private Difficulty difficulty = Difficulty.RAINBOW;
 		private Board board = null;
 
 		private Random random = new Random();
@@ -863,7 +864,7 @@ public class Board extends JPanel {
 		public Computer(Board board) {
 			this.board = board;
 
-			this.firstName = "Computer";
+			this.firstName = "add9cf0f98bd686c95909c8c9160fa5463225c10";
 			this.lastName = "Dr";
 		}
 
@@ -871,7 +872,7 @@ public class Board extends JPanel {
 		public void startTurn() {
 
 			switch (difficulty) {
-			case RETARD:
+			case RAINBOW:
 				retardTurn();
 				break;
 			case NORMAL:
@@ -894,11 +895,57 @@ public class Board extends JPanel {
 				randomBarrierDrop();
 				randomSheepMove();
 			}
-
 		}
 
 		private void normalTurn() {
+			if (random.nextBoolean()) {
+				normalSheepMove();
+				normalBarrierDrop();
+			} else {
+				normalBarrierDrop();
+				normalSheepMove();
+			}
+		}
 
+		private void normalSheepMove() {
+			Sheep sheep = sheeps.get(0);
+			Hexagon base = sheep.getHexagon();
+
+			int cost = findPath(base);
+		}
+
+		private int findPath(Hexagon base) {
+			int cost = 0;
+			for (Hexagon neighboor : base.getNeighboors()) {
+				if (neighboor.getSheep() != null && neighboor.getSheep().getOwner() != this) {
+					return cost;
+				}
+			}
+
+			return 0;
+		}
+
+		private void normalBarrierDrop() {
+			Player player = board.playerList.get(0);
+			int randomSheepIndex = random.nextInt(player.getSheeps().size());
+			Sheep randomSheep = player.getSheeps().get(randomSheepIndex);
+
+			Hexagon hexagon = randomSheep.getHexagon();
+			List<Bridge> bridges = new ArrayList<>();
+
+			for (Hexagon hex : hexagon.getNeighboors()) {
+				Bridge bridge = board.getBrigeFromIndex(hexagon, hex);
+				System.out.println(bridge);
+				if (!board.getBarriers().contains(bridge)) {
+					bridges.add(bridge);
+				}
+			}
+			System.out.println(player);
+			int randomBridgeIndex = random.nextInt(bridges.size());
+			barriers.add(bridges.get(randomBridgeIndex));
+			board.isGameFinished();
+
+			Speaker.playRandomDropBarrier();
 		}
 
 		private void hellTurn() {
@@ -919,6 +966,7 @@ public class Board extends JPanel {
 			barriers.add(barrierToDrop);
 			Speaker.playRandomDropBarrier();
 			board.isGameFinished();
+
 		}
 
 		private void randomSheepMove() {
@@ -933,6 +981,7 @@ public class Board extends JPanel {
 
 			board.switchSheep(sheepToMove, targetHexagon);
 			board.isGameFinished();
+
 		}
 	}
 
