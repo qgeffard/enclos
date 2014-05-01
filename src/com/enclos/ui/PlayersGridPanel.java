@@ -24,11 +24,20 @@ public class PlayersGridPanel extends JPanel {
 		add(playerProfilePanel);
 		profiles.add(playerProfilePanel);
 	}
+	
+	public void removePlayerProfile(PlayerProfilePanel playerProfilePanel) {
+		remove(playerProfilePanel);
+		profiles.remove(playerProfilePanel);
+	}
 
 	public void setSelectable(boolean isSelectable) {
 		for (PlayerProfilePanel playerProfilePanel : profiles) {
 			playerProfilePanel.setSelectable(isSelectable);
 		}
+	}
+
+	public List<PlayerProfilePanel> getProfiles() {
+		return profiles;
 	}
 
 	public int getPlayerSelectedCount() {

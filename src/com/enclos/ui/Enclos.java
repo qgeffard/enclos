@@ -70,15 +70,15 @@ public class Enclos extends JFrame {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_P) {
 					Enclos.this.contentPane.goToPlayersPanel();
-					Enclos.this.contentPane.setPlayersPanelSelectable(false);
+					Enclos.this.contentPane.setPlayersPanelSelectable(true);
 				}
 				if (e.getKeyCode() == KeyEvent.VK_G) {
 					Enclos.this.contentPane.goToGamePanel();
-					Enclos.this.contentPane.setPlayersPanelSelectable(false);
+					Enclos.this.contentPane.setPlayersPanelSelectable(true);
 				}
 				if (e.getKeyCode() == KeyEvent.VK_S) {
 					Enclos.this.contentPane.goToScorePanel();
-					Enclos.this.contentPane.setPlayersPanelSelectable(false);
+					Enclos.this.contentPane.setPlayersPanelSelectable(true);
 				}
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 					Enclos.this.contentPane.displayNextGame();
@@ -106,8 +106,8 @@ public class Enclos extends JFrame {
 			}
 		});
 
-		 this.introFrame = new IntroFrame(this);
-		 this.introFrame.setLocation(getLocation());
+//		 this.introFrame = new IntroFrame(this);
+//		 this.introFrame.setLocation(getLocation());
 
 		setVisible(true);
 	}
@@ -149,6 +149,10 @@ public class Enclos extends JFrame {
 
 	public void refreshPlayersInfo() {
 		getFrameContentPane().refreshPlayersInfo(players);
+	}
+	
+	public FrameContentPane getContentPane(){
+		return this.contentPane;
 	}
 
 }

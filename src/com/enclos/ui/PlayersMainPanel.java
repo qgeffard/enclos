@@ -28,7 +28,7 @@ public class PlayersMainPanel extends JPanel {
     private final FrameContentPane parent;
     private final PlayersGridPanel playersGridPanel;
 
-    private boolean isSelectable = false;
+    private boolean isSelectable = true;
     private final JPanel buttonPanel;
     private JButton next;
 
@@ -46,8 +46,9 @@ public class PlayersMainPanel extends JPanel {
         generatePlayersCard();
 
         JButton addPlayerButton = new JButton("Add player");
+        JButton removePlayerButton = new JButton("Delete selected players");
 
-        next = new JButton("Next");
+        next = new JButton("Create game");
         next.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -55,7 +56,7 @@ public class PlayersMainPanel extends JPanel {
                 super.mousePressed(e);
                 int nbPlayers = PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount();
 
-                if (nbPlayers >= 2) {
+                if (nbPlayers >= 2 && nbPlayers < 6) {
                     Map<String, String> params = NewGameForm.display(PlayersMainPanel.this.playersGridPanel.getPlayerSelectedCount());
                     if (params != null) {
                         Long size = Long.valueOf(params.get("boardSize"));
@@ -72,12 +73,28 @@ public class PlayersMainPanel extends JPanel {
                         PlayersMainPanel.this.playersGridPanel.reset();
                     }
                 } else {
-                    JOptionPane.showConfirmDialog(PlayersMainPanel.this, "Not enough players.");
+                    JOptionPane.showConfirmDialog(PlayersMainPanel.this, "The number of player must be between 2 and 5");
                 }
             }
         });
+        
+        removePlayerButton.setFocusable(false);
+        removePlayerButton.addMouseListener(new MouseAdapter() {
+        	@Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                for(Player playerToRemove : PlayersMainPanel.this.playersGridPanel.getPlayersSelected()){
+                	PlayersMainPanel.this.enclos.getPlayers().remove(playerToRemove);
+                	SimpleWriter.SavePlayer(PlayersMainPanel.this.enclos.getPlayers(), "players");
+                	PlayersMainPanel.this.enclos.getContentPane().refreshPlayersInfo(PlayersMainPanel.this.enclos.getPlayers());
+                    PlayersMainPanel.this.enclos.getFrameContentPane().refreshScorePanel(PlayersMainPanel.this.enclos.getPlayers());
+                    PlayersMainPanel.this.playersGridPanel.revalidate();
+                }
+                revalidate();
+            }
+		});
 
-        // only workaround I found to keep the 'P' shortcut after clicking the
+        // only workaround I found to keep the 'P' shortcut after clicking the  VK_P
         // button
         addPlayerButton.setFocusable(false);
 
@@ -136,9 +153,11 @@ public class PlayersMainPanel extends JPanel {
                 return newPlayer;
             }
         });
-
+        
         buttonPanel.add(addPlayerButton);
+        buttonPanel.add(removePlayerButton);
         buttonPanel.add(next);
+        
 
         this.add(buttonPanel, BorderLayout.SOUTH);
     }

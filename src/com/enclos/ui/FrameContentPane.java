@@ -111,4 +111,10 @@ public class FrameContentPane extends JPanel {
         refreshPlayersPanel(players);
     }
 
+	public PlayersMainPanel getPlayersPanel() {
+		return playersPanel;
+	}
+    
+    
+
 }
