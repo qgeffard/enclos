@@ -12,8 +12,6 @@ import com.enclos.component.Sheep;
 import com.enclos.ui.Board;
 
 public class Human extends Player implements Cloneable {
-    private final String firstName;
-    private final String lastName;
     private final int age;
     private int gamesWon = 0;
     private int gamesLost = 0;
@@ -54,13 +52,6 @@ public class Human extends Player implements Cloneable {
     	this.gamesLost = gamesLost;
 	}
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
 
     public int getAge() {
         return age;

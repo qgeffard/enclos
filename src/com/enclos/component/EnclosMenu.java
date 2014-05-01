@@ -21,7 +21,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,8 +33,6 @@ import com.enclos.resources.song.Speaker;
 import com.enclos.ui.Board;
 import com.enclos.ui.Enclos;
 import com.enclos.ui.FrameContentPane;
-import com.enclos.ui.PlayerProfilePanel;
-import com.enclos.ui.ScorePanel;
 
 public class EnclosMenu extends JMenuBar {
 
@@ -171,67 +168,91 @@ public class EnclosMenu extends JMenuBar {
 	}
 
 	private void addLoadFileListener(JMenuItem loadFile, final String exactName) {
-		/*
-		 * loadFile.addActionListener(new ActionListener() {
-		 * 
-		 * @Override public void actionPerformed(ActionEvent e) {
-		 * 
-		 * // LOADING try { JSONParser parser = new JSONParser(); JSONObject
-		 * root = null; try { root = (JSONObject) parser.parse(new
-		 * FileReader("resources/save/" + exactName + ".json")); } catch
-		 * (FileNotFoundException e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); } catch (IOException e1) { // TODO
-		 * Auto-generated catch block e1.printStackTrace(); } catch
-		 * (ParseException e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); }
-		 * 
-		 * List<JSONArray> players = (List<JSONArray>) root.get("Players");
-		 * Map<Sheep, Point> sheepsInfo = new LinkedHashMap<Sheep, Point>();
-		 * List<Human> playersList = new LinkedList<Human>();
-		 * 
-		 * 
-		 * for (JSONArray player : players) { for (Object obj : player) {
-		 * JSONObject jsonobj = (JSONObject) obj; Human owner =
-		 * EnclosMenu.this.parent.getCorrespondingPlayer((String)
-		 * jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
-		 * playersList.add(owner); } } Board loadBoard = new Board((Long)
-		 * root.get("Boardsize"),
-		 * Integer.parseInt(root.get("nbSheepPerPlayer").toString()),
-		 * playersList, EnclosMenu.this.parent);
-		 * 
-		 * for (JSONArray player : players) { for (Object obj : player) {
-		 * JSONObject jsonobj = (JSONObject) obj; Human owner =
-		 * loadBoard.getCorrespondingPlayer((String) jsonobj.get("firstname"),
-		 * (String) jsonobj.get("lastname")); playersList.add(owner); JSONArray
-		 * sheepsPosition = (JSONArray) jsonobj.get("sheeps"); for (Object
-		 * position : sheepsPosition) { Sheep newSheep = new Sheep();
-		 * newSheep.setOwner(owner); newSheep.setImgPath(new File((String)
-		 * jsonobj.get("imgPath"))); String[] hexaPosition = ((String)
-		 * position).split(","); Point pos = new
-		 * Point(Integer.valueOf(hexaPosition[0]),
-		 * Integer.valueOf(hexaPosition[1])); sheepsInfo.put(newSheep, pos); } }
-		 * } Human currentPlayer = loadBoard.getCorrespondingPlayer((String)
-		 * root.get("currentPLayerFirstName"), (String)
-		 * root.get("currentPLayerLastName"));
-		 * 
-		 * List<JSONArray> barriers = (List<JSONArray>) root.get("Barriers");
-		 * 
-		 * EnclosMenu.this.parent.getBoards().add(loadBoard);
-		 * EnclosMenu.this.parent
-		 * .getFrameContentPane().addToGamePanel(loadBoard);
-		 * 
-		 * loadBoard.setData(barriers, sheepsInfo, currentPlayer);
-		 * 
-		 * FrameContentPane contentPane = ((FrameContentPane)
-		 * EnclosMenu.this.parent.getContentPane());
-		 * contentPane.goToGamePanel(); EnclosMenu.this.parent.revalidate(); }
-		 * catch (Exception e1) { int deleteLoad =
-		 * JOptionPane.showConfirmDialog(parent,
-		 * "Load file was corrupted, do you want delete it ?");
-		 * 
-		 * if (deleteLoad == JOptionPane.OK_OPTION) {
-		 * System.out.println("hello"); File save = new File("resources/save/" +
-		 * exactName + ".json"); save.delete(); } } } });
-		 */
+		loadFile.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				// LOADING
+				try {
+					JSONParser parser = new JSONParser();
+					JSONObject root = null;
+					try {
+						root = (JSONObject) parser.parse(new FileReader("resources/save/" + exactName + ".json"));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (ParseException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+					List<JSONArray> players = (List<JSONArray>) root.get("Players");
+					Map<Sheep, Point> sheepsInfo = new LinkedHashMap<Sheep, Point>();
+					List<Human> playersList = new LinkedList<Human>();
+
+					for (JSONArray player : players) {
+						for (Object obj : player) {
+							JSONObject jsonobj = (JSONObject) obj;
+							if (!jsonobj.get("firstname").equals("Computer")) {
+								Human owner = EnclosMenu.this.parent.getCorrespondingPlayer((String) jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
+								playersList.add(owner);
+							}
+						}
+					}
+					Board loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList, EnclosMenu.this.parent);
+
+					for (JSONArray player : players) {
+						for (Object obj : player) {
+							JSONObject jsonobj = (JSONObject) obj;
+							if (!jsonobj.get("firstname").equals("Computer")) {
+								Human owner = loadBoard.getCorrespondingPlayer((String) jsonobj.get("firstname"), (String) jsonobj.get("lastname"));
+								JSONArray sheepsPosition = (JSONArray) jsonobj.get("sheeps");
+								for (Object position : sheepsPosition) {
+									Sheep newSheep = new Sheep();
+									newSheep.setOwner(owner);
+									newSheep.setImgPath(new File((String) jsonobj.get("imgPath")));
+									String[] hexaPosition = ((String) position).split(",");
+									Point pos = new Point(Integer.valueOf(hexaPosition[0]), Integer.valueOf(hexaPosition[1]));
+									sheepsInfo.put(newSheep, pos);
+								}
+							} else {
+								JSONArray sheepsPosition = (JSONArray) jsonobj.get("sheeps");
+								for (Object position : sheepsPosition) {
+									Sheep newSheep = new Sheep();
+									newSheep.setImgPath(new File((String) jsonobj.get("imgPath")));
+									String[] hexaPosition = ((String) position).split(",");
+									Point pos = new Point(Integer.valueOf(hexaPosition[0]), Integer.valueOf(hexaPosition[1]));
+									sheepsInfo.put(newSheep, pos);
+								}
+							}
+						}
+					}
+					Human currentPlayer = loadBoard.getCorrespondingPlayer((String) root.get("currentPLayerFirstName"), (String) root.get("currentPLayerLastName"));
+
+					List<JSONArray> barriers = (List<JSONArray>) root.get("Barriers");
+
+					EnclosMenu.this.parent.getBoards().add(loadBoard);
+					EnclosMenu.this.parent.getFrameContentPane().addToGamePanel(loadBoard);
+
+					loadBoard.setData(barriers, sheepsInfo, currentPlayer);
+
+					FrameContentPane contentPane = ((FrameContentPane) EnclosMenu.this.parent.getContentPane());
+					contentPane.goToGamePanel();
+					EnclosMenu.this.parent.revalidate();
+				} catch (Exception e1) {
+					int deleteLoad = JOptionPane.showConfirmDialog(parent, "Load file was corrupted, do you want delete it ?");
+
+					if (deleteLoad == JOptionPane.OK_OPTION) {
+						System.out.println("hello");
+						File save = new File("resources/save/" + exactName + ".json");
+						save.delete();
+					}
+				}
+			}
+		});
 	}
 }

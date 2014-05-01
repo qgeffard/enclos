@@ -69,28 +69,15 @@ public class Board extends JPanel {
 	private List<JSONArray> barriersToLoad;
 	private Map<Sheep, Point> sheepInfosToLoad;
 
+	private Computer computer = null;
+
 	private final Enclos parent;
 
 	Image background = new ImageIcon("resources/image/grass.jpg").getImage();
 
 	private Hexagon lastCell = null;
 
-	public Board(long size, int nbSheepPerPlayer, List<Human> players, Enclos parent) {
-		this.parent = parent;
-
-		this.realPlayersList = players;
-
-		for (Human player : players) {
-			Human playerCloned = player.clone();
-			this.playerList.add(playerCloned);
-		}
-		this.nbSheepPerPlayer = nbSheepPerPlayer;
-		this.NB_SHEEP = nbSheepPerPlayer * this.playerList.size();
-		this.size = size;
-		initGame();
-	}
-
-	public Board(Long boardSize, int nbSheep, List<Human> playersSelected, Enclos enclos, boolean b) {
+	public Board(Long boardSize, int nbSheep, List<Human> playersSelected, Enclos enclos) {
 		this.parent = enclos;
 
 		this.realPlayersList = playersSelected;
@@ -100,8 +87,10 @@ public class Board extends JPanel {
 			playerList.add(playerCloned);
 		}
 
-		playerList.add(new Computer(this));
-
+		if (playerList.size() < 2) {
+			computer = new Computer(this);
+			playerList.add(computer);
+		}
 		this.nbSheepPerPlayer = nbSheep;
 		this.NB_SHEEP = nbSheep * this.playerList.size();
 		this.size = boardSize;
@@ -802,12 +791,15 @@ public class Board extends JPanel {
 			Hexagon hexa = getCorrespondingHexagon(sheepInfosToLoad.get(sheep).x, sheepInfosToLoad.get(sheep).y);
 			hexa.setSheep(sheep);
 			sheep.setHexagon(hexa);
-			// add the new sheeps with their new position to the player's
-			// sheep's list
-			sheep.getOwner().getSheeps().add(sheep);
+			if (sheep.getOwner() != null) {
+				sheep.getOwner().getSheeps().add(sheep);
+			} else {
+				sheep.setOwner(computer);
+				computer.getSheeps().add(sheep);
+			}
+
 			sheeps.add(sheep);
 		}
-
 		repaint();
 	}
 
@@ -819,11 +811,11 @@ public class Board extends JPanel {
 		return currentPlayer;
 	}
 
-	public Player getCorrespondingPlayer(String firstName, String lastName) {
+	public Human getCorrespondingPlayer(String firstName, String lastName) {
 		for (Player player : this.playerList) {
 			if (player instanceof Human) {
 				if (((Human) player).getLastName().equals(lastName) && ((Human) player).getFirstName().equals(firstName)) {
-					return player;
+					return (Human) player;
 				}
 			}
 		}
@@ -870,6 +862,9 @@ public class Board extends JPanel {
 
 		public Computer(Board board) {
 			this.board = board;
+
+			this.firstName = "Computer";
+			this.lastName = "Dr";
 		}
 
 		@Override
@@ -890,12 +885,6 @@ public class Board extends JPanel {
 			board.nextTurn();
 		}
 
-		private void hellTurn() {
-		}
-
-		private void normalTurn() {
-		}
-
 		private void retardTurn() {
 
 			if (random.nextBoolean()) {
@@ -905,9 +894,19 @@ public class Board extends JPanel {
 				randomBarrierDrop();
 				randomSheepMove();
 			}
+
+		}
+
+		private void normalTurn() {
+
+		}
+
+		private void hellTurn() {
+
 		}
 
 		private void randomBarrierDrop() {
+
 			List<Bridge> barriers = board.getBarriers();
 			List<Bridge> bridges = board.getBridges();
 
@@ -930,11 +929,9 @@ public class Board extends JPanel {
 			} while (sheepToMove.getHexagon().getNeighboors().size() < 1);
 
 			int randomNeighboorTarget = random.nextInt(sheepToMove.getHexagon().getNeighboors().size());
-
 			Hexagon targetHexagon = sheepToMove.getHexagon().getNeighboors().get(randomNeighboorTarget);
 
 			board.switchSheep(sheepToMove, targetHexagon);
-			board.resetHexagonsColor();
 			board.isGameFinished();
 		}
 	}

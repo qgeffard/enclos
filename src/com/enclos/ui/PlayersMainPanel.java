@@ -65,7 +65,7 @@ public class PlayersMainPanel extends JPanel {
 					if (params != null) {
 						Long size = Long.valueOf(params.get("boardSize"));
 						int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
-						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(), PlayersMainPanel.this.enclos, true);
+						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(), PlayersMainPanel.this.enclos);
 
 						if (params.get("close").equals("close")) {
 							PlayersMainPanel.this.parent.resetGamePanel();

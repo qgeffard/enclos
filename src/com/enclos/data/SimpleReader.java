@@ -84,8 +84,7 @@ public class SimpleReader {
     }
 
     private enum Params {
-        SHEEPNUMBER, BOARDSIZE, PLAYERS, SHEEPSPOSITIONS, BARRIERS; // ; is required
-        // here.
+        SHEEPNUMBER, BOARDSIZE, PLAYERS, SHEEPSPOSITIONS, BARRIERS; 
 
         @Override
         public String toString() {
