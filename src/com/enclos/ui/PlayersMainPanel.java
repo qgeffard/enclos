@@ -82,7 +82,7 @@ public class PlayersMainPanel extends JPanel {
 					}
 				} else {
 					JOptionPane.showConfirmDialog(PlayersMainPanel.this,
-							"The number of player must be between 2 and 5");
+							"The number of player must be between 1 and 5");
 				}
 				PlayersMainPanel.this.createGameButton.setEnabled(false);
 				PlayersMainPanel.this.createGameButton.setEnabled(true);

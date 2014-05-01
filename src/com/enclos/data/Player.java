@@ -11,19 +11,12 @@ import javax.imageio.ImageIO;
 import com.enclos.component.Sheep;
 import com.enclos.ui.Board;
 
-public class Player implements PlayerAction, Cloneable {
-    public final static int BEGIN_TURN = 0;
-    public final static int MOVE_SHEEP = 2;
-    public final static int DROP_BARRIER = 1;
-    public final static int END_TURN = 3;
+public class Player extends PlayerBase implements Cloneable {
     private final String firstName;
     private final String lastName;
     private final int age;
     private int gamesWon = 0;
     private int gamesLost = 0;
-    private int turnStatus;
-    private boolean hasLost = false;
-    private List<Sheep> sheeps;
 
     // only used when saving player
     private String profilePicturePath;
@@ -64,18 +57,6 @@ public class Player implements PlayerAction, Cloneable {
     	this.gamesLost = gamesLost;
 	}
 
-	public void startTurn() {
-        this.turnStatus = BEGIN_TURN;
-    }
-
-    public boolean isEndOfTurn() {
-        return (this.turnStatus >= END_TURN) ? true : false;
-    }
-    
-    public boolean isBeginOfTurn(){
-    	return (this.turnStatus == BEGIN_TURN) ? true : false;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -90,14 +71,6 @@ public class Player implements PlayerAction, Cloneable {
 
     public BufferedImage getProfilePicture() {
         return profilePicture;
-    }
-
-    public int getTurnStatus() {
-        return turnStatus;
-    }
-
-    public void setTurnStatus(int turnStatus) {
-        this.turnStatus = turnStatus;
     }
 
     @Override
@@ -118,16 +91,6 @@ public class Player implements PlayerAction, Cloneable {
         return description.toString();
     }
 
-    @Override
-    public void moveSheep() {
-        this.turnStatus += MOVE_SHEEP;
-    }
-
-    @Override
-    public void dropBarrier() {
-        System.out.println(this.firstName + " " + this.lastName + " a posé une barriere");
-        this.turnStatus += DROP_BARRIER;
-    }
 
     public List<Sheep> getSheeps() {
         return this.sheeps;
@@ -148,27 +111,14 @@ public class Player implements PlayerAction, Cloneable {
     public void win(){
     	this.gamesWon++;
     }
-
-    public boolean hasLost() {
-        return this.hasLost;
-    }
-
-    public void paralyzed(){
-        this.hasLost = true;
-    }
     
     public void lose() {
         gamesLost++;
     }
 
-	public void alive() {
-		this.hasLost = false;
-	}
-
 	private void deepCopySheepList(){
 		this.sheeps = new ArrayList<Sheep>();
 	}
-	
 	
 	public Player clone() {
 		Player clone = null;
@@ -180,8 +130,5 @@ public class Player implements PlayerAction, Cloneable {
 		}
 		return clone;
 	}
-	
-	public void resetLoseStatus(){
-		hasLost = false;
-	}
+
 }
