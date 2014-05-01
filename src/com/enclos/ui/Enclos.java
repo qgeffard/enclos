@@ -69,7 +69,7 @@ public class Enclos extends JFrame {
 					}
 				}
 				if (e.getKeyCode() == KeyEvent.VK_P) {
-					Enclos.this.contentPane.goToPlayersPanel();
+					Enclos.this.contentPane.goToPlayersPanel(true);
 				}
 				if (e.getKeyCode() == KeyEvent.VK_G) {
 					Enclos.this.contentPane.goToGamePanel();

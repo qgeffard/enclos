@@ -80,7 +80,7 @@ public class EnclosMenu extends JMenuBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				parent.getFrameContentPane().goToPlayersPanel();
+				parent.getFrameContentPane().goToPlayersPanel(true);
 			}
 		});
 	}
@@ -144,7 +144,7 @@ public class EnclosMenu extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 
 				FrameContentPane contentPane = ((FrameContentPane) EnclosMenu.this.parent.getContentPane());
-				contentPane.goToPlayersPanel();
+				contentPane.goToPlayersPanel(false);
 			}
 		});
 	}

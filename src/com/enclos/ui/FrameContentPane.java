@@ -61,8 +61,9 @@ public class FrameContentPane extends JPanel {
         contentPaneCardLayout.show(this, GAMEPANELNAME);
     }
 
-    public void goToPlayersPanel() {
+    public void goToPlayersPanel(boolean displayPlayersManagementButton) {
     	playersPanel.resetSelectedPlayers();
+    	playersPanel.displayPlayersManagementButton(displayPlayersManagementButton);
         contentPaneCardLayout.show(this, PLAYERGRIDNAME);
     }
 
