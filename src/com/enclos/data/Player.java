@@ -160,7 +160,6 @@ public class Player implements PlayerAction, Cloneable {
     public void lose() {
         this.hasLost = true;
         gamesLost++;
-        int x = 0;
     }
 
 	public void alive() {
@@ -183,5 +182,9 @@ public class Player implements PlayerAction, Cloneable {
 			cnse.printStackTrace(System.err);
 		}
 		return clone;
+	}
+	
+	public void resetLoseStatus(){
+		hasLost = false;
 	}
 }

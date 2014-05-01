@@ -74,10 +74,10 @@ public class Board extends JPanel {
 	private Hexagon lastCell = null;
 
 	public Board(long size, int nbSheepPerPlayer, List<Player> players, Enclos parent) {
-
 		this.parent = parent;
+		
 		this.realPlayersList = players;
-
+		
 		for (Player player : players) {
 			Player playerCloned = player.clone();
 			this.playerList.add(playerCloned);
@@ -677,18 +677,19 @@ public class Board extends JPanel {
 
 	private boolean updateLoseStatusPlayer() {
 		generateNeighboors();
-		boolean lost = false;
+		boolean lost = true;
 		for (Player player : this.playerList) {
-			lost = true;
 			for (Sheep sheep : player.getSheeps()) {
 				if (sheep.getHexagon().getNeighboors().size() > 0) {
 					lost = false;
 				}
 			}
 			if (lost) {
+				if (!player.hasLost()) {
 				Player realPlayer = getCorrespondingRealPlayer(player.getFirstName(), player.getLastName());
 				realPlayer.lose();
 				player.lose();
+				}
 			} else {
 				if (player.hasLost()) {
 					//BUG QUAND LE JOUEUR GAGNE APPAREMMENT CA LUI FAIT -1 EN GAMES LOST
@@ -733,6 +734,10 @@ public class Board extends JPanel {
 					realWinner.win();
 					SimpleWriter.SavePlayer(parent.getPlayers(), "players");
 					parent.refreshPlayersInfo();
+					
+					for(Player player : realPlayersList){
+						player.resetLoseStatus();
+					}
 				}
 			}
 			return true;
