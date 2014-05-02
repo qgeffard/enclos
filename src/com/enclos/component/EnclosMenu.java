@@ -27,6 +27,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.enclos.data.Difficulty;
 import com.enclos.data.Human;
 import com.enclos.data.SimpleWriter;
 import com.enclos.resources.song.Speaker;
@@ -203,8 +204,12 @@ public class EnclosMenu extends JMenuBar {
 							}
 						}
 					}
-					Board loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList, EnclosMenu.this.parent);
-
+					Board loadBoard = null;
+					if (playersList.size() < 2) {
+						loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList, EnclosMenu.this.parent, Difficulty.valueOf((String) root.get("difficulty").toString().toUpperCase()));
+					} else {
+						loadBoard = new Board((Long) root.get("Boardsize"), Integer.parseInt(root.get("nbSheepPerPlayer").toString()), playersList, EnclosMenu.this.parent);
+					}
 					for (JSONArray player : players) {
 						for (Object obj : player) {
 							JSONObject jsonobj = (JSONObject) obj;
@@ -247,7 +252,6 @@ public class EnclosMenu extends JMenuBar {
 					int deleteLoad = JOptionPane.showConfirmDialog(parent, "Load file was corrupted, do you want delete it ?");
 
 					if (deleteLoad == JOptionPane.OK_OPTION) {
-						System.out.println("hello");
 						File save = new File("resources/save/" + exactName + ".json");
 						save.delete();
 					}

@@ -80,8 +80,6 @@ public class Board extends JPanel {
 
 		// first hexagon centered
 		center.resizeHexagon(getWidth() / 2, getHeight() / 2);
-
-		System.out.println("average : " + center.getAverageEdge());
 		BridgePanel.setEdge(center.getAverageEdge());
 
 		// TODO replace 100 by hex's max edge

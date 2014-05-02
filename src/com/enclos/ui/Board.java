@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class Board extends JPanel {
 	private Player currentPlayer = null;
 	private Sheep lastMovedSheep = null;
 	private Hexagon lastHexagonPosition = null;
+	private Difficulty difficulty = null;
 
 	private boolean guiIsBeingCreated = true;
 	private boolean dataToLoad = false;
@@ -92,13 +94,29 @@ public class Board extends JPanel {
 			playerList.add(playerCloned);
 		}
 
-		if (playerList.size() < 2) {
-			computer = new Computer(this);
-			playerList.add(computer);
-		}
 		this.nbSheepPerPlayer = nbSheep;
 		this.NB_SHEEP = nbSheep * this.playerList.size();
 		this.size = boardSize;
+
+		initGame();
+	}
+
+	public Board(Long size, int nbSheep, List<Human> playersSelected, Enclos enclos, Difficulty difficulty) {
+		this.parent = enclos;
+
+		this.realPlayersList = playersSelected;
+
+		for (Human player : playersSelected) {
+			Human playerCloned = player.clone();
+			playerList.add(playerCloned);
+		}
+		this.difficulty = difficulty;
+		computer = new Computer(this, difficulty);
+		playerList.add(computer);
+
+		this.nbSheepPerPlayer = nbSheep;
+		this.NB_SHEEP = nbSheep * this.playerList.size();
+		this.size = size;
 
 		initGame();
 	}
@@ -469,6 +487,10 @@ public class Board extends JPanel {
 		hexaToDraw.setCenterPoint();
 
 		this.lastCell = hexaToDraw;
+	}
+
+	public Difficulty getDifficulty() {
+		return difficulty;
 	}
 
 	private Hexagon getCorrespondingHexagon(int i, int j) {
@@ -869,77 +891,100 @@ public class Board extends JPanel {
 
 	private class Computer extends Player implements PlayerAction {
 
-		private Difficulty difficulty = Difficulty.NORMAL;
+		private Difficulty difficulty = Difficulty.RAINBOW;
 		private Board board = null;
 
 		private Random random = new Random();
 
-		public Computer(Board board) {
+		public Computer(Board board, Difficulty difficulty) {
 			this.board = board;
 
 			this.firstName = "add9cf0f98bd686c95909c8c9160fa5463225c10";
 			this.lastName = "Dr";
+
+			this.difficulty = difficulty;
 		}
 
 		@Override
 		public void startTurn() {
-
+			boolean isFinished = false;
 			switch (difficulty) {
 			case RAINBOW:
-				retardTurn();
+				isFinished = retardTurn();
 				break;
 			case NORMAL:
-				normalTurn();
-				break;
-			case HELL:
-				hellTurn();
+				isFinished = normalTurn();
 				break;
 			}
 			board.repaint();
-			board.nextTurn();
+
+			if (!isFinished) {
+				board.nextTurn();
+			}
 		}
 
-		private void retardTurn() {
-
+		private boolean retardTurn() {
+			boolean finished = false;
 			if (random.nextBoolean()) {
-				randomSheepMove();
-				randomBarrierDrop();
+				finished = randomSheepMove();
+				if (!finished) {
+					finished = randomBarrierDrop();
+				}
 			} else {
-				randomBarrierDrop();
-				randomSheepMove();
+				finished = randomBarrierDrop();
+				if (!finished) {
+					finished = randomSheepMove();
+				}
 			}
+			return finished;
 		}
 
-		private void normalTurn() {
+		private boolean normalTurn() {
+			boolean finished = false;
 			if (random.nextBoolean()) {
-				normalSheepMove();
-				normalBarrierDrop();
+				finished = normalSheepMove();
+				if (!finished) {
+					finished = normalBarrierDrop();
+				}
 			} else {
-				normalBarrierDrop();
-				normalSheepMove();
+				finished = normalBarrierDrop();
+				if (!finished) {
+					finished = normalSheepMove();
+				}
 			}
+			return finished;
 		}
 
-		private void normalSheepMove() {
+		private boolean normalSheepMove() {
+			Sheep randomSheepToMove = null;
 
-			List<ArrayList<Hexagon>> paths = new ArrayList<ArrayList<Hexagon>>();
-			Set<Hexagon> listNode = new HashSet<Hexagon>();
-			for (Hexagon hexa : board.hexagons) {
-				listNode.addAll(hexa.getNeighboorsWithSheep());
+			List<Sheep> sheepsAvailable = new ArrayList<Sheep>();
+			for (Sheep currentSheep : sheeps) {
+				if (currentSheep.getHexagon().getNeighboors().size() > 0 || !isCloseToEnnemy(randomSheepToMove)) {
+					sheepsAvailable.add(currentSheep);
+				}
 			}
+			if (sheepsAvailable.size() > 0) {
+				int randomSheepIndex = random.nextInt(sheeps.size());
+				randomSheepToMove = sheeps.get(randomSheepIndex);
 
-			for (Sheep sheepComputeur : sheeps) {
-				Hexagon startHexa = sheepComputeur.getHexagon();
+				List<ArrayList<Hexagon>> paths = new ArrayList<ArrayList<Hexagon>>();
+				Set<Hexagon> listNode = new HashSet<Hexagon>();
+				for (Hexagon hexa : board.hexagons) {
+					listNode.addAll(hexa.getNeighboorsWithSheep());
+				}
+
+				Hexagon startHexa = randomSheepToMove.getHexagon();
 
 				ArrayList<Hexagon> basePath = new ArrayList<Hexagon>();
 				basePath.add(startHexa);
 				paths.add(basePath);
 
-				Map<Hexagon, Boolean> hexaVisited = new HashMap<Hexagon, Boolean>();
+				Map<Hexagon, Boolean> hexaVisited = new LinkedHashMap<Hexagon, Boolean>();
 				for (Hexagon hex : listNode) {
 					hexaVisited.put(hex, false);
 				}
-				hexaVisited.put(sheepComputeur.getHexagon(), true);
+				hexaVisited.put(randomSheepToMove.getHexagon(), true);
 				Stack<Hexagon> stack = new Stack<Hexagon>();
 				stack.push(startHexa);
 				int level = 0;
@@ -949,7 +994,7 @@ public class Board extends JPanel {
 					Hexagon currentHexa = stack.pop();
 					for (Hexagon neighboor : currentHexa.getNeighboorsWithSheep()) {
 						if (!hexaVisited.get(neighboor)) {
-							
+
 							hexaVisited.put(neighboor, true);
 							stack.add(neighboor);
 
@@ -964,47 +1009,67 @@ public class Board extends JPanel {
 							}
 
 							if (neighboor.getSheep() != null && neighboor.getSheep().getOwner() != this) {
-								System.out.println(neighboor+" - level - "+level);
 								stack.clear();
 							}
-							
-							if(currentHexa.getNeighboorsWithSheep().get(currentHexa.getNeighboorsWithSheep().size()-1) == neighboor){
+
+							if (currentHexa.getNeighboorsWithSheep().get(currentHexa.getNeighboorsWithSheep().size() - 1) == neighboor) {
 								level++;
 							}
 						}
 					}
 					if (!updatedPaths.isEmpty()) {
-						
 						paths.addAll(updatedPaths);
 						updatedPaths.clear();
 					}
 				}
 
-				
-				List<Hexagon> bestPath = new ArrayList<Hexagon>();
-				int minSize = -1;
-				for (List<Hexagon> currentPath : paths) {
+				Set<ArrayList<Hexagon>> viablePaths = new HashSet<ArrayList<Hexagon>>();
+				for (ArrayList<Hexagon> currentPath : paths) {
 					for (Hexagon hexagon : currentPath) {
 						if (hexagon.getSheep() != null && hexagon.getSheep().getOwner() != this) {
-							if(minSize == -1){
-								minSize = currentPath.size();
-								bestPath = currentPath;
-							}else{
-								if(currentPath.size()<minSize){
-									minSize = currentPath.size();
-									bestPath = currentPath;
-								}
-							}
+							viablePaths.add(currentPath);
+						}
+
+					}
+				}
+				ArrayList<Hexagon> bestPath = new ArrayList<Hexagon>();
+				int minSize = -1;
+				for (ArrayList<Hexagon> currentPath : viablePaths) {
+					if (minSize == -1 && currentPath.get(1).getSheep() == null) {
+						minSize = currentPath.size();
+						bestPath = currentPath;
+					} else {
+						if (currentPath.size() < minSize && currentPath.size() > 2 && currentPath.get(1).getSheep() == null) {
+							minSize = currentPath.size();
+							bestPath = currentPath;
 						}
 					}
 				}
-				board.switchSheep(sheeps.get(0), bestPath.get(1));
-				board.isGameFinished();
+
+				if (bestPath.isEmpty()) {
+					return randomSheepMove();
+				} else {
+					board.switchSheep(randomSheepToMove, bestPath.get(1));
+					return board.isGameFinished();
+				}
+			} else {
+				return randomSheepMove();
 			}
 		}
 
-		private void normalBarrierDrop() {
+		private boolean isCloseToEnnemy(Sheep randomSheepToMove) {
+			boolean isCloseToEnnemy = false;
+			for (Hexagon hexagon : randomSheepToMove.getHexagon().getNeighboors()) {
+				if (hexagon.getSheep() != null && hexagon.getSheep().getOwner() != this) {
+					isCloseToEnnemy = true;
+				}
+			}
+			return isCloseToEnnemy;
+		}
+
+		private boolean normalBarrierDrop() {
 			Player player = board.playerList.get(0);
+			//GET UN SHEEP RANDOM TANT QUE LE SHEEP N'A PAS DE VOISIN
 			int randomSheepIndex = random.nextInt(player.getSheeps().size());
 			Sheep randomSheep = player.getSheeps().get(randomSheepIndex);
 
@@ -1013,24 +1078,22 @@ public class Board extends JPanel {
 
 			for (Hexagon hex : hexagon.getNeighboors()) {
 				Bridge bridge = board.getBrigeFromIndex(hexagon, hex);
-				System.out.println(bridge);
 				if (!board.getBarriers().contains(bridge)) {
 					bridges.add(bridge);
 				}
 			}
-			System.out.println(player);
-			int randomBridgeIndex = random.nextInt(bridges.size());
-			barriers.add(bridges.get(randomBridgeIndex));
-			board.isGameFinished();
+			if (!bridges.isEmpty()) {
+				int randomBridgeIndex = random.nextInt(bridges.size());
+				barriers.add(bridges.get(randomBridgeIndex));
+				Speaker.playRandomDropBarrier();
+				return board.isGameFinished();
+			} else {
+				return randomBarrierDrop();
+			}
 
-			Speaker.playRandomDropBarrier();
 		}
-
-		private void hellTurn() {
-
-		}
-
-		private void randomBarrierDrop() {
+		
+		private boolean randomBarrierDrop() {
 
 			List<Bridge> barriers = board.getBarriers();
 			List<Bridge> bridges = board.getBridges();
@@ -1043,11 +1106,10 @@ public class Board extends JPanel {
 
 			barriers.add(barrierToDrop);
 			Speaker.playRandomDropBarrier();
-			board.isGameFinished();
-
+			return board.isGameFinished();
 		}
 
-		private void randomSheepMove() {
+		private boolean randomSheepMove() {
 			Sheep sheepToMove = null;
 			do {
 				int randomSheepIndex = random.nextInt(sheeps.size());
@@ -1058,7 +1120,7 @@ public class Board extends JPanel {
 			Hexagon targetHexagon = sheepToMove.getHexagon().getNeighboors().get(randomNeighboorTarget);
 
 			board.switchSheep(sheepToMove, targetHexagon);
-			board.isGameFinished();
+			return board.isGameFinished();
 
 		}
 	}

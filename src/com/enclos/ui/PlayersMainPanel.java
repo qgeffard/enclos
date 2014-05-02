@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.enclos.data.Difficulty;
 import com.enclos.data.Human;
 import com.enclos.data.SimpleWriter;
 
@@ -65,8 +66,9 @@ public class PlayersMainPanel extends JPanel {
 					if (params != null) {
 						Long size = Long.valueOf(params.get("boardSize"));
 						int nbSheep = Integer.valueOf(params.get("nbSheepPerPlayer"));
-						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(), PlayersMainPanel.this.enclos);
-
+						Difficulty difficulty =  Difficulty.valueOf(params.get("difficulty").toUpperCase());
+						Board newBoard = new Board(size, nbSheep, PlayersMainPanel.this.playersGridPanel.getPlayersSelected(), PlayersMainPanel.this.enclos, difficulty);
+						
 						if (params.get("close").equals("close")) {
 							PlayersMainPanel.this.parent.resetGamePanel();
 						}

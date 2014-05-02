@@ -36,7 +36,12 @@ public class Enclos extends JFrame {
 
 		// enabled tab listener
 		setFocusTraversalKeysEnabled(false);
-		setSize(1200, 700);
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = screenSize.width;
+		int height = screenSize.height;
+		
+		setSize(width, height);
 
 		this.contentPane = new FrameContentPane(this);
 
@@ -98,7 +103,6 @@ public class Enclos extends JFrame {
 				super.keyPressed(e);
 				if (e.getKeyCode() == KeyEvent.VK_TAB) {
 					scoreFrame.setVisible(false);
-					System.out.println("released");
 				}
 			}
 		});

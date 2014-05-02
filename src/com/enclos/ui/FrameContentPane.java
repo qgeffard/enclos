@@ -89,6 +89,7 @@ public class FrameContentPane extends JPanel {
     }
 
     public void removeDisplayedGame() {
+    	System.out.println("remove pan");
         for (Component comp : this.gamePanel.getComponents()) {
             if (comp.isVisible() == true) {
                 this.gamePanel.remove(comp);

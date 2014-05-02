@@ -24,7 +24,6 @@ public class SimpleWriter {
 		for (Player player : board.getPlayers()) {
 			JSONArray sheepsByPLayer = new JSONArray();
 
-			System.out.println(player.getSheeps().size());
 			File imgPath = null;
 			for (Sheep sheep : player.getSheeps()) {
 				imgPath = sheep.getImgPath();
@@ -52,6 +51,10 @@ public class SimpleWriter {
 				barriers.add(barrier);
 
 			}
+			
+			if(board.getDifficulty() != null){
+				jsonObject.put("difficulty", board.getDifficulty().toString());
+			}
 
 			jsonObject.put("Players", players);
 			jsonObject.put("nbSheepPerPlayer", board.getNbSheepPerPlayer());
@@ -65,8 +68,6 @@ public class SimpleWriter {
 				jsonFileWriter.write(jsonObject.toJSONString());
 				jsonFileWriter.flush();
 				jsonFileWriter.close();
-
-				System.out.print(jsonObject);
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -92,8 +93,6 @@ public class SimpleWriter {
 			jsonFileWriter.write(jsonObject.toJSONString());
 			jsonFileWriter.flush();
 			jsonFileWriter.close();
-
-			System.out.print(jsonObject);
 
 		} catch (IOException e) {
 			e.printStackTrace();

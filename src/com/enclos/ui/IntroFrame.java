@@ -99,7 +99,6 @@ public class IntroFrame extends JFrame implements WindowListener {
 				sleep(9000);
 			} catch (InterruptedException e) {
 			}
-			System.out.println("About to close");
 			// close the frame
 			IntroFrame.this.processWindowEvent(new WindowEvent(IntroFrame.this, WindowEvent.WINDOW_CLOSED));
 		}

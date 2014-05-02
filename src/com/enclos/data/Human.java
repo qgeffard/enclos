@@ -42,7 +42,6 @@ public class Human extends Player implements Cloneable {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            System.out.println(firstName + lastName + " : default picture");
         }
     }
 
