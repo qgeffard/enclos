@@ -21,10 +21,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.Stack;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -478,6 +482,7 @@ public class Board extends JPanel {
 	private void generateNeighboors() {
 		for (Hexagon hex : hexagons) {
 			hex.getNeighboors().clear();
+			hex.getNeighboorsWithSheep().clear();
 			Point2D center = hex.getCenterPoint();
 
 			for (Direction direction : Direction.values()) {
@@ -491,6 +496,14 @@ public class Board extends JPanel {
 							Bridge correspondingBridge = this.getBrigeFromIndex(hex, hexa);
 							if (!this.barriers.contains(correspondingBridge)) {
 								hex.addNeighboor(hexa);
+								hex.addNeighboorWithSheep(hexa);
+							}
+						}
+					} else {
+						if (hexa.getPolygon().contains(targetPoint)) {
+							Bridge correspondingBridge = this.getBrigeFromIndex(hex, hexa);
+							if (!this.barriers.contains(correspondingBridge)) {
+								hex.addNeighboorWithSheep(hexa);
 							}
 						}
 					}
@@ -856,7 +869,7 @@ public class Board extends JPanel {
 
 	private class Computer extends Player implements PlayerAction {
 
-		private Difficulty difficulty = Difficulty.RAINBOW;
+		private Difficulty difficulty = Difficulty.NORMAL;
 		private Board board = null;
 
 		private Random random = new Random();
@@ -908,21 +921,86 @@ public class Board extends JPanel {
 		}
 
 		private void normalSheepMove() {
-			Sheep sheep = sheeps.get(0);
-			Hexagon base = sheep.getHexagon();
 
-			int cost = findPath(base);
-		}
-
-		private int findPath(Hexagon base) {
-			int cost = 0;
-			for (Hexagon neighboor : base.getNeighboors()) {
-				if (neighboor.getSheep() != null && neighboor.getSheep().getOwner() != this) {
-					return cost;
-				}
+			List<ArrayList<Hexagon>> paths = new ArrayList<ArrayList<Hexagon>>();
+			Set<Hexagon> listNode = new HashSet<Hexagon>();
+			for (Hexagon hexa : board.hexagons) {
+				listNode.addAll(hexa.getNeighboorsWithSheep());
 			}
 
-			return 0;
+			for (Sheep sheepComputeur : sheeps) {
+				Hexagon startHexa = sheepComputeur.getHexagon();
+
+				ArrayList<Hexagon> basePath = new ArrayList<Hexagon>();
+				basePath.add(startHexa);
+				paths.add(basePath);
+
+				Map<Hexagon, Boolean> hexaVisited = new HashMap<Hexagon, Boolean>();
+				for (Hexagon hex : listNode) {
+					hexaVisited.put(hex, false);
+				}
+				hexaVisited.put(sheepComputeur.getHexagon(), true);
+				Stack<Hexagon> stack = new Stack<Hexagon>();
+				stack.push(startHexa);
+				int level = 0;
+
+				List<ArrayList<Hexagon>> updatedPaths = new ArrayList<ArrayList<Hexagon>>();
+				while (!stack.isEmpty()) {
+					Hexagon currentHexa = stack.pop();
+					for (Hexagon neighboor : currentHexa.getNeighboorsWithSheep()) {
+						if (!hexaVisited.get(neighboor)) {
+							
+							hexaVisited.put(neighboor, true);
+							stack.add(neighboor);
+
+							for (List<Hexagon> currentBasePath : paths) {
+								Hexagon lastHexa = currentBasePath.get(currentBasePath.size() - 1);
+								if (lastHexa.getNeighboorsWithSheep().contains(neighboor)) {
+									ArrayList<Hexagon> newBasePath = new ArrayList<Hexagon>();
+									newBasePath.addAll(currentBasePath);
+									newBasePath.add(neighboor);
+									updatedPaths.add(newBasePath);
+								}
+							}
+
+							if (neighboor.getSheep() != null && neighboor.getSheep().getOwner() != this) {
+								System.out.println(neighboor+" - level - "+level);
+								stack.clear();
+							}
+							
+							if(currentHexa.getNeighboorsWithSheep().get(currentHexa.getNeighboorsWithSheep().size()-1) == neighboor){
+								level++;
+							}
+						}
+					}
+					if (!updatedPaths.isEmpty()) {
+						
+						paths.addAll(updatedPaths);
+						updatedPaths.clear();
+					}
+				}
+
+				
+				List<Hexagon> bestPath = new ArrayList<Hexagon>();
+				int minSize = -1;
+				for (List<Hexagon> currentPath : paths) {
+					for (Hexagon hexagon : currentPath) {
+						if (hexagon.getSheep() != null && hexagon.getSheep().getOwner() != this) {
+							if(minSize == -1){
+								minSize = currentPath.size();
+								bestPath = currentPath;
+							}else{
+								if(currentPath.size()<minSize){
+									minSize = currentPath.size();
+									bestPath = currentPath;
+								}
+							}
+						}
+					}
+				}
+				board.switchSheep(sheeps.get(0), bestPath.get(1));
+				board.isGameFinished();
+			}
 		}
 
 		private void normalBarrierDrop() {

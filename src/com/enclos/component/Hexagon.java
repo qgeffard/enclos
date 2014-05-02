@@ -11,6 +11,7 @@ public class Hexagon extends Shape {
 
 	private Polygon polygon = null;
 	private List<Hexagon> neighboors = new LinkedList<Hexagon>();
+	private List<Hexagon> neighboorsWithSheep = new LinkedList<Hexagon>();
 	private static long distanceBetweenHexagons = 0;
 	private Point virtualIndex = new Point();
 	private Point2D center = null;
@@ -24,6 +25,15 @@ public class Hexagon extends Shape {
 
 	public boolean contains(int x, int y) {
 		return polygon.contains(new Point(x, y)) ? true : false;
+	}
+	
+
+	public List<Hexagon> getNeighboorsWithSheep() {
+		return neighboorsWithSheep;
+	}
+
+	public void setNeighboorsWithSheep(List<Hexagon> neighboorsWithSheep) {
+		this.neighboorsWithSheep = neighboorsWithSheep;
 	}
 
 	public Polygon getPolygon() {
@@ -75,6 +85,11 @@ public class Hexagon extends Shape {
 	public void addNeighboor(Hexagon hex) {
 		this.neighboors.add(hex);
 	}
+	
+	public void addNeighboorWithSheep(Hexagon hex) {
+		this.neighboorsWithSheep.add(hex);
+	}
+
 
 	public void setCenterPoint() {
 		this.center = new Point((int) this.getPointList().get(3).getX()
@@ -110,6 +125,6 @@ public class Hexagon extends Shape {
 
 	@Override
 	public String toString() {
-		return super.toString() + " Hexagon  - " +this.sheep ;// == null ? "je n'ai pas de sheep" : "j'ai un sheep"
+		return super.toString() + " Hexagon  - " +this.sheep + "Point :"+virtualIndex;// == null ? "je n'ai pas de sheep" : "j'ai un sheep"
 	}
 }
