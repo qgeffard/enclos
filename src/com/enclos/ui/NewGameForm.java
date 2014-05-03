@@ -24,6 +24,7 @@ public class NewGameForm extends JOptionPane {
 		List<String> nbSheepsPerPlayer = Arrays.asList("1", "2", "3", "4", "5");
 		JComboBox<String> sheepComboBox = new JComboBox(
 				nbSheepsPerPlayer.toArray());
+		sheepComboBox.setSelectedItem("3");
 		
 		List<String> nbBoardSize = new ArrayList<String>();
 		for(int i=1; i<15; i++){
@@ -31,6 +32,7 @@ public class NewGameForm extends JOptionPane {
 		}
 		JComboBox<String> boardSizeComboBox = new JComboBox(
 				nbBoardSize.toArray());
+		boardSizeComboBox.setSelectedItem("3");
 		
 		List<String> choiceComputerDifficulty = new ArrayList<String>();
 		for(Difficulty difficulty : Difficulty.values()){
