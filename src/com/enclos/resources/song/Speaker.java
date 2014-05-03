@@ -5,8 +5,10 @@ import java.applet.AudioClip;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.enclos.component.EnclosMenu;
 
 public class Speaker {
+	private AudioClip music;
 	private static List<AudioClip> saySheep = new LinkedList<AudioClip>();
 	private static List<AudioClip> stepSheep = new LinkedList<AudioClip>();
 	private static List<AudioClip> dropBarrier = new LinkedList<AudioClip>();
@@ -14,6 +16,11 @@ public class Speaker {
 	private static AudioClip click;
 	private static AudioClip intro;
 	private static boolean isMute = false;
+	private static boolean isMusicPlaying = false;
+
+	public Speaker() {
+		this.music = Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/tetris_music.wav"));
+	}
 
 	static {
 		// SAY
@@ -35,14 +42,14 @@ public class Speaker {
 		Speaker.dropBarrier.add(Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/wood4.wav")));
 		Speaker.dropBarrier.add(Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/wood5.wav")));
 		Speaker.dropBarrier.add(Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/wood6.wav")));
-		
-		//Hover event
+
+		// Hover event
 		Speaker.hoverEvent.add(Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/stone1.wav")));
-		
-		//Click
+
+		// Click
 		Speaker.click = Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/click.wav"));
-		
-		//Intro
+
+		// Intro
 		Speaker.intro = Applet.newAudioClip(Speaker.class.getResource("/com/enclos/resources/song/intro.wav"));
 	}
 
@@ -66,26 +73,38 @@ public class Speaker {
 			Speaker.dropBarrier.get((int) (Math.random() * (max - 0)) + 0).play();
 		}
 	}
-	
-	public static void playRandomHoverEvent(){
-		if(!Speaker.isMute){
+
+	public static void playRandomHoverEvent() {
+		if (!Speaker.isMute) {
 			int max = Speaker.hoverEvent.size();
 			Speaker.hoverEvent.get((int) (Math.random() * (max - 0)) + 0).play();
 		}
 	}
 
-	public static void playClickEvent(){
-		if(!Speaker.isMute){
+	public static void playClickEvent() {
+		if (!Speaker.isMute) {
 			Speaker.click.play();
 		}
 	}
-	
-	public static void playIntro(){
-		if(!Speaker.isMute){
+
+	public static void playIntro() {
+		if (!Speaker.isMute) {
 			Speaker.intro.play();
 		}
 	}
-	
+
+	public void playMusic() {
+		if (!Speaker.isMusicPlaying && EnclosMenu.isMusicActivated) {
+			music.loop();
+			Speaker.isMusicPlaying = true;
+		}
+	}
+
+	public void stopMusic() {
+		music.stop();
+		Speaker.isMusicPlaying = false;
+	}
+
 	public static void isMute(boolean isMute) {
 		Speaker.isMute = isMute;
 	}

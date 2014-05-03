@@ -19,6 +19,7 @@ import com.enclos.component.EnclosMenu;
 import com.enclos.data.Human;
 import com.enclos.data.SimpleReader;
 import com.enclos.data.SimpleWriter;
+import com.enclos.resources.song.Speaker;
 
 public class Enclos extends JFrame {
 
@@ -29,6 +30,7 @@ public class Enclos extends JFrame {
 	private final List<Human> players;
 	private int screenWidth;
 	private int screenHeight;
+	private Speaker enclosSpeaker = new Speaker();
 
 	public Enclos() {
 		// si jamais on veut utiliser le principe de la fen�tre carr�e
@@ -137,8 +139,8 @@ public class Enclos extends JFrame {
 			}
 		});
 
-		// this.introFrame = new IntroFrame(this);
-		// this.introFrame.setLocation(getLocation());
+//		 this.introFrame.setLocation(getLocation());
+//		 this.introFrame = new IntroFrame(this);
 
 		setVisible(true);
 	}
@@ -184,6 +186,10 @@ public class Enclos extends JFrame {
 
 	public FrameContentPane getContentPane() {
 		return this.contentPane;
+	}
+
+	public Speaker getBackgroundMusicSpeaker() {
+		return enclosSpeaker;
 	}
 
 }

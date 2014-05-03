@@ -52,6 +52,7 @@ import com.enclos.data.PlayerAction;
 import com.enclos.data.SimpleWriter;
 import com.enclos.resources.song.Speaker;
 
+
 //board de test
 public class Board extends JPanel {
 
@@ -88,7 +89,6 @@ public class Board extends JPanel {
 
 	public Board(Long boardSize, int nbSheep, List<Human> playersSelected, Enclos enclos) {
 		this.parent = enclos;
-
 		this.realPlayersList = playersSelected;
 
 		for (Human player : playersSelected) {
@@ -99,7 +99,8 @@ public class Board extends JPanel {
 		this.nbSheepPerPlayer = nbSheep;
 		this.NB_SHEEP = nbSheep * this.playerList.size();
 		this.size = boardSize;
-
+		
+		parent.getBackgroundMusicSpeaker().playMusic();
 		initGame();
 	}
 
@@ -120,7 +121,8 @@ public class Board extends JPanel {
 		this.nbSheepPerPlayer = nbSheep;
 		this.NB_SHEEP = nbSheep * this.playerList.size();
 		this.size = size;
-
+		
+		parent.getBackgroundMusicSpeaker().playMusic();
 		initGame();
 	}
 

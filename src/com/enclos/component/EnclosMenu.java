@@ -38,6 +38,9 @@ import com.enclos.ui.FrameContentPane;
 
 public class EnclosMenu extends JMenuBar {
 
+	private static boolean isSoundActivated = true; 
+	public static boolean isMusicActivated = true; 
+	
 	private final Enclos parent;
 
 	public EnclosMenu(Enclos enclos) {
@@ -46,13 +49,45 @@ public class EnclosMenu extends JMenuBar {
 		this.setBackground(Color.black);
 		JMenu file = new JMenu("File");
 		JMenu game = new JMenu("Game");
+		JMenu sounds = new JMenu("Sounds");
 		JMenu help = new JMenu("Help");
-		file.setForeground(Color.WHITE);
-		game.setForeground(Color.WHITE);
-		help.setForeground(Color.WHITE);
+//		file.setForeground(Color.WHITE);
+//		game.setForeground(Color.WHITE);
+//		sounds.setForeground(Color.WHITE);
+//		help.setForeground(Color.WHITE);
 		addFileSubItems(file);
 		addGameSubItems(game);
+		addSoundsSubItems(sounds);
 		addHelpGameSubItems(help);
+	}
+
+	private void addSoundsSubItems(JMenu menu) {
+		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", EnclosMenu.isSoundActivated);
+		addSoundsItemListener(soundsItem);
+		final JMenuItem musicItem = new JCheckBoxMenuItem("Play music", EnclosMenu.isMusicActivated);
+		addMusicItemListener(musicItem);
+		menu.add(soundsItem);
+		menu.add(musicItem);
+		
+		add(menu);
+		
+	}
+
+	private void addMusicItemListener(final JMenuItem musicItem) {
+		musicItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(musicItem.isSelected() && parent.getBoards().size()>0){
+					EnclosMenu.isMusicActivated = true;
+					parent.getBackgroundMusicSpeaker().playMusic();
+
+				}else{
+					EnclosMenu.isMusicActivated = false;
+					parent.getBackgroundMusicSpeaker().stopMusic();
+				}
+			}
+		});
 	}
 
 	private void addHelpGameSubItems(JMenu menu) {
@@ -120,8 +155,6 @@ public class EnclosMenu extends JMenuBar {
 		final JMenuItem playersItem = new JMenuItem("Players");
 		addPlayersItemListener(playersItem);
 		final JMenu loadMenu = generateLoadMenu();
-		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", true);
-		addSoundsItemListener(soundsItem);
 		final JMenuItem exitItem = new JMenuItem("Exit");
 		addExitItemListener(exitItem);
 
@@ -129,7 +162,6 @@ public class EnclosMenu extends JMenuBar {
 		menu.add(scoreItem);
 		menu.add(playersItem);
 		menu.add(loadMenu);
-		menu.add(soundsItem);
 		menu.add(exitItem);
 		this.add(menu);
 
@@ -173,6 +205,11 @@ public class EnclosMenu extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Speaker.isMute(!soundsItem.isSelected());
+				if(soundsItem.isSelected()){
+					EnclosMenu.isSoundActivated = true;
+				}else{
+					EnclosMenu.isSoundActivated = false;
+				}
 			}
 		});
 
@@ -229,6 +266,9 @@ public class EnclosMenu extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				EnclosMenu.this.parent.getFrameContentPane().removeDisplayedGame();
+				if(EnclosMenu.this.parent.getBoards().size() == 0){
+					EnclosMenu.this.parent.getBackgroundMusicSpeaker().stopMusic();
+				}
 			}
 		});
 	}
