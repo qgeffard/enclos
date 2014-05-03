@@ -46,25 +46,72 @@ public class EnclosMenu extends JMenuBar {
 		this.setBackground(Color.black);
 		JMenu file = new JMenu("File");
 		JMenu game = new JMenu("Game");
+		JMenu help = new JMenu("Help");
 		file.setForeground(Color.WHITE);
 		game.setForeground(Color.WHITE);
-		addSubItems(file);
-		addSubItems2(game);
-
+		help.setForeground(Color.WHITE);
+		addFileSubItems(file);
+		addGameSubItems(game);
+		addHelpGameSubItems(help);
 	}
 
-	private void addSubItems2(JMenu menu2) {
+	private void addHelpGameSubItems(JMenu menu) {
+		final JMenuItem shortcutsItem = new JMenuItem("Shortcuts");
+		addCloseGameItemListener(shortcutsItem);
+		menu.add(shortcutsItem);
+		addShortcutItemListener(shortcutsItem);
+		
+		this.add(menu);
+	}
+
+	private void addShortcutItemListener(JMenuItem shortcutsItem) {
+		shortcutsItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.getFrameContentPane().goToHelpPanel();
+			}
+		});
+	}
+
+	private void addGameSubItems(JMenu menu) {
+		final JMenuItem previousGameItem = new JMenuItem("Previous Game");
+		addPreviousGameItemListener(previousGameItem);
+		final JMenuItem nextGameItem = new JMenuItem("Next Game");
+		addNextGameItemListener(nextGameItem);
 		final JMenuItem closeGameItem = new JMenuItem("Close");
 		addCloseGameItemListener(closeGameItem);
 		final JMenuItem saveItem = new JMenuItem("Save");
 		addSaveItemListener(saveItem);
 
-		menu2.add(closeGameItem);
-		menu2.add(saveItem);
-		this.add(menu2);
+		menu.add(previousGameItem);
+		menu.add(nextGameItem);
+		menu.add(closeGameItem);
+		menu.add(saveItem);
+		this.add(menu);
 	}
 
-	public void addSubItems(JMenu menu) {
+	private void addNextGameItemListener(JMenuItem nextGameItem) {
+		nextGameItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.getFrameContentPane().displayNextGame();
+			}
+		});
+	}
+
+	private void addPreviousGameItemListener(JMenuItem previousGameItem) {
+		previousGameItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.getFrameContentPane().displayPreviousGame();
+			}
+		});		
+	}
+
+	public void addFileSubItems(JMenu menu) {
 
 		final JMenuItem newGameItem = new JMenuItem("New Game");
 		addNewGameItemListener(newGameItem);

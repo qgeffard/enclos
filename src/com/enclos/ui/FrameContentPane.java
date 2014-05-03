@@ -11,109 +11,113 @@ import com.enclos.data.Human;
 
 public class FrameContentPane extends JPanel {
 
-    private final CardLayout contentPaneCardLayout;
-    private final JPanel gamePanel;
-    private final CardLayout gamePanelCardLayout;
-    private final PlayersMainPanel playersPanel;
-    private final ScorePanel scorePanel;
+	private final CardLayout contentPaneCardLayout;
+	private final JPanel gamePanel;
+	private final CardLayout gamePanelCardLayout;
+	private final PlayersMainPanel playersPanel;
+	private final ScorePanel scorePanel;
+	private final HelpPanel helpPanel;
 
-    private final String GAMEPANELNAME = "GamePanel";
-    private final String PLAYERGRIDNAME = "PlayersGrid";
-    private final String SCOREPANELNAME = "ScorePanel";
+	private final String GAMEPANELNAME = "GamePanel";
+	private final String PLAYERGRIDNAME = "PlayersGrid";
+	private final String SCOREPANELNAME = "ScorePanel";
+	private final String HELPPANELNAME = "HelpPanel";
 
-    private Enclos parent = null;
+	private Enclos parent = null;
 
-    public FrameContentPane(Enclos parent) {
-        this.parent = parent;
+	public FrameContentPane(Enclos parent) {
+		this.parent = parent;
 
-        contentPaneCardLayout = new CardLayout();
-        this.setLayout(contentPaneCardLayout);
+		contentPaneCardLayout = new CardLayout();
+		this.setLayout(contentPaneCardLayout);
 
-        gamePanel = new JPanel();
-        gamePanelCardLayout = new CardLayout();
-        gamePanel.setLayout(gamePanelCardLayout);
+		gamePanel = new JPanel();
+		gamePanelCardLayout = new CardLayout();
+		gamePanel.setLayout(gamePanelCardLayout);
 
-        playersPanel = new PlayersMainPanel(parent, this);
-        JScrollPane scrollPanel = new JScrollPane(playersPanel);
+		helpPanel = new HelpPanel();
 
-        scorePanel = new ScorePanel(parent.getPlayers());
+		playersPanel = new PlayersMainPanel(parent, this);
+		JScrollPane scrollPanel = new JScrollPane(playersPanel);
 
-        this.add(gamePanel, GAMEPANELNAME);
-        this.add(scrollPanel, PLAYERGRIDNAME);
-        this.add(scorePanel, SCOREPANELNAME);
-    }
+		scorePanel = new ScorePanel(parent.getPlayers());
 
-    public void addToGamePanel(Board board) {
-        parent.getBoards().add(board);
-        gamePanel.add(board);
-        parent.refreshMenu();
-    }
+		this.add(gamePanel, GAMEPANELNAME);
+		this.add(scrollPanel, PLAYERGRIDNAME);
+		this.add(scorePanel, SCOREPANELNAME);
+		this.add(helpPanel, HELPPANELNAME);
+	}
 
-    public void resetGamePanel() {
-        gamePanel.removeAll();
-    }
+	public void addToGamePanel(Board board) {
+		parent.getBoards().add(board);
+		gamePanel.add(board);
+		parent.refreshMenu();
+	}
 
-    public void switchPanel() {
-        contentPaneCardLayout.next(this);
-    }
+	public void resetGamePanel() {
+		gamePanel.removeAll();
+	}
 
-    public void goToGamePanel() {
-        contentPaneCardLayout.show(this, GAMEPANELNAME);
-    }
+	public void goToGamePanel() {
+		contentPaneCardLayout.show(this, GAMEPANELNAME);
+	}
 
-    public void goToPlayersPanel(boolean displayPlayersManagementButton) {
-    	playersPanel.resetSelectedPlayers();
-    	playersPanel.displayPlayersManagementButton(displayPlayersManagementButton);
-        contentPaneCardLayout.show(this, PLAYERGRIDNAME);
-    }
+	public void goToPlayersPanel(boolean displayPlayersManagementButton) {
+		playersPanel.resetSelectedPlayers();
+		playersPanel.displayPlayersManagementButton(displayPlayersManagementButton);
+		contentPaneCardLayout.show(this, PLAYERGRIDNAME);
+	}
 
-    public void goToScorePanel() {
-        contentPaneCardLayout.show(this, SCOREPANELNAME);
-    }
+	public void goToScorePanel() {
+		contentPaneCardLayout.show(this, SCOREPANELNAME);
+	}
 
-    public void displayNextGame() {
-        this.gamePanelCardLayout.next(this.gamePanel);
-    }
+	public void goToHelpPanel() {
+		contentPaneCardLayout.show(this, HELPPANELNAME);
+	}
 
-    public void displayPreviousGame() {
-        this.gamePanelCardLayout.previous(this.gamePanel);
-    }
+	public void displayNextGame() {
+		this.gamePanelCardLayout.next(this.gamePanel);
+	}
 
-    public Board getDisplayedBoard() {
-        for (Component comp : this.gamePanel.getComponents()) {
-            if (comp.isVisible() == true) {
-                return (Board) comp;
-            }
-        }
-        return null;
-    }
+	public void displayPreviousGame() {
 
-    public void removeDisplayedGame() {
-    	System.out.println("remove pan");
-        for (Component comp : this.gamePanel.getComponents()) {
-            if (comp.isVisible() == true) {
-                this.gamePanel.remove(comp);
-            }
-        }
-    }
+		this.gamePanelCardLayout.previous(this.gamePanel);
+	}
 
-    public void refreshScorePanel(List<Human> players) {
-        scorePanel.feedTable(players);
-    }
+	public Board getDisplayedBoard() {
+		for (Component comp : this.gamePanel.getComponents()) {
+			if (comp.isVisible() == true) {
+				return (Board) comp;
+			}
+		}
+		return null;
+	}
 
-    private void refreshPlayersPanel(List<Human> players) {
-        playersPanel.refresh();
-    }
+	public void removeDisplayedGame() {
+		System.out.println("remove pan");
+		for (Component comp : this.gamePanel.getComponents()) {
+			if (comp.isVisible() == true) {
+				this.gamePanel.remove(comp);
+			}
+		}
+	}
 
-    public void refreshPlayersInfo(List<Human> players) {
-        refreshScorePanel(players);
-        refreshPlayersPanel(players);
-    }
+	public void refreshScorePanel(List<Human> players) {
+		scorePanel.feedTable(players);
+	}
+
+	private void refreshPlayersPanel(List<Human> players) {
+		playersPanel.refresh();
+	}
+
+	public void refreshPlayersInfo(List<Human> players) {
+		refreshScorePanel(players);
+		refreshPlayersPanel(players);
+	}
 
 	public PlayersMainPanel getPlayersPanel() {
 		return playersPanel;
 	}
-    
-    
 
 }
