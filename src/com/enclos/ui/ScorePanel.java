@@ -53,6 +53,8 @@ public class ScorePanel extends JPanel {
 				return false;
 			};
 		};
+		
+		table.setFocusable(false);
 
 		table.setPreferredScrollableViewportSize(table.getPreferredSize());
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();

@@ -17,11 +17,13 @@ public class FrameContentPane extends JPanel {
 	private final PlayersMainPanel playersPanel;
 	private final ScorePanel scorePanel;
 	private final HelpPanel helpPanel;
+	private final AboutPanel aboutPanel;
 
 	private final String GAMEPANELNAME = "GamePanel";
 	private final String PLAYERGRIDNAME = "PlayersGrid";
 	private final String SCOREPANELNAME = "ScorePanel";
 	private final String HELPPANELNAME = "HelpPanel";
+	private final String ABOUTPANELNAME = "AboutPanel";
 
 	private Enclos parent = null;
 
@@ -36,6 +38,8 @@ public class FrameContentPane extends JPanel {
 		gamePanel.setLayout(gamePanelCardLayout);
 
 		helpPanel = new HelpPanel();
+		
+		aboutPanel = new AboutPanel();
 
 		playersPanel = new PlayersMainPanel(parent, this);
 		JScrollPane scrollPanel = new JScrollPane(playersPanel);
@@ -46,6 +50,7 @@ public class FrameContentPane extends JPanel {
 		this.add(scrollPanel, PLAYERGRIDNAME);
 		this.add(scorePanel, SCOREPANELNAME);
 		this.add(helpPanel, HELPPANELNAME);
+		this.add(aboutPanel, ABOUTPANELNAME);
 	}
 
 	public void addToGamePanel(Board board) {
@@ -71,6 +76,11 @@ public class FrameContentPane extends JPanel {
 	public void goToScorePanel() {
 		contentPaneCardLayout.show(this, SCOREPANELNAME);
 	}
+	
+	public void goToAboutPanel() {
+		contentPaneCardLayout.show(this, ABOUTPANELNAME);
+	}
+
 
 	public void goToHelpPanel() {
 		contentPaneCardLayout.show(this, HELPPANELNAME);

@@ -92,11 +92,26 @@ public class EnclosMenu extends JMenuBar {
 
 	private void addHelpGameSubItems(JMenu menu) {
 		final JMenuItem shortcutsItem = new JMenuItem("Shortcuts");
-		addCloseGameItemListener(shortcutsItem);
-		menu.add(shortcutsItem);
 		addShortcutItemListener(shortcutsItem);
 		
+		final JMenuItem about = new JMenuItem("About Enclos");
+		addAboutGameItemListener(about);
+		
+		menu.add(about);
+		menu.add(shortcutsItem);
+		
 		this.add(menu);
+	}
+
+	private void addAboutGameItemListener(JMenuItem about) {
+		about.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.getFrameContentPane().goToAboutPanel();
+			}
+		});
+		
 	}
 
 	private void addShortcutItemListener(JMenuItem shortcutsItem) {
