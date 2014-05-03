@@ -1,5 +1,6 @@
 package com.enclos.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -33,6 +34,7 @@ import java.util.Stack;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -86,7 +88,7 @@ public class Board extends JPanel {
 
 	public Board(Long boardSize, int nbSheep, List<Human> playersSelected, Enclos enclos) {
 		this.parent = enclos;
-
+		
 		this.realPlayersList = playersSelected;
 
 		for (Human player : playersSelected) {
@@ -102,6 +104,7 @@ public class Board extends JPanel {
 	}
 
 	public Board(Long size, int nbSheep, List<Human> playersSelected, Enclos enclos, Difficulty difficulty) {
+		
 		this.parent = enclos;
 
 		this.realPlayersList = playersSelected;
@@ -205,6 +208,7 @@ public class Board extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
 		Graphics2D g2 = (Graphics2D) g;
 		if (!guiIsBeingCreated) {
 			g2.drawImage(this.background, 0, 0, null);
@@ -607,7 +611,7 @@ public class Board extends JPanel {
 		this.sheeps = sheeps;
 	}
 
-	public void initGame() {
+	public void initGame() {		
 		generateCells();
 
 		this.firstTurn();
@@ -619,8 +623,9 @@ public class Board extends JPanel {
 				super.componentResized(e);
 
 				for (Shape shape : hexagons) {
-					shape.setSize(getHeight() / Board.this.size / 6);
+					shape.setSize(getHeight() / Board.this.size / 7);
 				}
+				Board.this.repaint();
 			}
 		});
 

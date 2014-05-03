@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -43,18 +44,30 @@ public class EnclosMenu extends JMenuBar {
 		this.parent = enclos;
 
 		this.setBackground(Color.black);
-		JMenu menu = new JMenu("Game");
-		menu.setForeground(Color.white);
-		addSubItems(menu);
+		JMenu file = new JMenu("File");
+		JMenu game = new JMenu("Game");
+		file.setForeground(Color.WHITE);
+		game.setForeground(Color.WHITE);
+		addSubItems(file);
+		addSubItems2(game);
 
+	}
+
+	private void addSubItems2(JMenu menu2) {
+		final JMenuItem closeGameItem = new JMenuItem("Close");
+		addCloseGameItemListener(closeGameItem);
+		final JMenuItem saveItem = new JMenuItem("Save");
+		addSaveItemListener(saveItem);
+
+		menu2.add(closeGameItem);
+		menu2.add(saveItem);
+		this.add(menu2);
 	}
 
 	public void addSubItems(JMenu menu) {
 
 		final JMenuItem newGameItem = new JMenuItem("New Game");
 		addNewGameItemListener(newGameItem);
-		final JMenuItem saveItem = new JMenuItem("Save");
-		addSaveItemListener(saveItem);
 		final JMenuItem scoreItem = new JMenuItem("Scores");
 		addScoreItemListener(scoreItem);
 		final JMenuItem playersItem = new JMenuItem("Players");
@@ -62,14 +75,27 @@ public class EnclosMenu extends JMenuBar {
 		final JMenu loadMenu = generateLoadMenu();
 		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", true);
 		addSoundsItemListener(soundsItem);
+		final JMenuItem exitItem = new JMenuItem("Exit");
+		addExitItemListener(exitItem);
 
 		menu.add(newGameItem);
 		menu.add(scoreItem);
 		menu.add(playersItem);
-		menu.add(saveItem);
 		menu.add(loadMenu);
 		menu.add(soundsItem);
+		menu.add(exitItem);
 		this.add(menu);
+
+	}
+
+	private void addExitItemListener(JMenuItem exitItem) {
+		exitItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
 
 	}
 
@@ -121,6 +147,8 @@ public class EnclosMenu extends JMenuBar {
 					} else {
 						JOptionPane.showMessageDialog(null, "Please finish your turn before saving", "Error", JOptionPane.PLAIN_MESSAGE);
 					}
+				} else {
+					JOptionPane.showMessageDialog(null, "No game to save", "Error", JOptionPane.PLAIN_MESSAGE);
 				}
 				if (EnclosMenu.this.parent.getPlayers().size() > 0) {
 					SimpleWriter.SavePlayer(EnclosMenu.this.parent.getPlayers(), "players");
@@ -147,8 +175,19 @@ public class EnclosMenu extends JMenuBar {
 		});
 	}
 
+	private void addCloseGameItemListener(JMenuItem closeGameItem) {
+
+		closeGameItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EnclosMenu.this.parent.getFrameContentPane().removeDisplayedGame();
+			}
+		});
+	}
+
 	private JMenu generateLoadMenu() {
-		final JMenu loadMenu = new JMenu("Load");
+		final JMenu loadMenu = new JMenu("Open");
 		File folder = new File("resources/save/");
 		File[] listOfFiles = folder.listFiles();
 
@@ -173,24 +212,32 @@ public class EnclosMenu extends JMenuBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				// LOADING
+				FileReader reader = null;
 				try {
-					JSONParser parser = new JSONParser();
-					JSONObject root = null;
-					try {
-						root = (JSONObject) parser.parse(new FileReader("resources/save/" + exactName + ".json"));
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (ParseException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					reader = new FileReader("resources/save/" + exactName + ".json");
+				} catch (FileNotFoundException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				// LOADING
 
+				JSONParser parser = new JSONParser();
+				JSONObject root = null;
+				try {
+
+					root = (JSONObject) parser.parse(reader);
+
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
 					List<JSONArray> players = (List<JSONArray>) root.get("Players");
 					Map<Sheep, Point> sheepsInfo = new LinkedHashMap<Sheep, Point>();
 					List<Human> playersList = new LinkedList<Human>();
@@ -252,9 +299,19 @@ public class EnclosMenu extends JMenuBar {
 					int deleteLoad = JOptionPane.showConfirmDialog(parent, "Load file was corrupted, do you want delete it ?");
 
 					if (deleteLoad == JOptionPane.OK_OPTION) {
+						try {
+							reader.close();
+						} catch (IOException e2) {
+							// TODO Auto-generated catch block
+							e2.printStackTrace();
+						}
 						File save = new File("resources/save/" + exactName + ".json");
+						System.out.println(save.getAbsolutePath());
 						save.delete();
+						EnclosMenu.this.parent.refreshMenu();
+						EnclosMenu.this.parent.revalidate();
 					}
+
 				}
 			}
 		});

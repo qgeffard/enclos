@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -20,6 +21,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 import com.enclos.data.Difficulty;
 import com.enclos.data.Human;
@@ -218,13 +222,24 @@ public class PlayersMainPanel extends JPanel {
 
 	public void displayPlayersManagementButton(boolean displayPlayersManagementButton) {
 		if (displayPlayersManagementButton) {
+			setPanelTitle("Player Manager");
+			
 			addPlayerButton.setVisible(true);
 			removePlayerButton.setVisible(true);
 			createGameButton.setVisible(false);
 		} else {
+			setPanelTitle("Choose your characters");
+			
 			createGameButton.setVisible(true);
 			addPlayerButton.setVisible(false);
 			removePlayerButton.setVisible(false);
 		}
+	}
+	
+	private void setPanelTitle(String title){
+		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+		TitledBorder titleBorder = BorderFactory.createTitledBorder(lowerEtched, title);
+		setBorder(titleBorder);
+
 	}
 }

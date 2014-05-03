@@ -27,7 +27,7 @@ public class IntroFrame extends JFrame implements WindowListener {
 		setAlwaysOnTop(true);
 		setUndecorated(true);
 		
-		setBackground(Color.blue); // FUCK THAT
+		getContentPane().setBackground(Color.BLACK); // FUCK THAT
 
 		Image image = Toolkit.getDefaultToolkit().createImage("resources/image/intro.gif");
 		ImageIcon icon = new ImageIcon(image);
@@ -94,7 +94,7 @@ public class IntroFrame extends JFrame implements WindowListener {
 
 		public void run() {
 			try {
-				sleep(1000);
+				sleep(1300);
 				Speaker.playIntro();
 				sleep(9000);
 			} catch (InterruptedException e) {

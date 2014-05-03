@@ -23,6 +23,8 @@ public class Enclos extends JFrame {
 	private FrameContentPane contentPane = null;
 	private final List<Board> boards = new LinkedList<Board>();
 	private final List<Human> players;
+	private int screenWidth;
+	private int screenHeight;
 
 	public Enclos() {
 		// si jamais on veut utiliser le principe de la fen�tre carr�e
@@ -38,10 +40,12 @@ public class Enclos extends JFrame {
 		setFocusTraversalKeysEnabled(false);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = screenSize.width;
-		int height = screenSize.height;
+		this.screenWidth = screenSize.width;
+		this.screenHeight = screenSize.height;
 		
-		setSize(width, height);
+		setSize(screenWidth, screenHeight);
+		
+		this.setUndecorated(true);
 
 		this.contentPane = new FrameContentPane(this);
 
@@ -87,6 +91,24 @@ public class Enclos extends JFrame {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 					Enclos.this.contentPane.displayPreviousGame();
+				}
+				
+				if (e.getKeyCode() == KeyEvent.VK_F11){
+					if(Enclos.this.isUndecorated()){
+						Enclos.this.dispose();
+						Enclos.this.setUndecorated(false);
+						Enclos.this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+						Enclos.this.setVisible(true);	
+						Enclos.this.repaint();
+					} else {
+						Enclos.this.dispose();
+						Enclos.this.setSize(Enclos.this.screenWidth, Enclos.this.screenHeight);
+						Enclos.this.setLocationRelativeTo(null);
+						Enclos.this.setUndecorated(true);
+						Enclos.this.setVisible(true);
+						Enclos.this.repaint();
+					}
+					
 				}
 
 				if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
