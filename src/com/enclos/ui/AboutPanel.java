@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +16,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class AboutPanel extends JPanel {
+
 
 	public AboutPanel() {
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
@@ -26,15 +28,23 @@ public class AboutPanel extends JPanel {
 
 	public void feedTable() {
 		this.removeAll();
-		setLayout(new BorderLayout());
+		
+		JPanel content = new JPanel();
+		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
 		
 		Image image = Toolkit.getDefaultToolkit().createImage("resources/image/team.jpg");
 		ImageIcon icon = new ImageIcon(image);
-		JLabel label = new JLabel(icon);
+		JLabel imgDev = new JLabel(icon);
 
-		JLabel label2 = new JLabel("Developper team : ");
-		label2.setText("<html>"
-						+ "<h1>Developper Team : </h1><br>"
+		JLabel developpers = new JLabel("Developper team : ");
+		developpers.setText("<html>"
+						+ "<h1><u>Enclos Game</u></h1>"
+						+ "<span><i>&nbsp;&nbsp;&nbsp;This project was...</i></span>"
+				        + "<h2>Specifications</h2>"
+				        + "<ul>"
+							+ "<li>GAVA F.</li>"
+					    + "</ul>"
+						+ "<h2>Developper Team : </h2><br>"
 						+ "<ul>"
 							+ "<li>CARREAU CLEMENT</li>"
 							+ "<li>TELA JULIEN </li>"
@@ -42,9 +52,10 @@ public class AboutPanel extends JPanel {
 						+ "</ul>"
 					    + "<br>"
 					+ "</html>");
-		add(label2, BorderLayout.NORTH);
-		add(label, BorderLayout.CENTER);
+		content.add(developpers);
+		content.add(imgDev);
 		
+		add(content);
 	}
 
 }

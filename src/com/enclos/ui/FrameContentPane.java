@@ -109,6 +109,11 @@ public class FrameContentPane extends JPanel {
 			if (board.isVisible() == true) {
 				this.gamePanel.remove(board);
 				parent.getBoards().remove(board);
+				
+				if(parent.getBoards().isEmpty()){
+					parent.getBackgroundMusicSpeaker().stopMusic();
+				}
+				
 				gamePanel.revalidate();
 			}
 		}

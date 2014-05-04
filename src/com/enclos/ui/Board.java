@@ -784,6 +784,8 @@ public class Board extends JPanel {
 		}
 
 		if (playersLeft <= 1) {
+			String winner = null;
+			
 			for (Player player : playerList) {
 				if (player instanceof Human) {
 					Human realPlayer = getCorrespondingRealPlayer(((Human) player).getFirstName(), ((Human) player).getLastName());
@@ -791,18 +793,24 @@ public class Board extends JPanel {
 						realPlayer.lose();
 					} else {
 						realPlayer.win();
+						winner = realPlayer.getLastName()+" "+realPlayer.getFirstName();
 					}
 				}
+			}
+			
+			if(winner == null){
+				winner = "Computer - Difficulty : "+difficulty.toString();
 			}
 
 			SimpleWriter.SavePlayer(parent.getPlayers(), "players");
 			parent.refreshPlayersInfo();
+			
+			JOptionPane.showMessageDialog(null, "<html><h1>GAME OVER !</h1> And the winner is "+winner+"</html>");
 
 			for (Human player : realPlayersList) {
 				player.resetLoseStatus();
 			}
 
-			JOptionPane.showMessageDialog(null, "GAME OVER !!!!");
 			Board.this.parent.getFrameContentPane().removeDisplayedGame();
 			return true;
 		} else {
