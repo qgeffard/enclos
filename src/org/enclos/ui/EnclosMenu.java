@@ -1,4 +1,4 @@
-package org.enclos.component;
+package org.enclos.ui;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -23,25 +23,42 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import org.enclos.component.Sheep;
 import org.enclos.data.Difficulty;
 import org.enclos.data.Human;
 import org.enclos.data.SimpleWriter;
 import org.enclos.resources.song.Speaker;
-import org.enclos.ui.Board;
-import org.enclos.ui.Enclos;
-import org.enclos.ui.FrameContentPane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class EnclosMenu extends JMenuBar {
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
 
+public class EnclosMenu extends JMenuBar {
+	
+	/**
+	 * Static attribute used to check if sounds game are enable
+	 */
 	private static boolean isSoundActivated = true; 
+	
+	/**
+	 * Static attribute used to check if music game are enable
+	 */
 	public static boolean isMusicActivated = true; 
 	
 	private final Enclos parent;
 
+	
+	/**
+	 * EnclosMenu Constructor 
+	 * 
+	 * @param enclos
+	 */
 	public EnclosMenu(Enclos enclos) {
 		this.parent = enclos;
 
@@ -50,16 +67,16 @@ public class EnclosMenu extends JMenuBar {
 		JMenu game = new JMenu("Game");
 		JMenu sounds = new JMenu("Sounds");
 		JMenu help = new JMenu("Help");
-//		file.setForeground(Color.WHITE);
-//		game.setForeground(Color.WHITE);
-//		sounds.setForeground(Color.WHITE);
-//		help.setForeground(Color.WHITE);
 		addFileSubItems(file);
 		addGameSubItems(game);
 		addSoundsSubItems(sounds);
 		addHelpGameSubItems(help);
 	}
-
+	
+	/**
+	 * Used to add sub menu item to the menu pass as argument
+	 * @param menu
+	 */
 	private void addSoundsSubItems(JMenu menu) {
 		final JMenuItem soundsItem = new JCheckBoxMenuItem("Play sounds", EnclosMenu.isSoundActivated);
 		addSoundsItemListener(soundsItem);
@@ -72,6 +89,10 @@ public class EnclosMenu extends JMenuBar {
 		
 	}
 
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param musicItem
+	 */
 	private void addMusicItemListener(final JMenuItem musicItem) {
 		musicItem.addActionListener(new ActionListener() {
 
@@ -88,7 +109,11 @@ public class EnclosMenu extends JMenuBar {
 			}
 		});
 	}
-
+	
+	/**
+	 * Used to add sub menu item to the menu pass as argument
+	 * @param menu
+	 */
 	private void addHelpGameSubItems(JMenu menu) {
 		final JMenuItem shortcutsItem = new JMenuItem("Shortcuts");
 		addShortcutItemListener(shortcutsItem);
@@ -101,7 +126,13 @@ public class EnclosMenu extends JMenuBar {
 		
 		this.add(menu);
 	}
-
+	
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 *
+	 * @param about
+	 */
 	private void addAboutGameItemListener(JMenuItem about) {
 		about.addActionListener(new ActionListener() {
 
@@ -113,6 +144,11 @@ public class EnclosMenu extends JMenuBar {
 		
 	}
 
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 *  
+	 * @param shortcutsItem
+	 */
 	private void addShortcutItemListener(JMenuItem shortcutsItem) {
 		shortcutsItem.addActionListener(new ActionListener() {
 
@@ -123,6 +159,10 @@ public class EnclosMenu extends JMenuBar {
 		});
 	}
 
+	/**
+	 * Used to add sub menu item to the menu pass as argument
+	 * @param menu
+	 */
 	private void addGameSubItems(JMenu menu) {
 		final JMenuItem previousGameItem = new JMenuItem("Previous Game");
 		addPreviousGameItemListener(previousGameItem);
@@ -140,6 +180,10 @@ public class EnclosMenu extends JMenuBar {
 		this.add(menu);
 	}
 
+	/**
+	 *  Used to add a new listener on the menu item pass as argument
+	 * @param nextGameItem
+	 */
 	private void addNextGameItemListener(JMenuItem nextGameItem) {
 		nextGameItem.addActionListener(new ActionListener() {
 
@@ -150,6 +194,10 @@ public class EnclosMenu extends JMenuBar {
 		});
 	}
 
+	/**
+	 *  Used to add a new listener on the menu item pass as argument
+	 * @param previousGameItem
+	 */
 	private void addPreviousGameItemListener(JMenuItem previousGameItem) {
 		previousGameItem.addActionListener(new ActionListener() {
 
@@ -159,7 +207,11 @@ public class EnclosMenu extends JMenuBar {
 			}
 		});		
 	}
-
+	
+	/**
+	 * Used to add sub menu item to the menu pass as argument
+	 * @param menu
+	 */
 	public void addFileSubItems(JMenu menu) {
 
 		final JMenuItem newGameItem = new JMenuItem("New Game");
@@ -180,7 +232,11 @@ public class EnclosMenu extends JMenuBar {
 		this.add(menu);
 
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param exitItem
+	 */
 	private void addExitItemListener(JMenuItem exitItem) {
 		exitItem.addActionListener(new ActionListener() {
 
@@ -191,7 +247,11 @@ public class EnclosMenu extends JMenuBar {
 		});
 
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param playersItem
+	 */
 	private void addPlayersItemListener(JMenuItem playersItem) {
 		playersItem.addActionListener(new ActionListener() {
 
@@ -201,7 +261,11 @@ public class EnclosMenu extends JMenuBar {
 			}
 		});
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param scoreItem
+	 */
 	private void addScoreItemListener(JMenuItem scoreItem) {
 		scoreItem.addActionListener(new ActionListener() {
 
@@ -212,7 +276,11 @@ public class EnclosMenu extends JMenuBar {
 		});
 
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param soundsItem
+	 */
 	private void addSoundsItemListener(final JMenuItem soundsItem) {
 		soundsItem.addActionListener(new ActionListener() {
 
@@ -229,6 +297,12 @@ public class EnclosMenu extends JMenuBar {
 
 	}
 
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * 
+	 * This listener save the current game shown
+	 * @param saveItem
+	 */
 	private void addSaveItemListener(JMenuItem saveItem) {
 
 		saveItem.addActionListener(new ActionListener() {
@@ -259,7 +333,11 @@ public class EnclosMenu extends JMenuBar {
 		});
 
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param newGameItem
+	 */
 	private void addNewGameItemListener(JMenuItem newGameItem) {
 
 		newGameItem.addActionListener(new ActionListener() {
@@ -272,7 +350,11 @@ public class EnclosMenu extends JMenuBar {
 			}
 		});
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * @param closeGameItem
+	 */
 	private void addCloseGameItemListener(JMenuItem closeGameItem) {
 
 		closeGameItem.addActionListener(new ActionListener() {
@@ -286,7 +368,12 @@ public class EnclosMenu extends JMenuBar {
 			}
 		});
 	}
-
+	
+	/**
+	 * Used to construct the sub menu list item of the load menu
+	 * 
+	 * @return the sub list menu item
+	 */
 	private JMenu generateLoadMenu() {
 		final JMenu loadMenu = new JMenu("Open");
 		File folder = new File("resources/save/");
@@ -307,7 +394,15 @@ public class EnclosMenu extends JMenuBar {
 		}
 		return loadMenu;
 	}
-
+	
+	/**
+	 * Used to add a new listener on the menu item pass as argument
+	 * 
+	 * Charge the new game with informations read in the json file
+	 * 
+	 * @param loadFile
+	 * @param exactName
+	 */
 	private void addLoadFileListener(JMenuItem loadFile, final String exactName) {
 		loadFile.addActionListener(new ActionListener() {
 

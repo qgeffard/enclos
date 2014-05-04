@@ -11,11 +11,21 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class SimpleReader {
 
     private String jsonFilePath;
     private Object file;
-
+    
+    /**
+     * Constructor of the SimpleReader class
+     * @param fileName
+     */
     public SimpleReader(String fileName) {
         JSONParser parser = new JSONParser();
         try {
@@ -24,7 +34,12 @@ public class SimpleReader {
             e.printStackTrace();
         }
     }
-
+    
+    /**
+     * Read the json file given as argument 
+     * @param fileName
+     * @return Board's data
+     */
     public static Map<String, Object> readGame(String fileName) {
         JSONParser parser = new JSONParser();
         Object targetFile = null;
@@ -47,7 +62,12 @@ public class SimpleReader {
         }
         return values;
     }
-
+    
+    /**
+     * Read the json file given as argument
+     * @param fileName
+     * @return Players' data 
+     */
     public static List<Human> readPlayer(String fileName) {
         JSONParser parser = new JSONParser();
         Object targetFile = null;
@@ -82,7 +102,12 @@ public class SimpleReader {
 
         return listPlayers;
     }
-
+    
+    /**
+     * Enum of informations pick in different json file
+     * @author Clement
+     *
+     */
     private enum Params {
         SHEEPNUMBER, BOARDSIZE, PLAYERS, SHEEPSPOSITIONS, BARRIERS; 
 

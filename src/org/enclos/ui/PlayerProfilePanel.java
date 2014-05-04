@@ -20,9 +20,14 @@ import javax.swing.SwingUtilities;
 import org.enclos.data.Human;
 import org.enclos.data.PlayerProfilePanelState;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class PlayerProfilePanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
 	private PlayerProfilePanelState state = PlayerProfilePanelState.NOTSELECTED;
 	private final JPanel imagePanel;
 
@@ -30,6 +35,11 @@ public class PlayerProfilePanel extends JPanel {
 	private PlayersMainPanel parent = null;
 	private Human player = null;
 
+	/**
+	 * Constructor of the PlayerProfilePanel class
+	 * @param player
+	 * @param parent
+	 */
 	public PlayerProfilePanel(final Human player, final PlayersMainPanel parent) {
 
 		this.player = player;
@@ -73,24 +83,26 @@ public class PlayerProfilePanel extends JPanel {
 			return (BufferedImage) img;
 		}
 
-		// Create a buffered image with transparency
 		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-		// Draw the image on to the buffered image
 		Graphics2D bGr = bimage.createGraphics();
 		bGr.drawImage(img, 0, 0, null);
 		bGr.dispose();
 
-		// Return the buffered image
 		return bimage;
 	}
-
+	
+	/**
+	 * Override the paint component method
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		this.baseColor = this.getBackground();
 	}
-
+	
+	/**
+	 * Used to show the select effect to the user (green border)
+	 */
 	public void toggleState() {
 		if (this.state == PlayerProfilePanelState.NOTSELECTED) {
 			this.state = PlayerProfilePanelState.SELECTED;
@@ -101,15 +113,26 @@ public class PlayerProfilePanel extends JPanel {
 
 		}
 	}
-
+	
+	/**
+	 * Getter of state attribute 
+	 * @return state
+	 */
 	public PlayerProfilePanelState getState() {
 		return this.state;
 	}
 
+	/**
+	 * Getter of player attribute
+	 * @return player 
+	 */
 	public Human getPlayer() {
 		return this.player;
 	}
 
+	/**
+	 * deselect the profile planel
+	 */
 	public void unSelect() {
 		this.state = PlayerProfilePanelState.NOTSELECTED;
 		this.imagePanel.setBackground(this.baseColor);

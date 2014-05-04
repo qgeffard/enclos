@@ -13,12 +13,22 @@ import javax.swing.JLabel;
 
 import org.enclos.resources.song.Speaker;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class IntroFrame extends JFrame implements WindowListener {
 
 	// in case we need it later
 	private JFrame parent = null;
 	private Dimension size = null;
-
+	
+	/**
+	 * Constructor of IntroFrame class
+	 * @param parent
+	 */
 	public IntroFrame(JFrame parent) {
 
 		this.parent = parent;
@@ -89,6 +99,11 @@ public class IntroFrame extends JFrame implements WindowListener {
 
 	}
 	
+	/**
+	 * 
+	 * Timer class used to create a parallel timer to close the intro frame after the intro
+	 *
+	 */
 	class Timer extends Thread {
 		int time = 10;
 

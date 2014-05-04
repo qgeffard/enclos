@@ -15,18 +15,30 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class AboutPanel extends JPanel {
 
-
+	
+	/**
+	 * Constructor of AboutPanel 
+	 */
 	public AboutPanel() {
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "About Enclos");
 		setBorder(title);
 		
-		feedTable();
+		feedPanel();
 	}
-
-	public void feedTable() {
+	
+	/**
+	 * Used to feed the panel with our information
+	 */
+	public void feedPanel() {
 		this.removeAll();
 		
 		JPanel content = new JPanel();

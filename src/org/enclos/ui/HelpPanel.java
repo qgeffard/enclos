@@ -20,18 +20,30 @@ import javax.swing.table.TableColumn;
 import org.enclos.data.Human;
 import org.enclos.data.Row;
 
-public class HelpPanel extends JPanel {
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
 
+public class HelpPanel extends JPanel {
+	
+	/**
+	 * Constructor of HelpPanel class
+	 */
 	public HelpPanel() {
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "Help");
 		setBorder(title);
 		feedTable();
 	}
-
+	
+	/**
+	 * Feed the panel 
+	 */
 	public void feedTable() {
 		String[] columns = { "Shortcut", "Description" };
-		Object[][] data = { { "CTRL+Q", "Exit" }, { "CTRL+N", "Create a new game" }, { "CTRL+S", "Save displayed game" }, { "S", "Show scores" }, { "G", "Show current game" }, { "P", "Show player manager" }, { "F1", "Help" }, { "F11", "Fullscreen mode" },{ "← →", "Switch game" } };
+		Object[][] data = { { "CTRL+Q", "Exit" }, { "CTRL+N", "Create a new game" }, { "CTRL+S", "Save displayed game" }, { "S", "Show scores" }, { "G", "Show current game" }, { "P", "Show player manager" }, { "F1", "Help" }, { "F11", "Fullscreen mode" },{ "<-  ->", "Switch game" } };
 
 		JTable table = new JTable(data,columns) {
 

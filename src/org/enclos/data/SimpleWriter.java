@@ -12,9 +12,20 @@ import org.enclos.ui.Board;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class SimpleWriter {
 	private String jsonFilePath;
-
+	
+	/**
+	 * Save the game, with the board pass in the filename pass
+	 * @param board
+	 * @param fileName
+	 */
 	public static void SaveGame(Board board, String fileName) {
 		String jsonFilePath = "resources/save/" + fileName + ".json";
 
@@ -39,41 +50,46 @@ public class SimpleWriter {
 			playerRoot.put("imgPath", imgPath.toString());
 
 			players.add(playerInfos);
+		}
 
-			JSONArray barriers = new JSONArray();
-			for (Bridge currentBridge : board.getBarriers()) {
-				JSONArray barrier = new JSONArray();
-				for (Point currentPoint : currentBridge.getVirtualIndex()) {
+		JSONArray barriers = new JSONArray();
+		for (Bridge currentBridge : board.getBarriers()) {
+			JSONArray barrier = new JSONArray();
+			for (Point currentPoint : currentBridge.getVirtualIndex()) {
 
-					barrier.add(currentPoint.x + "," + currentPoint.y);
-				}
-				barriers.add(barrier);
-
+				barrier.add(currentPoint.x + "," + currentPoint.y);
 			}
-			
-			if(board.getDifficulty() != null){
-				jsonObject.put("difficulty", board.getDifficulty().toString());
-			}
+			barriers.add(barrier);
 
-			jsonObject.put("Players", players);
-			jsonObject.put("nbSheepPerPlayer", board.getNbSheepPerPlayer());
-			jsonObject.put("Boardsize", board.getBoardSize());
-			jsonObject.put("Barriers", barriers);
-			jsonObject.put("currentPLayerFirstName", ((Human) board.getCurrentPlayer()).getFirstName());
-			jsonObject.put("currentPLayerLastName", ((Human) board.getCurrentPlayer()).getLastName());
+		}
 
-			try {
-				FileWriter jsonFileWriter = new FileWriter(jsonFilePath);
-				jsonFileWriter.write(jsonObject.toJSONString());
-				jsonFileWriter.flush();
-				jsonFileWriter.close();
+		if (board.getDifficulty() != null) {
+			jsonObject.put("difficulty", board.getDifficulty().toString());
+		}
 
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		jsonObject.put("Players", players);
+		jsonObject.put("nbSheepPerPlayer", board.getNbSheepPerPlayer());
+		jsonObject.put("Boardsize", board.getBoardSize());
+		jsonObject.put("Barriers", barriers);
+		jsonObject.put("currentPLayerFirstName", ((Human) board.getCurrentPlayer()).getFirstName());
+		jsonObject.put("currentPLayerLastName", ((Human) board.getCurrentPlayer()).getLastName());
+
+		try {
+			FileWriter jsonFileWriter = new FileWriter(jsonFilePath);
+			jsonFileWriter.write(jsonObject.toJSONString());
+			jsonFileWriter.flush();
+			jsonFileWriter.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Save all player contains in list of Player given in the filename pass
+	 * @param listPlayers
+	 * @param fileName
+	 */
 	public static void SavePlayer(List<Human> listPlayers, String fileName) {
 		String jsonFilePath = "resources/players/" + fileName + ".json";
 

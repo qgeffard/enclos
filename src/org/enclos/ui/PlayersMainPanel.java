@@ -29,6 +29,12 @@ import org.enclos.data.Difficulty;
 import org.enclos.data.Human;
 import org.enclos.data.SimpleWriter;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class PlayersMainPanel extends JPanel {
 
 	private final Enclos enclos;
@@ -40,6 +46,11 @@ public class PlayersMainPanel extends JPanel {
 	JButton addPlayerButton;
 	JButton removePlayerButton;
 
+	/**
+	 * Constructor of PlayersMainPanel 
+	 * @param enclos
+	 * @param parent
+	 */
 	public PlayersMainPanel(final Enclos enclos, FrameContentPane parent) {
 		this.enclos = enclos;
 		this.parent = parent;
@@ -126,9 +137,7 @@ public class PlayersMainPanel extends JPanel {
 			}
 		});
 
-		// only workaround I found to keep the 'P' shortcut after clicking the
-		// VK_P
-		// button
+
 		addPlayerButton.setFocusable(false);
 
 		addPlayerButton.addMouseListener(new MouseAdapter() {
@@ -160,7 +169,6 @@ public class PlayersMainPanel extends JPanel {
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						// fileDialog.setVisible(true);
 						fileChooser.showDialog(PlayersMainPanel.this, "ok");
 					}
 				});
@@ -192,7 +200,9 @@ public class PlayersMainPanel extends JPanel {
 
 	}
 
-	// TODO manage return carriage
+	/**
+	 * Generate all player card from player list attribute of enclos
+	 */
 	private void generatePlayersCard() {
 		final List<Human> players = this.enclos.getPlayers();
 		if (players != null && players.size() > 0) {
@@ -202,24 +212,42 @@ public class PlayersMainPanel extends JPanel {
 			}
 		}
 	}
-
+	
+	/**
+	 * Getter enclos attribute
+	 * @return enclos
+	 */
 	public Enclos getEnclos() {
 		return this.enclos;
 	}
-
+	
+	/**
+	 * Getter playersGridPanel attribute
+	 * @return playersGridPanel 
+	 */
 	public PlayersGridPanel getGridPanel() {
 		return this.playersGridPanel;
 	}
 
+	/**
+	 * Unselect selected player
+	 */
 	public void resetSelectedPlayers() {
 		playersGridPanel.reset();
 	}
-
+	
+	/**
+	 * refresh the panel
+	 */
 	public void refresh() {
 		playersGridPanel.removeAll();
 		generatePlayersCard();
 	}
-
+	
+	/**
+	 * Change the title and buttons shown 
+	 * @param displayPlayersManagementButton
+	 */
 	public void displayPlayersManagementButton(boolean displayPlayersManagementButton) {
 		if (displayPlayersManagementButton) {
 			setPanelTitle("Player Manager");
@@ -236,6 +264,10 @@ public class PlayersMainPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Add the title given as argument 
+	 * @param title
+	 */
 	private void setPanelTitle(String title){
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder titleBorder = BorderFactory.createTitledBorder(lowerEtched, title);

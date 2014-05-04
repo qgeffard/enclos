@@ -19,8 +19,18 @@ import javax.swing.table.TableColumn;
 import org.enclos.data.Human;
 import org.enclos.data.Row;
 
-public class ScorePanel extends JPanel {
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
 
+public class ScorePanel extends JPanel {
+	
+	/**
+	 * Constructor ScorePanel class
+	 * @param players
+	 */
 	public ScorePanel(List<Human> players) {
 		Border lowerEtched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
 		TitledBorder title = BorderFactory.createTitledBorder(lowerEtched, "Score");
@@ -29,6 +39,10 @@ public class ScorePanel extends JPanel {
 		feedTable(players);
 	}
 
+	/**
+	 * Feed the score table
+	 * @param players
+	 */
 	public void feedTable(List<Human> players) {
 		this.removeAll();
 		List<String> columns = Arrays.asList("First Name", "Last Name", "Age", "Games won", "Games lost");

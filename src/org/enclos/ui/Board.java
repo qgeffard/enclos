@@ -51,8 +51,12 @@ import org.enclos.data.SimpleWriter;
 import org.enclos.resources.song.Speaker;
 import org.json.simple.JSONArray;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
 
-//board de test
 public class Board extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -86,6 +90,13 @@ public class Board extends JPanel {
 
 	private Hexagon lastCell = null;
 
+	/**
+	 * First constructor of Board class, used when board is create in player versus player mode
+	 * @param boardSize
+	 * @param nbSheep
+	 * @param playersSelected
+	 * @param enclos
+	 */
 	public Board(Long boardSize, int nbSheep, List<Human> playersSelected, Enclos enclos) {
 		this.parent = enclos;
 		this.realPlayersList = playersSelected;
@@ -102,7 +113,15 @@ public class Board extends JPanel {
 		parent.getBackgroundMusicSpeaker().playMusic();
 		initGame();
 	}
-
+	
+	/**
+	 * Second constructor of Board class, used when board is create in player versus computer mode
+	 * @param size
+	 * @param nbSheep
+	 * @param playersSelected
+	 * @param enclos
+	 * @param difficulty
+	 */
 	public Board(Long size, int nbSheep, List<Human> playersSelected, Enclos enclos, Difficulty difficulty) {
 
 		this.parent = enclos;
@@ -124,7 +143,10 @@ public class Board extends JPanel {
 		parent.getBackgroundMusicSpeaker().playMusic();
 		initGame();
 	}
-
+	
+	/**
+	 * Clear sheep
+	 */
 	private void resetSheep() {
 		for (Hexagon hexa : hexagons) {
 			if (hexa.getSheep() != null)
@@ -132,14 +154,10 @@ public class Board extends JPanel {
 		}
 		sheeps.clear();
 	}
-
-	@Override
-	public Dimension getPreferredSize() {
-		Container parent = getParent();
-		int numberOfGames = getParent().getComponentCount();
-		return new Dimension(parent.getWidth() / numberOfGames, parent.getHeight() / numberOfGames);
-	}
-
+	
+	/**
+	 * generate the board object sure as hexagon, bridge..
+	 */
 	private void generateCells() {
 		// HEXAGONS
 		this.hexagons.add(new Hexagon(0, 0));
@@ -195,7 +213,11 @@ public class Board extends JPanel {
 			this.bridges.add(new Bridge());
 		}
 	}
-
+	
+	/**
+	 * Used to calculate the number of bridge contains in the board instance
+	 * @return the number of bridge
+	 */
 	private int calculateNumberOfBridges() {
 
 		int nbBridges = 0;
@@ -206,6 +228,9 @@ public class Board extends JPanel {
 		return nbBridges;
 	}
 
+	/**
+	 * Methods override to draw all object of board
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -235,7 +260,11 @@ public class Board extends JPanel {
 			this.repaint();
 		}
 	}
-
+	
+	/**
+	 * Draw hexagon
+	 * @param g
+	 */
 	private void drawHexas(Graphics2D g) {
 		int counter;
 		Hexagon currentCell = null;
@@ -269,7 +298,11 @@ public class Board extends JPanel {
 			}
 		}
 	}
-
+	
+	/**
+	 * Draw bridge
+	 * @param g
+	 */
 	private void drawBridges(Graphics2D g) {
 		int i = 0;
 		g.setColor(Color.YELLOW);
@@ -389,6 +422,10 @@ public class Board extends JPanel {
 
 	}
 
+	/**
+	 * Draw barriers
+	 * @param g2
+	 */
 	private void drawBarriers(Graphics2D g2) {
 		g2.setColor(Color.RED);
 		for (Bridge currentBarrier : this.barriers) {
@@ -396,7 +433,10 @@ public class Board extends JPanel {
 		}
 	}
 
-	// TODO trouver taille ad�quate au mouton
+	/**
+	 * Draw sheep
+	 * @param g
+	 */
 	private void drawSheep(Graphics2D g) {
 		for (int i = 1; i < this.NB_SHEEP + 1; i++) {
 			Sheep sheep = this.sheeps.get(i - 1);
@@ -420,7 +460,11 @@ public class Board extends JPanel {
 			}
 		}
 	}
-
+	
+	/**
+	 * Draw current player sheep
+	 * @param g
+	 */
 	private void drawCurrentPlayer(Graphics2D g) {
 		try {
 			BufferedImage originalImage = ImageIO.read(this.currentPlayer.getSheeps().get(0).getImgPath());
@@ -431,7 +475,6 @@ public class Board extends JPanel {
 
 			g.drawImage(resizeImageJpg, resizeImageJpg.getWidth() / 2, resizeImageJpg.getHeight() / 2, null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		g.setFont(new Font("Arial", Font.BOLD, 20));
@@ -444,7 +487,12 @@ public class Board extends JPanel {
 		}
 
 	}
-
+	
+	/**
+	 * Get the owner of the sheep given
+	 * @param sheep
+	 * @return Player
+	 */
 	private Hexagon findOwnerOfSheep(Sheep sheep) {
 		Hexagon owner = null;
 		for (Hexagon hex : hexagons) {
@@ -454,7 +502,11 @@ public class Board extends JPanel {
 		}
 		return owner;
 	}
-
+	
+	/**
+	 * Draw Hexagon
+	 * @param g
+	 */
 	private void drawCenterCell(Graphics2D g) {
 		Polygon polygon = new Polygon();
 		hexagons.get(0).clearPointList();
@@ -470,7 +522,14 @@ public class Board extends JPanel {
 		hexagons.get(0).setCenterPoint();
 		Hexagon.setDistanceBetweenHexagons(hexagons.get(0));
 	}
-
+	
+	/**
+	 * Call in the draw hexagon
+	 * @param g
+	 * @param hexaToDraw
+	 * @param lastDrawnHexa
+	 * @param direction
+	 */
 	private void drawCell(Graphics2D g, Hexagon hexaToDraw, Hexagon lastDrawnHexa, Direction direction) {
 		g.setColor(hexaToDraw.getColor());
 		Polygon polygon = new Polygon();
@@ -496,11 +555,22 @@ public class Board extends JPanel {
 
 		this.lastCell = hexaToDraw;
 	}
-
+	
+	
+	/**
+	 * Getter difficulty
+	 * @return Difficulty difficulty
+	 */
 	public Difficulty getDifficulty() {
 		return difficulty;
 	}
-
+	
+	/**
+	 * Get the hexagon corresponding to the virtualIndex given as int i and int j parameters
+	 * @param i
+	 * @param j
+	 * @return hexagon corresponding
+	 */
 	private Hexagon getCorrespondingHexagon(int i, int j) {
 		for (Hexagon hexagon : hexagons) {
 			if (hexagon.getVirtualIndex().getX() == i && hexagon.getVirtualIndex().getY() == j)
@@ -508,7 +578,10 @@ public class Board extends JPanel {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * Update all hexagon to generate its neighbors list
+	 */
 	private void generateNeighboors() {
 		for (Hexagon hex : hexagons) {
 			hex.getNeighboors().clear();
@@ -544,6 +617,12 @@ public class Board extends JPanel {
 
 	}
 
+	/**
+	 * Get the dimansion of image according to the frame size
+	 * @param imgSize
+	 * @param boundary
+	 * @return Dimension
+	 */
 	public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
 
 		int original_width = imgSize.width;
@@ -565,7 +644,15 @@ public class Board extends JPanel {
 
 		return new Dimension(new_width, new_height);
 	}
-
+	
+	/**
+	 * Resized an image with parameter
+	 * @param originalImage
+	 * @param type
+	 * @param img_width
+	 * @param img_height
+	 * @return image resized
+	 */
 	private static BufferedImage resizeImage(BufferedImage originalImage, int type, Integer img_width, Integer img_height) {
 		BufferedImage resizedImage = new BufferedImage(img_width, img_height, type);
 		Graphics2D g = resizedImage.createGraphics();
@@ -574,7 +661,13 @@ public class Board extends JPanel {
 
 		return resizedImage;
 	}
-
+	
+	/**
+	 * Return the bridge corresponding to the virtualIndex given by the pair of hexagon
+	 * @param from
+	 * @param to
+	 * @return Bridge corresponding to the index
+	 */
 	private Bridge getBrigeFromIndex(Hexagon from, Hexagon to) {
 		Bridge bridge = null;
 
@@ -586,35 +679,67 @@ public class Board extends JPanel {
 		return bridge;
 
 	}
-
+	
+	/**
+	 * Getter of number sheep attribute
+	 * @return number of sheep 
+	 */
 	public int getNbSheep() {
 		return this.NB_SHEEP;
 	}
-
+	
+	/**
+	 * Getter of number sheep per player attribute
+	 * @return number of sheep per player
+	 */
 	public int getNbSheepPerPlayer() {
 		return this.nbSheepPerPlayer;
 	}
 
+	/**
+	 * Getter board size attribute
+	 * @return long - size attribute
+	 */
 	public long getBoardSize() {
 		return this.size;
 	}
-
+	
+	/**
+	 *  Getter of the barriers attribute
+	 * @return list of bridge contains in barriers list
+	 */
 	public List<Bridge> getBarriers() {
 		return this.barriers;
 	}
-
+	
+	/**
+	 * Getter of the bridges attribute
+	 * @return bridges attribute
+	 */
 	public List<Bridge> getBridges() {
 		return bridges;
 	}
-
+	
+	/**
+	 * Getter of sheeps attribute
+	 * @return sheeps attribute
+	 */
 	public List<Sheep> getSheeps() {
 		return sheeps;
 	}
 
+	/**
+	 * Setter of sheeps attribute
+	 * @param sheeps List of Sheep 
+	 * @see Sheep
+	 */
 	public void setSheeps(List<Sheep> sheeps) {
 		this.sheeps = sheeps;
 	}
-
+	
+	/**
+	 * Call to init all board
+	 */
 	public void initGame() {
 		generateCells();
 
@@ -709,25 +834,40 @@ public class Board extends JPanel {
 		});
 	}
 
+	/**
+	 * Move Sheep to the target hexagon given
+	 * @param sheep
+	 * @param target
+	 */
 	private void switchSheep(Sheep sheep, Hexagon target) {
 		sheep.getHexagon().setSheep(null);
 		target.setSheep(sheep);
 		sheep.setHexagon(target);
 	}
-
+	
+	/**
+	 * All hexagon are repaint with the original color
+	 */
 	private void resetHexagonsColor() {
 		for (Hexagon hexa : Board.this.hexagons) {
 			hexa.setColor(Color.BLACK);
 		}
 
 	}
-
+	
+	/**
+	 * Highlight neighbor can be targeted 
+	 * @param hex
+	 */
 	public void colorNeighboors(Hexagon hex) {
 		for (Hexagon hexa : hex.getNeighboors()) {
 			hexa.setColor(Color.CYAN);
 		}
 	}
-
+	
+	/**
+	 * init first turn chosse player
+	 */
 	private void firstTurn() {
 		if (this.currentPlayer == null)
 			this.currentPlayer = this.playerList.get((this.nbTurn) % this.playerList.size());
@@ -735,7 +875,11 @@ public class Board extends JPanel {
 		this.nbTurn++;
 		this.currentPlayer.startTurn();
 	}
-
+	
+	/**
+	 * Update all player status 
+	 * @return whether the player has lost
+	 */
 	private boolean updateLoseStatusPlayer() {
 		generateNeighboors();
 		boolean lost = false;
@@ -759,7 +903,10 @@ public class Board extends JPanel {
 
 		return lost;
 	}
-
+	
+	/**
+	 * Select the next player, and add it in currentPlayer player
+	 */
 	public void nextTurn() {
 		Player nextPlayer = null;
 		do {
@@ -771,7 +918,11 @@ public class Board extends JPanel {
 
 		this.currentPlayer.startTurn();
 	}
-
+	
+	/**
+	 * Check if game is terminated, feed score, show message
+	 * @return whether the game is finished
+	 */
 	private boolean isGameFinished() {
 		int playersLeft = this.playerList.size();
 		updateLoseStatusPlayer();
@@ -807,7 +958,7 @@ public class Board extends JPanel {
 			JOptionPane.showMessageDialog(null, "<html><h1>GAME OVER !</h1> And the winner is "+winner+"</html>");
 
 			for (Human player : realPlayersList) {
-				player.resetLoseStatus();
+				player.alive();
 			}
 
 			Board.this.parent.getFrameContentPane().removeDisplayedGame();
@@ -816,14 +967,23 @@ public class Board extends JPanel {
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Feed all object, call on load
+	 * @param barriers
+	 * @param sheepInfos
+	 * @param currentPlay
+	 */
 	public void setData(List<JSONArray> barriers, Map<Sheep, Point> sheepInfos, Human currentPlay) {
 		dataToLoad = true;
 		barriersToLoad = barriers;
 		sheepInfosToLoad = sheepInfos;
 		currentPlayer = currentPlay;
 	}
-
+	
+	/**
+	 * Read informations given on load 
+	 */
 	public void loadData() {
 		for (JSONArray array : barriersToLoad) {
 
@@ -858,15 +1018,29 @@ public class Board extends JPanel {
 		}
 		repaint();
 	}
-
+	
+	/**
+	 * Getter playerlist attribute
+	 * @return player list attribute 
+	 */
 	public List<Player> getPlayers() {
 		return this.playerList;
 	}
-
+	
+	/**
+	 * Getter currentPLayer attribute
+	 * @return current Player
+	 */
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
-
+	
+	/**
+	 * Get corresponding player cloned find with his firstname and lastname
+	 * @param firstName
+	 * @param lastName
+	 * @return Human the corresponding player
+	 */
 	public Human getCorrespondingPlayer(String firstName, String lastName) {
 		for (Player player : this.playerList) {
 			if (player instanceof Human) {
@@ -878,6 +1052,12 @@ public class Board extends JPanel {
 		return null;
 	}
 
+	/**
+	 * Get corresponding player real find with his firstname and lastname
+	 * @param firstName
+	 * @param lastName
+	 * @return Human the corresponding player
+	 */
 	public Human getCorrespondingRealPlayer(String firstName, String lastName) {
 		for (Human player : this.realPlayersList) {
 			if (player.getLastName().equals(lastName) && player.getFirstName().equals(firstName)) {
@@ -887,6 +1067,9 @@ public class Board extends JPanel {
 		return null;
 	}
 
+	/**
+	 * Used to cancel the last action, call on ctrl+z 
+	 */
 	public void cancelAction() {
 		if (!currentPlayer.isBeginOfTurn()) {
 			if (currentPlayer.getTurnStatus() == Human.DROP_BARRIER) {
@@ -905,17 +1088,31 @@ public class Board extends JPanel {
 		}
 	}
 
+	/**
+	 * Getter of realPlayerList attribute
+	 * @return list of Player 
+	 */
 	public List<Human> getRealPlayerList() {
 		return realPlayersList;
 	}
-
+	
+	/**
+	 * 
+	 * Class computer
+	 *
+	 */
 	private class Computer extends Player implements PlayerAction {
 
 		private Difficulty difficulty = Difficulty.RAINBOW;
 		private Board board = null;
 
 		private Random random = new Random();
-
+		
+		/**
+		 * Constructor of computer inner class 
+		 * @param board
+		 * @param difficulty
+		 */
 		public Computer(Board board, Difficulty difficulty) {
 			this.board = board;
 
@@ -925,6 +1122,9 @@ public class Board extends JPanel {
 			this.difficulty = difficulty;
 		}
 
+		/**
+		 * Start turn, call good method according to the difficulty level set
+		 */
 		@Override
 		public void startTurn() {
 			boolean isFinished = false;
@@ -958,7 +1158,11 @@ public class Board extends JPanel {
 			}
 			return finished;
 		}
-
+		
+		/**
+		 * The normal difficulty turn
+		 * @return
+		 */
 		private boolean normalTurn() {
 			boolean finished = false;
 			if (random.nextBoolean()) {
@@ -974,7 +1178,11 @@ public class Board extends JPanel {
 			}
 			return finished;
 		}
-
+		
+		/**
+		 * The normal sheep move 
+		 * @return
+		 */
 		private boolean normalSheepMove() {
 			Sheep randomSheepToMove = null;
 
@@ -1072,7 +1280,12 @@ public class Board extends JPanel {
 				return randomSheepMove();
 			}
 		}
-
+		
+		/**
+		 * Check if the sheep given is next to a enemy sheep
+		 * @param randomSheepToMove
+		 * @return boolean
+		 */
 		private boolean isCloseToEnnemy(Sheep randomSheepToMove) {
 			boolean isCloseToEnnemy = false;
 			for (Hexagon hexagon : randomSheepToMove.getHexagon().getNeighboorsWithSheep()) {
@@ -1082,7 +1295,11 @@ public class Board extends JPanel {
 			}
 			return isCloseToEnnemy;
 		}
-
+		
+		/**
+		 * The normal drop barrier
+		 * @return status game  
+		 */
 		private boolean normalBarrierDrop() {
 			Player player = board.playerList.get(0);
 
@@ -1118,7 +1335,11 @@ public class Board extends JPanel {
 			}
 
 		}
-
+		
+		/**
+		 * Drop a barrier on a random bridge, call in rainbow difficulty 
+		 * @return game status (terminated or not)
+		 */
 		private boolean randomBarrierDrop() {
 
 			List<Bridge> barriers = board.getBarriers();
@@ -1134,7 +1355,11 @@ public class Board extends JPanel {
 			Speaker.playRandomDropBarrier();
 			return board.isGameFinished();
 		}
-
+		
+		/**
+		 * Move a sheep randomly 
+		 * @return game status
+		 */
 		private boolean randomSheepMove() {
 			Sheep sheepToMove = null;
 			do {

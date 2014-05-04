@@ -16,32 +16,38 @@ import javax.swing.JTextField;
 
 import org.enclos.data.Difficulty;
 
+/**
+ * @author Clement CARREAU
+ * @author Quentin GEFFARD
+ * @author Julien TELA
+ */
+
 public class NewGameForm extends JOptionPane {
 
+	/**
+	 * Request to the user about the information of the new game
+	 * @param nbPlayers
+	 * @return parameters chosen by user
+	 */
 	public static Map<String, String> display(int nbPlayers) {
 		Map<String, String> settings = new HashMap<>();
 
 		List<String> nbSheepsPerPlayer = Arrays.asList("1", "2", "3", "4", "5");
-		JComboBox<String> sheepComboBox = new JComboBox(
-				nbSheepsPerPlayer.toArray());
+		JComboBox<String> sheepComboBox = new JComboBox(nbSheepsPerPlayer.toArray());
 		sheepComboBox.setSelectedItem("3");
-		
+
 		List<String> nbBoardSize = new ArrayList<String>();
-		for(int i=1; i<15; i++){
+		for (int i = 1; i < 15; i++) {
 			nbBoardSize.add(String.valueOf(i));
 		}
-		JComboBox<String> boardSizeComboBox = new JComboBox(
-				nbBoardSize.toArray());
+		JComboBox<String> boardSizeComboBox = new JComboBox(nbBoardSize.toArray());
 		boardSizeComboBox.setSelectedItem("3");
-		
+
 		List<String> choiceComputerDifficulty = new ArrayList<String>();
-		for(Difficulty difficulty : Difficulty.values()){
+		for (Difficulty difficulty : Difficulty.values()) {
 			choiceComputerDifficulty.add(difficulty.toString());
 		}
-		JComboBox<String> computerDifficultyComboBox = new JComboBox(
-				choiceComputerDifficulty.toArray());
-		
-		
+		JComboBox<String> computerDifficultyComboBox = new JComboBox(choiceComputerDifficulty.toArray());
 
 		JTextField boardSize = new JTextField("3");
 		JPanel panel = new JPanel(new GridLayout(0, 1));
@@ -51,7 +57,7 @@ public class NewGameForm extends JOptionPane {
 		panel.add(sheepComboBox);
 		panel.add(new JLabel("Board Size :"));
 		panel.add(boardSizeComboBox);
-		if(nbPlayers==1){
+		if (nbPlayers == 1) {
 			panel.add(new JLabel("Computer difficulty:"));
 			panel.add(computerDifficultyComboBox);
 		}
@@ -60,15 +66,12 @@ public class NewGameForm extends JOptionPane {
 		closeOtherGames.setSelected(true);
 		panel.add(closeOtherGames);
 
-		int result = JOptionPane.showConfirmDialog(null, panel, "New Game",
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		int result = JOptionPane.showConfirmDialog(null, panel, "New Game", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
 			settings.put("nbSheepPerPlayer", sheepComboBox.getSelectedItem().toString());
 			settings.put("boardSize", boardSizeComboBox.getSelectedItem().toString());
 			settings.put("difficulty", computerDifficultyComboBox.getSelectedItem().toString());
-			settings.put("close", closeOtherGames.isSelected() == true
-					? "close"
-					: "");
+			settings.put("close", closeOtherGames.isSelected() == true ? "close" : "");
 		} else {
 			return null;
 		}
